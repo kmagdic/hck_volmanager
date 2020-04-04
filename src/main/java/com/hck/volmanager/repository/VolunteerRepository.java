@@ -1,6 +1,5 @@
 package com.hck.volmanager.repository;
 
-import com.hck.volmanager.model.Employee;
 import com.hck.volmanager.model.Volunteer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
