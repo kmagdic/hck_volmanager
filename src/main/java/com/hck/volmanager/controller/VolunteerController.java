@@ -24,6 +24,12 @@ public class VolunteerController {
 	@Autowired
 	private VolunteerRepository volunteerRepository;
 
+	@GetMapping("/info")
+	public String getInfo() {
+		log.info("Get info ...");
+		return "App HCK VolManager";
+	}
+
 	@GetMapping("/volunteers")
 	public List<Volunteer> getAllVolunteers() {
 		log.info("Listing all volunteers ...");
@@ -41,9 +47,13 @@ public class VolunteerController {
 	}
 
 	@PostMapping("/volunteers")
-	public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteer) {
+	public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteer) throws ResourceNotFoundException {
 		Volunteer newVolunteer = volunteerRepository.save(volunteer);
 		log.info("Creating volunteer:  " + volunteer.getId());
+
+		newVolunteer = volunteerRepository.findById(volunteer.getId())
+			.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteer.getId()));
+
 		return newVolunteer;
 	}
 
