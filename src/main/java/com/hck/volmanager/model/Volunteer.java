@@ -430,4 +430,5 @@ public class Volunteer {
     }
 
     // TODO: add CustomSkill, CustomExperience, CustomService
+    // TODO: check needs for setters of attributes: dateTimeEntry and datetimeLastUpdate
 }
