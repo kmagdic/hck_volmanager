@@ -17,11 +17,14 @@ public class HckSociety {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 50)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "type")
     private String type;
+
+    @Column(name = "ordernum")
+    private short orderNum;
 
     @Override
     public String toString() {
@@ -57,5 +60,13 @@ public class HckSociety {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public short getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(short orderNum) {
+        this.orderNum = orderNum;
     }
 }
