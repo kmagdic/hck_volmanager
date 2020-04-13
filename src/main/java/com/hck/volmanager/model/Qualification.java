@@ -61,4 +61,12 @@ public class Qualification {
     public void setOrderNum(short orderNum) {
         this.orderNum = orderNum;
     }
+
+    public Set<Volunteer> getVolunteers() {
+        return volunteers;
+    }
+
+    public void setVolunteers(Set<Volunteer> volunteers) {
+        this.volunteers = volunteers;
+    }
 }

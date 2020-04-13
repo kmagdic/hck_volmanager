@@ -408,4 +408,26 @@ public class Volunteer {
     public void setDatetimeLastUpdate(Instant datetimeLastUpdate) {
         this.datetimeLastUpdate = datetimeLastUpdate;
     }
+
+    public void addQualification(Qualification qualification) {
+        this.qualifications.add(qualification);
+        qualification.getVolunteers().add(this);
+    }
+
+    public void removeQualification(Qualification qualification) {
+        this.qualifications.remove(qualification);
+        qualification.getVolunteers().remove(this);
+    }
+
+    public void addCustomQualification(CustomQualification customQualification) {
+        this.customQualifications.add(customQualification);
+        customQualification.setVolunteer(this);
+    }
+
+    public void removeCustomQualification(CustomQualification customQualification) {
+        this.customQualifications.remove(customQualification);
+        customQualification.setVolunteer(null);
+    }
+
+    // TODO: add CustomSkill, CustomExperience, CustomService
 }
