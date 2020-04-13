@@ -162,6 +162,14 @@ public class Volunteer {
     )
     Set<Qualification> experiences = new HashSet<>();
 
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "vservices",
+            joinColumns = { @JoinColumn(name = "volunteerid") },
+            inverseJoinColumns = { @JoinColumn(name = "serviceid") }
+    )
+    Set<Qualification> services = new HashSet<>();
+
     @Override
     public String toString() {
         return "Volunteer{" +
