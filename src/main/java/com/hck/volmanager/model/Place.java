@@ -1,10 +1,18 @@
 package com.hck.volmanager.model;
 
 import javax.persistence.*;
+import javax.swing.text.StyleContext;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 
+/**
+ * 	id bigserial,
+ * 	name text not null,
+ * 	county text not null,
+ * 	postcode int2 not null,
+ * 	hckSocietyId int8 not null,
+ */
 
 @Entity
 @Table(name = "places")
@@ -18,12 +26,11 @@ public class Place {
     @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "county", length = 50)
+    @Column(name = "county", columnDefinition="bpchar", length = 1)
     private String county;
 
-    @Size(min = 11, max = 11)
-    @Column(name = "postcode", length = 11)
-    private String postCode;
+    @Column(name = "postcode")
+    private short postCode;
 
     @Override
     public String toString() {
@@ -61,11 +68,11 @@ public class Place {
         this.county = county;
     }
 
-    public String getPostCode() {
+    public short getPostCode() {
         return postCode;
     }
 
-    public void setPostCode(String postCode) {
+    public void setPostCode(short postCode) {
         this.postCode = postCode;
     }
 }

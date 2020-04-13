@@ -7,7 +7,39 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.time.LocalDate;
 
+/**
+ * 	id bigserial,
+ * 	firstName text not null,
+ * 	lastName text not null,
+ * 	dob date,
+ * 	oib char(11),
+ * 	gender char(1),
+ * 	addressOfLiving text,
+ * 	placeOfLivingId int8,
+ * 	placeOfVolunteeringId int8,
+ * 	phone text,
+ * 	email text,
+ * 	iceName text,
+ * 	icePhone text,
+ * 	consentProcessPersonalData bool,
+ * 	householdElderly bool,
+ * 	householdPregnantWomen bool,
+ * 	pregnantWoman bool,
+ * 	householdChild bool,
+ * 	householdChronicPatient bool,
+ * 	healthFine bool,
+ * 	healthDetails text,
+ * 	availabilityHoursWeekly int2,
+ * 	availabilityDetails text,
+ * 	criminalRecord bool,
+ * 	note text,
+ * 	backgroundCheckNeeded bool,
+ * 	backgroundCheckPassed bool,
+ * 	datetimeEntry timestamptz not null default current_timestamp,
+ * 	datetimeLastUpdate timestamptz,
+ */
 
 @Entity
 @Table(name = "volunteers")
@@ -24,27 +56,81 @@ public class Volunteer {
     @Column(name = "lastname", length = 50)
     private String lastName;
 
+    @Column(name = "dob")
+    private LocalDate dob;
+
     @Size(min = 11, max = 11)
-    @Column(name = "oib", length = 11)
+    @Column(name = "oib", columnDefinition="bpchar", length = 11)
     private String oib;
 
     @Size(min = 1, max = 1)
-    @Column(name = "gender", length = 1)
+    @Column(name = "gender", columnDefinition="bpchar", length = 1)
     private String gender;
 
-    @Column(name = "phonemobile", length = 15)
-    private String phoneMobile;
+    @Column(name = "addressofliving")
+    private String addressOfLiving;
+
+    @ManyToOne
+    @JoinColumn(name="placeoflivingid")
+    private Place placeOfLiving;
+
+    @Column(name = "phone", length = 15)
+    private String phone;
 
     @Email
     @Column(name = "email", length = 254)
     private String email;
 
-    @Column(name = "entrydate", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
-    private Instant entryDate = null;
+    @Column(name="icename")
+    private String iceName;
 
-    @ManyToOne
-    @JoinColumn(name="placeid")
-    private Place place;
+    @Column(name="icephone")
+    private String icePhone;
+
+    @Column(name="householdelderly")
+    private boolean householdElderly;
+
+    @Column(name="householdpregnantwomen")
+    private boolean householdPregnantWomen;
+
+    @Column(name="pregnantwoman")
+    private boolean pregnantWoman;
+
+    @Column(name="householdchild")
+    private boolean householdChild;
+
+    @Column(name="householdchronicpatient")
+    private boolean householdChronicPatient;
+
+    @Column(name="healthfine")
+    private boolean healthFine;
+
+    @Column(name="healthdetails")
+    private String healthDetails;
+
+    @Column(name="availabilityhoursweekly")
+    private short availabilityHoursWeekly;
+
+    @Column(name="availabilitydetails")
+ 	private String availabilityDetails;
+
+    @Column(name="criminalrecord")
+ 	private Boolean criminalRecord;
+
+    @Column(name="note")
+ 	private String note;
+
+    @Column(name="backgroundcheckneeded")
+ 	private Boolean backgroundCheckNeeded;
+
+    @Column(name="backgroundcheckpassed")
+ 	private Boolean backgroundCheckPassed;
+
+    @Column(name = "datetimeentry", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
+    private Instant dateTimeEntry = null;
+
+    @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
+    private Instant datetimeLastUpdate = null;
 
     @Override
     public String toString() {
@@ -57,30 +143,6 @@ public class Volunteer {
 
 
     // Setters and getters
-
-    public String getOib() {
-        return oib;
-    }
-
-    public void setOib(String oib) {
-        this.oib = oib;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPhoneMobile() {
-        return phoneMobile;
-    }
-
-    public void setPhoneMobile(String phoneMobile) {
-        this.phoneMobile = phoneMobile;
-    }
 
     public Long getId() {
         return id;
@@ -106,6 +168,54 @@ public class Volunteer {
         this.lastName = lastName;
     }
 
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
+    public String getOib() {
+        return oib;
+    }
+
+    public void setOib(String oib) {
+        this.oib = oib;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAddressOfLiving() {
+        return addressOfLiving;
+    }
+
+    public void setAddressOfLiving(String addressOfLiving) {
+        this.addressOfLiving = addressOfLiving;
+    }
+
+    public Place getPlaceOfLiving() {
+        return placeOfLiving;
+    }
+
+    public void setPlaceOfLiving(Place placeOfLiving) {
+        this.placeOfLiving = placeOfLiving;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -114,19 +224,139 @@ public class Volunteer {
         this.email = email;
     }
 
-    public Instant getEntryDate() {
-        return entryDate;
+    public String getIceName() {
+        return iceName;
     }
 
-    public void setEntryDate(Instant entryDate) {
-        this.entryDate = entryDate;
+    public void setIceName(String iceName) {
+        this.iceName = iceName;
     }
 
-    public Place getPlace() {
-        return place;
+    public String getIcePhone() {
+        return icePhone;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setIcePhone(String icePhone) {
+        this.icePhone = icePhone;
+    }
+
+    public boolean isHouseholdElderly() {
+        return householdElderly;
+    }
+
+    public void setHouseholdElderly(boolean householdElderly) {
+        this.householdElderly = householdElderly;
+    }
+
+    public boolean isHouseholdPregnantWomen() {
+        return householdPregnantWomen;
+    }
+
+    public void setHouseholdPregnantWomen(boolean householdPregnantWomen) {
+        this.householdPregnantWomen = householdPregnantWomen;
+    }
+
+    public boolean isPregnantWoman() {
+        return pregnantWoman;
+    }
+
+    public void setPregnantWoman(boolean pregnantWoman) {
+        this.pregnantWoman = pregnantWoman;
+    }
+
+    public boolean isHouseholdChild() {
+        return householdChild;
+    }
+
+    public void setHouseholdChild(boolean householdChild) {
+        this.householdChild = householdChild;
+    }
+
+    public boolean isHouseholdChronicPatient() {
+        return householdChronicPatient;
+    }
+
+    public void setHouseholdChronicPatient(boolean householdChronicPatient) {
+        this.householdChronicPatient = householdChronicPatient;
+    }
+
+    public boolean isHealthFine() {
+        return healthFine;
+    }
+
+    public void setHealthFine(boolean healthFine) {
+        this.healthFine = healthFine;
+    }
+
+    public String getHealthDetails() {
+        return healthDetails;
+    }
+
+    public void setHealthDetails(String healthDetails) {
+        this.healthDetails = healthDetails;
+    }
+
+    public short getAvailabilityHoursWeekly() {
+        return availabilityHoursWeekly;
+    }
+
+    public void setAvailabilityHoursWeekly(short availabilityHoursWeekly) {
+        this.availabilityHoursWeekly = availabilityHoursWeekly;
+    }
+
+    public String getAvailabilityDetails() {
+        return availabilityDetails;
+    }
+
+    public void setAvailabilityDetails(String availabilityDetails) {
+        this.availabilityDetails = availabilityDetails;
+    }
+
+    public Boolean getCriminalRecord() {
+        return criminalRecord;
+    }
+
+    public void setCriminalRecord(Boolean criminalRecord) {
+        this.criminalRecord = criminalRecord;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Boolean getBackgroundCheckNeeded() {
+        return backgroundCheckNeeded;
+    }
+
+    public void setBackgroundCheckNeeded(Boolean backgroundCheckNeeded) {
+        this.backgroundCheckNeeded = backgroundCheckNeeded;
+    }
+
+    public Boolean getBackgroundCheckPassed() {
+        return backgroundCheckPassed;
+    }
+
+    public void setBackgroundCheckPassed(Boolean backgroundCheckPassed) {
+        this.backgroundCheckPassed = backgroundCheckPassed;
+    }
+
+    public Instant getDateTimeEntry() {
+        return dateTimeEntry;
+    }
+
+    public void setDateTimeEntry(Instant dateTimeEntry) {
+        this.dateTimeEntry = dateTimeEntry;
+    }
+
+    public Instant getDatetimeLastUpdate() {
+        return datetimeLastUpdate;
+    }
+
+    public void setDatetimeLastUpdate(Instant datetimeLastUpdate) {
+        this.datetimeLastUpdate = datetimeLastUpdate;
     }
 }
