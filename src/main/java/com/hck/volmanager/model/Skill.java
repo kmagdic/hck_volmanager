@@ -9,8 +9,8 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "qualifications")
-public class Qualification {
+@Table(name = "skills")
+public class Skill {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -25,7 +25,7 @@ public class Qualification {
 
     @Override
     public String toString() {
-        return "Qualification{" +
+        return "Skill{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
