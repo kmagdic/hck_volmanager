@@ -1,6 +1,8 @@
 package com.hck.volmanager.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 	id bigserial,
@@ -22,6 +24,9 @@ public class Qualification {
 
     @Column(name = "ordernum")
     private short orderNum;
+
+    @ManyToMany(mappedBy = "qualifications")
+    private Set<Volunteer> volunteers = new HashSet<>();
 
     @Override
     public String toString() {

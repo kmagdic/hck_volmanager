@@ -8,6 +8,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 	id bigserial,
@@ -135,6 +137,14 @@ public class Volunteer {
 
     @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
     private Instant datetimeLastUpdate = null;
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "vqualifications",
+            joinColumns = { @JoinColumn(name = "volunteerid") },
+            inverseJoinColumns = { @JoinColumn(name = "qualificationid") }
+    )
+    Set<Qualification> qualifications = new HashSet<>();
 
     @Override
     public String toString() {
