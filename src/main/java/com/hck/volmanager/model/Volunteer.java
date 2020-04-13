@@ -74,6 +74,10 @@ public class Volunteer {
     @JoinColumn(name="placeoflivingid")
     private Place placeOfLiving;
 
+    @ManyToOne
+    @JoinColumn(name="placeofvolunteeringid")
+    private Place placeOfVolunteering;
+
     @Column(name = "phone", length = 15)
     private String phone;
 
@@ -206,6 +210,14 @@ public class Volunteer {
 
     public void setPlaceOfLiving(Place placeOfLiving) {
         this.placeOfLiving = placeOfLiving;
+    }
+
+    public Place getPlaceOfVolunteering() {
+        return placeOfVolunteering;
+    }
+
+    public void setPlaceOfVolunteering(Place placeOfVolunteering) {
+        this.placeOfVolunteering = placeOfVolunteering;
     }
 
     public String getPhone() {

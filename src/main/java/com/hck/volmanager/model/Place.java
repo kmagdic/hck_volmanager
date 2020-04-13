@@ -32,6 +32,10 @@ public class Place {
     @Column(name = "postcode")
     private short postCode;
 
+    @ManyToOne
+    @JoinColumn(name="hcksocietyid")
+    private HckSociety hckSociety;
+
     @Override
     public String toString() {
         return "Place{" +
@@ -74,5 +78,13 @@ public class Place {
 
     public void setPostCode(short postCode) {
         this.postCode = postCode;
+    }
+
+    public HckSociety getHckSociety() {
+        return hckSociety;
+    }
+
+    public void setHckSociety(HckSociety hckSociety) {
+        this.hckSociety = hckSociety;
     }
 }
