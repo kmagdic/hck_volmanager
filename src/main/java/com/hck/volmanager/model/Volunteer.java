@@ -146,6 +146,9 @@ public class Volunteer {
     )
     Set<Qualification> qualifications = new HashSet<>();
 
+    @OneToMany(mappedBy="volunteer")
+    private Set<CustomQualification> customQualifications;
+
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "vskills",
