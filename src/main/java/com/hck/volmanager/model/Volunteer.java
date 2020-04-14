@@ -155,7 +155,7 @@ public class Volunteer {
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "skillid") }
     )
-    Set<Qualification> skills = new HashSet<>();
+    Set<Skill> skills = new HashSet<>();
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -163,7 +163,7 @@ public class Volunteer {
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "experienceid") }
     )
-    Set<Qualification> experiences = new HashSet<>();
+    Set<Experience> experiences = new HashSet<>();
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -171,7 +171,7 @@ public class Volunteer {
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "serviceid") }
     )
-    Set<Qualification> services = new HashSet<>();
+    Set<Service> services = new HashSet<>();
 
     @Override
     public String toString() {
