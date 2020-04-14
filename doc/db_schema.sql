@@ -6,7 +6,7 @@ create table hck.hckSociety(
 	id bigserial,
 	name text not null,
 	type text not null,
-	ordernum int2,
+	ordernum int2 not null default '0',
 	constraint pk_hckSociety primary key(id)
 );
 
@@ -14,7 +14,7 @@ create table hck.places(
 	id bigserial,
 	name text not null,
 	county text not null,
-	postcode int2 not null,
+	postcode integer,
 	hckSocietyId int8 not null,
 	constraint pk_places primary key(id),
 	constraint fk_places_hckSocietyId foreign key(hckSocietyId) references hck.hckSociety(id)
@@ -42,7 +42,7 @@ create table hck.volunteers(
 	householdChronicPatient bool,
 	healthFine bool,
 	healthDetails text,
-	availabilityHoursWeekly int2,
+	availabilityHoursWeekly int2 not null default '0',
 	availabilityDetails text,
 	criminalRecord bool,
 	note text,
