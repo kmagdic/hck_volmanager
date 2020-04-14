@@ -94,28 +94,28 @@ public class Volunteer {
     private String icePhone;
 
     @Column(name="householdelderly")
-    private boolean householdElderly;
+    private Boolean householdElderly;
 
     @Column(name="householdpregnantwomen")
-    private boolean householdPregnantWomen;
+    private Boolean householdPregnantWomen;
 
     @Column(name="pregnantwoman")
-    private boolean pregnantWoman;
+    private Boolean pregnantWoman;
 
     @Column(name="householdchild")
-    private boolean householdChild;
+    private Boolean householdChild;
 
     @Column(name="householdchronicpatient")
-    private boolean householdChronicPatient;
+    private Boolean householdChronicPatient;
 
     @Column(name="healthfine")
-    private boolean healthFine;
+    private Boolean healthFine;
 
     @Column(name="healthdetails")
     private String healthDetails;
 
     @Column(name="availabilityhoursweekly")
-    private short availabilityHoursWeekly;
+    private Short availabilityHoursWeekly;
 
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
@@ -289,51 +289,51 @@ public class Volunteer {
         this.icePhone = icePhone;
     }
 
-    public boolean isHouseholdElderly() {
+    public Boolean isHouseholdElderly() {
         return householdElderly;
     }
 
-    public void setHouseholdElderly(boolean householdElderly) {
+    public void setHouseholdElderly(Boolean householdElderly) {
         this.householdElderly = householdElderly;
     }
 
-    public boolean isHouseholdPregnantWomen() {
+    public Boolean isHouseholdPregnantWomen() {
         return householdPregnantWomen;
     }
 
-    public void setHouseholdPregnantWomen(boolean householdPregnantWomen) {
+    public void setHouseholdPregnantWomen(Boolean householdPregnantWomen) {
         this.householdPregnantWomen = householdPregnantWomen;
     }
 
-    public boolean isPregnantWoman() {
+    public Boolean isPregnantWoman() {
         return pregnantWoman;
     }
 
-    public void setPregnantWoman(boolean pregnantWoman) {
+    public void setPregnantWoman(Boolean pregnantWoman) {
         this.pregnantWoman = pregnantWoman;
     }
 
-    public boolean isHouseholdChild() {
+    public Boolean isHouseholdChild() {
         return householdChild;
     }
 
-    public void setHouseholdChild(boolean householdChild) {
+    public void setHouseholdChild(Boolean householdChild) {
         this.householdChild = householdChild;
     }
 
-    public boolean isHouseholdChronicPatient() {
+    public Boolean isHouseholdChronicPatient() {
         return householdChronicPatient;
     }
 
-    public void setHouseholdChronicPatient(boolean householdChronicPatient) {
+    public void setHouseholdChronicPatient(Boolean householdChronicPatient) {
         this.householdChronicPatient = householdChronicPatient;
     }
 
-    public boolean isHealthFine() {
+    public Boolean isHealthFine() {
         return healthFine;
     }
 
-    public void setHealthFine(boolean healthFine) {
+    public void setHealthFine(Boolean healthFine) {
         this.healthFine = healthFine;
     }
 

@@ -30,7 +30,7 @@ public class Place {
     private String county;
 
     @Column(name = "postcode")
-    private short postCode;
+    private Integer postCode;
 
     @ManyToOne
     @JoinColumn(name="hcksocietyid")
@@ -72,11 +72,11 @@ public class Place {
         this.county = county;
     }
 
-    public short getPostCode() {
+    public Integer getPostCode() {
         return postCode;
     }
 
-    public void setPostCode(short postCode) {
+    public void setPostCode(Integer postCode) {
         this.postCode = postCode;
     }
 
