@@ -136,7 +136,7 @@ public class Volunteer {
     private Instant dateTimeEntry = null;
 
     @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
-    private Instant datetimeLastUpdate = null;
+    private Instant dateTimeLastUpdate = null;
 
     @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
@@ -405,13 +405,13 @@ public class Volunteer {
 
     */
 
-    public Instant getDatetimeLastUpdate() {
-        return datetimeLastUpdate;
+    public Instant getDateTimeLastUpdate() {
+        return dateTimeLastUpdate;
     }
 
     /*
-    public void setDatetimeLastUpdate(Instant datetimeLastUpdate) {
-        this.datetimeLastUpdate = datetimeLastUpdate;
+    public void setDatetimeLastUpdate(Instant dateTimeLastUpdate) {
+        this.dateTimeLastUpdate = dateTimeLastUpdate;
     }
      */
 
