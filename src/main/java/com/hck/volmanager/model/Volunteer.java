@@ -138,7 +138,7 @@ public class Volunteer {
     @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
     private Instant datetimeLastUpdate = null;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
             name = "vqualifications",
             joinColumns = { @JoinColumn(name = "volunteerid") },
@@ -345,11 +345,11 @@ public class Volunteer {
         this.healthDetails = healthDetails;
     }
 
-    public short getAvailabilityHoursWeekly() {
+    public Short getAvailabilityHoursWeekly() {
         return availabilityHoursWeekly;
     }
 
-    public void setAvailabilityHoursWeekly(short availabilityHoursWeekly) {
+    public void setAvailabilityHoursWeekly(Short availabilityHoursWeekly) {
         this.availabilityHoursWeekly = availabilityHoursWeekly;
     }
 
@@ -397,26 +397,27 @@ public class Volunteer {
         return dateTimeEntry;
     }
 
+    /*
+
     public void setDateTimeEntry(Instant dateTimeEntry) {
         this.dateTimeEntry = dateTimeEntry;
     }
+
+    */
 
     public Instant getDatetimeLastUpdate() {
         return datetimeLastUpdate;
     }
 
+    /*
     public void setDatetimeLastUpdate(Instant datetimeLastUpdate) {
         this.datetimeLastUpdate = datetimeLastUpdate;
     }
+     */
 
-    public void addQualification(Qualification qualification) {
-        this.qualifications.add(qualification);
-        qualification.getVolunteers().add(this);
-    }
 
-    public void removeQualification(Qualification qualification) {
-        this.qualifications.remove(qualification);
-        qualification.getVolunteers().remove(this);
+public Set<Qualification> getQualifications() {
+        return qualifications;
     }
 
     public void addCustomQualification(CustomQualification customQualification) {
@@ -428,6 +429,8 @@ public class Volunteer {
         this.customQualifications.remove(customQualification);
         customQualification.setVolunteer(null);
     }
+
+
 
     // TODO: add CustomSkill, CustomExperience, CustomService
     // TODO: check needs for setters of attributes: dateTimeEntry and datetimeLastUpdate

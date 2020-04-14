@@ -59,15 +59,17 @@ public class VolunteerController {
 
 	@PutMapping("/volunteers/{id}")
 	public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
-													@Valid @RequestBody Volunteer volunteerDetails) throws ResourceNotFoundException {
-		Volunteer volunteer = volunteerRepository.findById(volunteerId)
+													@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
+		Volunteer volunteerDB = volunteerRepository.findById(volunteerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
 
-		log.info("Updating of volunteer by id: " + volunteer.getId() + ", Voluneteer: " + volunteer);
+		log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Voluneteer: " + volunteerDB);
 
 		// TODO: when proprerty is null it is overwriten to non-null property
-		BeanUtils.copyProperties(volunteerDetails, volunteer);
-		final Volunteer updatedVolunteer = volunteerRepository.save(volunteer);
+		BeanUtils.copyProperties(volunteerJSON, volunteerDB);
+		volunteerDB.getQualifications().clear();
+		volunteerDB.getQualifications().addAll(volunteerJSON.getQualifications());
+		final Volunteer updatedVolunteer = volunteerRepository.save(volunteerDB);
 		return ResponseEntity.ok(updatedVolunteer);
 	}
 
