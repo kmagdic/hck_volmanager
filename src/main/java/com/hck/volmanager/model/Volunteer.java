@@ -133,6 +133,7 @@ public class Volunteer {
  	private Boolean backgroundCheckPassed;
 
     @Column(name = "datetimeentry", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
+    @CreationTimestamp
     private Instant dateTimeEntry = null;
 
     @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
