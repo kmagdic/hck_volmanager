@@ -23,10 +23,10 @@ public class Qualification {
     private String name;
 
     @Column(name = "ordernum")
-    private short orderNum;
+    private Short orderNum;
 
-    @ManyToMany(mappedBy = "qualifications")
-    private Set<Volunteer> volunteers = new HashSet<>();
+    //@ManyToMany(mappedBy = "qualifications")
+    //private Set<Volunteer> volunteers = new HashSet<>();
 
     @Override
     public String toString() {
@@ -54,13 +54,15 @@ public class Qualification {
         this.name = name;
     }
 
-    public short getOrderNum() {
+    public Short getOrderNum() {
         return orderNum;
     }
 
-    public void setOrderNum(short orderNum) {
+    public void setOrderNum(Short orderNum) {
         this.orderNum = orderNum;
     }
+
+    /*
 
     public Set<Volunteer> getVolunteers() {
         return volunteers;
@@ -69,4 +71,6 @@ public class Qualification {
     public void setVolunteers(Set<Volunteer> volunteers) {
         this.volunteers = volunteers;
     }
+
+     */
 }
