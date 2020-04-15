@@ -57,6 +57,28 @@ public class VolunteerController {
 		return newVolunteer;
 	}
 
+	/**
+	 *
+	 * @param volunteerId
+	 * @param volunteerJSON
+	 * @return
+	 * @throws ResourceNotFoundException
+	 *
+	 * {
+	 *     "id": 2,
+	 *     "firstName": "Tihomir",
+	 *     "lastName": "Magdić",
+	 *     "qualifications": [
+	 *         {
+	 *             "id": 1
+	 *         },
+	 *         {
+	 *             "id": 2
+	 *         }
+	 *     ]
+	 * }
+	 */
+
 	@PutMapping("/volunteers/{id}")
 	public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
 													@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {

@@ -1,11 +1,6 @@
 package com.hck.volmanager.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 	id bigserial,
@@ -28,39 +23,21 @@ public class Qualification {
     @Column(name = "ordernum")
     private Short orderNum;
 
+    /*
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "qualifications")
     private Set<Volunteer> volunteers = new HashSet<Volunteer>(0);
 
-    public Set<Volunteer> getStocks() {
+    public Set<Volunteer> getVolunteers() {
         return this.volunteers;
     }
 
-    public void setStocks(Set<Volunteer> stocks) {
+    public void setVolunteers(Set<Volunteer> stocks) {
         this.volunteers = stocks;
     }
+    */
 
     public Qualification() {
     }
-
-    public Qualification(Long id, String name, Short orderNum, Set<Volunteer> volunteers) {
-        this.id = id;
-        this.name = name;
-        this.orderNum = orderNum;
-        this.volunteers = volunteers;
-    }
-/*
-    @OneToMany(mappedBy = "qualification")
-    private Set<VolunteerQualification> volunteerQualifications;
-    */
-    /*
-    @ManyToMany(mappedBy = "qualifications")
-    private Set<Volunteer> volunteers = new HashSet<>();
-    */
-
-    /*
-    @OneToMany
-    private Set<VolunteerQualification> volunteerQualification = new HashSet<>();
-    */
 
     @Override
     public String toString() {
