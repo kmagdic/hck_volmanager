@@ -2,6 +2,8 @@ package com.hck.volmanager.model;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -132,20 +134,27 @@ public class Volunteer {
     @Column(name="backgroundcheckpassed")
  	private Boolean backgroundCheckPassed;
 
-    @Column(name = "datetimeentry", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false)
+    @Column(name = "datetimeentry", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
     @CreationTimestamp
-    private Instant dateTimeEntry = null;
+    private Instant dateTimeEntry;
 
     @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
     private Instant datetimeLastUpdate = null;
 
-    @ManyToMany(cascade = { CascadeType.MERGE })
-    @JoinTable(
-            name = "vqualifications",
-            joinColumns = { @JoinColumn(name = "volunteerid") },
-            inverseJoinColumns = { @JoinColumn(name = "qualificationid") }
-    )
-    Set<Qualification> qualifications = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY/*, cascade = CascadeType.ALL*/)
+    @JoinTable(name = "vqualifications", joinColumns = {
+            @JoinColumn(name = "volunteerid", nullable = false, updatable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "qualificationid",
+                    nullable = false, updatable = false) })
+    private Set<Qualification> qualifications = new HashSet<Qualification>(0);
+
+    public Set<Qualification> getQualifications() {
+        return this.qualifications;
+    }
+
+    public void setQualifications(Set<Qualification> categories) {
+        this.qualifications = categories;
+    }
 
     @OneToMany(mappedBy="volunteer")
     private Set<CustomQualification> customQualifications;
@@ -185,7 +194,6 @@ public class Volunteer {
 
 
     // Setters and getters
-
     public Long getId() {
         return id;
     }
@@ -416,11 +424,6 @@ public class Volunteer {
     }
      */
 
-
-public Set<Qualification> getQualifications() {
-        return qualifications;
-    }
-
     public void addCustomQualification(CustomQualification customQualification) {
         this.customQualifications.add(customQualification);
         customQualification.setVolunteer(this);
@@ -430,8 +433,6 @@ public Set<Qualification> getQualifications() {
         this.customQualifications.remove(customQualification);
         customQualification.setVolunteer(null);
     }
-
-
 
     // TODO: add CustomSkill, CustomExperience, CustomService
     // TODO: check needs for setters of attributes: dateTimeEntry and datetimeLastUpdate

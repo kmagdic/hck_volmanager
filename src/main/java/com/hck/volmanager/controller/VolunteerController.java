@@ -60,15 +60,27 @@ public class VolunteerController {
 	@PutMapping("/volunteers/{id}")
 	public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
 													@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
+		//final Volunteer updatedVolunteer = volunteerRepository.save(volunteerJSON);
+		//return ResponseEntity.ok(updatedVolunteer);
+
 		Volunteer volunteerDB = volunteerRepository.findById(volunteerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
 
-		log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Voluneteer: " + volunteerDB);
+		log.info("volunteerJSON: " + volunteerJSON.getId() + ", Volunteer: " + volunteerJSON);
+		log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Volunteer: " + volunteerDB);
 
 		// TODO: when proprerty is null it is overwriten to non-null property
 		BeanUtils.copyProperties(volunteerJSON, volunteerDB);
-		volunteerDB.getQualifications().clear();
-		volunteerDB.getQualifications().addAll(volunteerJSON.getQualifications());
+		//volunteerDB.setId(volunteerId);
+		log.info("Updated: " + volunteerDB.getId() + ", Voluneteer: " + volunteerDB);
+		log.info("volunteerJSON.getVolunteerQualifications().size(): " + volunteerJSON.getQualifications().size());
+		/*
+		volunteerJSON.getVolunteerQualifications().forEach((vq) -> {
+			log.info("vq:" + vq);
+			//volunteerDB.getVolunteerQualifications().add(vq);
+		});
+		//volunteerDB.getVolunteerQualifications().addAll(volunteerJSON.getVolunteerQualifications());
+		*/
 		final Volunteer updatedVolunteer = volunteerRepository.save(volunteerDB);
 		return ResponseEntity.ok(updatedVolunteer);
 	}
