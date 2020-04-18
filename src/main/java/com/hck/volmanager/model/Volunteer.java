@@ -144,8 +144,7 @@ public class Volunteer {
     @ManyToMany(fetch = FetchType.LAZY/*, cascade = CascadeType.ALL*/)
     @JoinTable(name = "vqualifications", joinColumns = {
             @JoinColumn(name = "volunteerid", nullable = false, updatable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "qualificationid",
-                    nullable = false, updatable = false) })
+            inverseJoinColumns = { @JoinColumn(name = "qualificationid", nullable = false, updatable = false) })
     private Set<Qualification> qualifications = new HashSet<Qualification>(0);
 
     public Set<Qualification> getQualifications() {

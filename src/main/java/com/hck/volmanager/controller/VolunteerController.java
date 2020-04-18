@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,83 +20,87 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class VolunteerController {
-	private static final Logger log = LoggerFactory.getLogger(VolunteerController.class);
+    private static final Logger log = LoggerFactory.getLogger(VolunteerController.class);
 
-	@Autowired
-	private VolunteerRepository volunteerRepository;
+    @Autowired
+    private VolunteerRepository volunteerRepository;
 
-	@GetMapping("/info")
-	public String getInfo() {
-		log.info("Get info ...");
-		return "App HCK VolManager";
-	}
+    @GetMapping("/info")
+    public String getInfo() {
+        log.info("Get info ...");
+        return "App HCK VolManager";
+    }
 
-	@GetMapping("/volunteers")
-	public List<Volunteer> getAllVolunteers() {
-		log.info("Listing all volunteers ...");
-		return volunteerRepository.findAll();
-	}
+    @GetMapping("/volunteers")
+    public List<Volunteer> getAllVolunteers() {
+        log.info("Listing all volunteers ...");
+        return volunteerRepository.findAll();
+    }
 
-	@GetMapping("/volunteers/{id}")
-	public ResponseEntity<Volunteer> getVolunteerById(@PathVariable(value = "id") Long id)
-			throws ResourceNotFoundException {
-		Volunteer volunteer = volunteerRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + id));
 
-		log.info("Get volunteer by id " + volunteer.getId()  + ": " +  volunteer);
-		return ResponseEntity.ok().body(volunteer);
-	}
+    @GetMapping("/volunteersInPages")
+    public List<Volunteer> getAllVolunteersPages(Pageable pageable) {
+        log.info("Listing all volunteers ...");
+        return (List<Volunteer>) volunteerRepository.findAll(pageable);
+    }
 
-	@PostMapping("/volunteers")
-	public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteer) throws ResourceNotFoundException {
-		Volunteer newVolunteer = volunteerRepository.save(volunteer);
-		log.info("Creating volunteer:  " + volunteer.getId());
+    @GetMapping("/volunteers/{id}")
+    public ResponseEntity<Volunteer> getVolunteerById(@PathVariable(value = "id") Long id)
+            throws ResourceNotFoundException {
+        Volunteer volunteer = volunteerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + id));
 
-		newVolunteer = volunteerRepository.findById(volunteer.getId())
-			.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteer.getId()));
+        log.info("Get volunteer by id " + volunteer.getId() + ": " + volunteer);
+        return ResponseEntity.ok().body(volunteer);
+    }
 
-		return newVolunteer;
-	}
+    @PostMapping("/volunteers")
+    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteer) throws ResourceNotFoundException {
+        Volunteer newVolunteer = volunteerRepository.save(volunteer);
+        log.info("Creating volunteer:  " + volunteer.getId());
 
-	/**
-	 *
-	 * @param volunteerId
-	 * @param volunteerJSON
-	 * @return
-	 * @throws ResourceNotFoundException
-	 *
-	 * {
-	 *     "id": 2,
-	 *     "firstName": "Tihomir",
-	 *     "lastName": "Magdić",
-	 *     "qualifications": [
-	 *         {
-	 *             "id": 1
-	 *         },
-	 *         {
-	 *             "id": 2
-	 *         }
-	 *     ]
-	 * }
-	 */
+        newVolunteer = volunteerRepository.findById(volunteer.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteer.getId()));
 
-	@PutMapping("/volunteers/{id}")
-	public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
-													@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
-		//final Volunteer updatedVolunteer = volunteerRepository.save(volunteerJSON);
-		//return ResponseEntity.ok(updatedVolunteer);
+        return newVolunteer;
+    }
 
-		Volunteer volunteerDB = volunteerRepository.findById(volunteerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
+    /**
+     * @param volunteerId
+     * @param volunteerJSON
+     * @return
+     * @throws ResourceNotFoundException {
+     *                                   "id": 2,
+     *                                   "firstName": "Tihomir",
+     *                                   "lastName": "Magdić",
+     *                                   "qualifications": [
+     *                                   {
+     *                                   "id": 1
+     *                                   },
+     *                                   {
+     *                                   "id": 2
+     *                                   }
+     *                                   ]
+     *                                   }
+     */
 
-		log.info("volunteerJSON: " + volunteerJSON.getId() + ", Volunteer: " + volunteerJSON);
-		log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Volunteer: " + volunteerDB);
+    @PutMapping("/volunteers/{id}")
+    public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
+                                                     @Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
+        //final Volunteer updatedVolunteer = volunteerRepository.save(volunteerJSON);
+        //return ResponseEntity.ok(updatedVolunteer);
 
-		// TODO: when proprerty is null it is overwriten to non-null property
-		BeanUtils.copyProperties(volunteerJSON, volunteerDB);
-		//volunteerDB.setId(volunteerId);
-		log.info("Updated: " + volunteerDB.getId() + ", Voluneteer: " + volunteerDB);
-		log.info("volunteerJSON.getVolunteerQualifications().size(): " + volunteerJSON.getQualifications().size());
+        Volunteer volunteerDB = volunteerRepository.findById(volunteerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
+
+        log.info("volunteerJSON: " + volunteerJSON.getId() + ", Volunteer: " + volunteerJSON);
+        log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Volunteer: " + volunteerDB);
+
+        // TODO: when proprerty is null it is overwriten to non-null property
+        BeanUtils.copyProperties(volunteerJSON, volunteerDB);
+        //volunteerDB.setId(volunteerId);
+        log.info("Updated: " + volunteerDB.getId() + ", Voluneteer: " + volunteerDB);
+        log.info("volunteerJSON.getVolunteerQualifications().size(): " + volunteerJSON.getQualifications().size());
 		/*
 		volunteerJSON.getVolunteerQualifications().forEach((vq) -> {
 			log.info("vq:" + vq);
@@ -103,21 +108,21 @@ public class VolunteerController {
 		});
 		//volunteerDB.getVolunteerQualifications().addAll(volunteerJSON.getVolunteerQualifications());
 		*/
-		final Volunteer updatedVolunteer = volunteerRepository.save(volunteerDB);
-		return ResponseEntity.ok(updatedVolunteer);
-	}
+        final Volunteer updatedVolunteer = volunteerRepository.save(volunteerDB);
+        return ResponseEntity.ok(updatedVolunteer);
+    }
 
-	@DeleteMapping("/volunteers/{id}")
-	public Map<String, Boolean> deleteVolunteer(@PathVariable(value = "id") Long volunteerId)
-			throws ResourceNotFoundException {
-		Volunteer volunteer = volunteerRepository.findById(volunteerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
+    @DeleteMapping("/volunteers/{id}")
+    public Map<String, Boolean> deleteVolunteer(@PathVariable(value = "id") Long volunteerId)
+            throws ResourceNotFoundException {
+        Volunteer volunteer = volunteerRepository.findById(volunteerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
 
-		log.info("Deleting volunteer by id: " + volunteer.getId());
+        log.info("Deleting volunteer by id: " + volunteer.getId());
 
-		volunteerRepository.delete(volunteer);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
-	}
+        volunteerRepository.delete(volunteer);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return response;
+    }
 }
