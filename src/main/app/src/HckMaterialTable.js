@@ -36,7 +36,7 @@ class HckMaterialTable extends React.Component {
             //url += '&page=' + (query.page + 1)
             fetch(url)
               .then(response => {
-                    console.log(response);
+                    console.log("response:", response);
                     return response.json();
                 }
               )
