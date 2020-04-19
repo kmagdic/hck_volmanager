@@ -29,7 +29,6 @@ public class PlaceController {
         return placeRepository.findAll();
     }
 
-
     @PostMapping("/places")
     public Place createPlace(@Valid @RequestBody Place place) throws ResourceNotFoundException {
         Place newPlace = placeRepository.save(place);
