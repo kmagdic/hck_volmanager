@@ -1,6 +1,7 @@
 package com.hck.volmanager.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * id bigserial,
@@ -25,6 +26,10 @@ public class HckSociety {
 
     @Column(name = "ordernum")
     private short orderNum;
+
+    @OneToMany
+    @JoinColumn(name="hcksocietyid")
+    private Set<Place> places;
 
     @Override
     public String toString() {
