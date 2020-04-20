@@ -70,6 +70,10 @@ label.MuiFormControlLabel-labelPlacementTop {
   width: 100%;
 }
 
+.label {
+  margin-left: 1em;
+}
+
 @media (max-width: 576px) {
   .container {
     width: 100%;
