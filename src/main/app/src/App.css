@@ -85,19 +85,18 @@ label.MuiFormControlLabel-labelPlacementTop {
   }
 }
 
+.preregistration {
+  width: 500px;
+}
+
 .App {
   atext-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
+  aheight: 40vmin;
+  width: 100%;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {

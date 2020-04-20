@@ -180,6 +180,9 @@ function Registration() {
   }
 
   return (
+    <div className="App">
+    <header className="App-header">
+
     <div className="container">
       <form onSubmit={onSubmit} action="http://localhost:8080/api/v1/volunteers" target="_self" autoComplete="off">
       <fieldset className="fieldset">
@@ -274,7 +277,7 @@ function Registration() {
       <Law></Law>
       <FormLabel component="legend">
       </FormLabel>
-      <RadioGroup aria-label="gender" name="criminalRecord">
+      <RadioGroup aria-label="criminalRecord" name="criminalRecord">
         <div className="criminalRecord">
           <FormControlLabel value="true" control={<Radio color="primary" />} label="Da"/>
           <FormControlLabel value="false" control={<Radio color="primary" />} label="Ne"/>
@@ -286,6 +289,9 @@ function Registration() {
       </div>
       </form>
     </div>
+
+    </header>
+  </div>
   );
 }
 

@@ -86,7 +86,7 @@ export default function VolunteersList() {
   
   return (
     <MaterialTable
-      title="Editable Example"
+      title="Hrvatski Crveni Križ - Sustav za upravljanje volonterima"
       columns={state.columns}
       data={state.data}
       options={{paging: false}}
