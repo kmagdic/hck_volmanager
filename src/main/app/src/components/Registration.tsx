@@ -123,6 +123,9 @@ function Registration() {
       criminalRecord: event.target.criminalRecord.value,
     };
     console.log("form data:", data);
+    request('volunteers', (data: any) => {
+        console.log("response:", data);
+      }, "POST", data);
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
