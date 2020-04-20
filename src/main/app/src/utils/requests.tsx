@@ -12,7 +12,7 @@ export const request = (resource: string, fetching: any, method: string = "GET",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: body? JSON.stringify(body) : undefined
+      body: body ? JSON.stringify(body) : undefined
     } )
     .then(response => response.json())
     .then(fetching)
