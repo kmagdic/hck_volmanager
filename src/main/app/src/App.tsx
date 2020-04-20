@@ -1,7 +1,9 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Registration from './components/Registration';
-import PreRegistration from './components/PreRegistration';
+import Approval from './components/Approval';
+import Confirmation from './components/Confirmation';
+import Login from './components/Login';
 import logo from './logo.svg';
 import './App.css';
 import HckMaterialTable from './HckMaterialTable';
@@ -18,9 +20,11 @@ class App extends React.Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={PreRegistration} />
+        <Route exact path="/" component={Approval} />
         <Route exact path="/registration" component={Registration} />
-        <Route exact path="/login" component={VolunteersList} />
+        <Route exact path="/Confirmation" component={Confirmation} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/list" component={VolunteersList} />
       </Switch>
     )
   }

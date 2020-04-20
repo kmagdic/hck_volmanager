@@ -85,8 +85,54 @@ label.MuiFormControlLabel-labelPlacementTop {
   }
 }
 
-.preregistration {
-  width: 500px;
+.approval {
+  apadding: 1em;
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+}
+
+.approval h1 {
+  padding: 0 1em;
+}
+
+.approval .header {
+  padding: 1em;
+  color: white;
+  background-color: green;
+}
+
+.approval .header a {
+  color: white;
+}
+
+.approval .statement {
+  padding: 1em;
+}
+
+.approval .buttons {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.approval .btnContainer {
+  padding: 0.5em;
+}
+
+.approval .btn {
+  width: 200px;
+}
+
+.approval-radiobuttons {
+  padding: 0 1em;
+  display: flex;
+  justify-content: space-around;
+}
+
+.approval-radiobuttons .MuiFormControlLabel-label {
+  user-select: none;
 }
 
 .App {
