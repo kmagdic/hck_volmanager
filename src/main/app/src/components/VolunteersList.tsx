@@ -3,6 +3,7 @@ import MaterialTable, { Column } from 'material-table';
 import Switch from '@material-ui/core/Switch';
 import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
+import { format } from 'date-fns';
 
 interface Row {
   firstName: string;
@@ -22,7 +23,9 @@ export default function VolunteersList() {
     columns: [
       { title: 'Ime', field: 'firstName' },
       { title: 'Prezime', field: 'lastName' },
-      { title: 'Datum rođenja', field: 'dob' },
+      { title: 'Datum rođenja', field: 'dob', type: 'date',
+        render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy')
+       },
       { title: 'HCK Društvo', field: 'placeOfVolunteering.name' },
       { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean',
         render: rowData => 
