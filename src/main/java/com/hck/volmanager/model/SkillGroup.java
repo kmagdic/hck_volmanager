@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 	id bigserial,
- * 	name text not null,
- * 	ordernum int2,
+ * 	id bigserial NOT NULL,
+ * 	"name" text NOT NULL,
+ * 	ordernum int2 NULL,
  */
 
 @Entity
-@Table(name = "skills")
-public class Skill {
+@Table(name = "skillgroups")
+public class SkillGroup {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -25,16 +25,16 @@ public class Skill {
     @Column(name = "ordernum")
     private Short orderNum;
 
-    @ManyToMany(mappedBy = "skills")
-    private Set<Volunteer> volunteers = new HashSet<>();
-
-    @ManyToOne
+    /*
+    @OneToMany
+    @JoinTable(name = "skills")
     @JoinColumn(name = "groupid")
-    private SkillGroup skillGroup;
+    private Set<Skill> skills;
+    */
 
     @Override
     public String toString() {
-        return "Skill{" +
+        return "SkillGroup{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
@@ -64,13 +64,5 @@ public class Skill {
 
     public void setOrderNum(Short orderNum) {
         this.orderNum = orderNum;
-    }
-
-    public SkillGroup getSkillGroup() {
-        return skillGroup;
-    }
-
-    public void setSkillGroup(SkillGroup skillGroup) {
-        this.skillGroup = skillGroup;
     }
 }

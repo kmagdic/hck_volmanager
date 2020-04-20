@@ -10,10 +10,16 @@ export interface Place {
   postCode: number, 
 };
 
+export interface SkillGroup {
+	id: number,
+	name: string,
+	orderNum: number
+}
+
 export interface Skill { 
   id: number, 
   name: string, 
-  group: string, 
+  skillGroup: SkillGroup
 };
 
 export const genders = [
@@ -72,6 +78,7 @@ export const skillsData: DataItem[] = [
   { id: 7, name: "Skill G" },
   { id: 8, name: "Skill H" },
 ];
+/*
 export const skillsData2: Skill[] = [
   { id: 1, name: "Skill A", group: "psycho" },
   { id: 2, name: "Skill B", group: "psycho" },
@@ -82,6 +89,7 @@ export const skillsData2: Skill[] = [
   { id: 7, name: "Skill G", group: "physical" },
   { id: 8, name: "Skill H", group: "psycho" },
 ];
+*/
 export const placesData0: Place[] = [
 	{ id: 1, name: "Varaždin", county: "Varaždinska županija", postCode: 42000 },
 	{ id: 2, name: "Ivanec", county: "Varaždinska županija", postCode: 42000 },

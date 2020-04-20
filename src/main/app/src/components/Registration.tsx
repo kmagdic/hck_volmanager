@@ -6,8 +6,8 @@ import Datetime from 'react-datetime';
 import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
-import { ListItem, GroupedOption, groupingOptions, join } from "../utils/json-methods"
-import { Place, Skill, genders, placesData, qualificationsData, skillsData2, experiencesData, servicesData, skillsData } from "../utils/data"
+import { ListItem, GroupedOption, groupingOptions, join, emptyGroup } from "../utils/json-methods"
+import { Place, Skill, genders, placesData, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 
 /*
@@ -43,8 +43,9 @@ function Registration() {
       <span style={groupBadgeStyles}>{data.options.length}</span>
     </div>
   );
-  const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
-  const [groupedPlaces, setGroupedPlaces] = useState(newGroupedPlaces);
+  //const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
+  const [groupedPlaces, setGroupedPlaces] = useState(emptyGroup);
+  const [groupedSkills, setGroupedSkills] = useState(emptyGroup);
   //setGroupedPlaces(newGroupedPlaces);
 
   //const newPlaces = join(places, counties, (p: any, c: any) => (p.county === c.id) ? { ...p, countyName: c.name } : null );
@@ -52,15 +53,24 @@ function Registration() {
 
   useEffect(() => {
     console.log("before fetching...");
+
+    // fetching places
     request('places', (placesData: any) => {
       console.log("placesData:", placesData);
       const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
       setGroupedPlaces(newGroupedPlaces);
     });
+
+    // fatching skills
+    request('skills', (skillsData: any) => {
+      console.log("skillsData:", skillsData);
+      const newGroupedSkills = groupingOptions(skillsData, (skill: Skill) => ({ value: skill.id, label: skill.name, group: skill.skillGroup.name }), "skillGroup.name");
+      setGroupedSkills(newGroupedSkills);
+    });
     console.log("after fetching...");
   }, []);
 
-  const groupedSkills = groupingOptions(skillsData2, (skill: Skill) => ({ value: skill.id, label: skill.name }), "group");
+  //const groupedSkills = groupingOptions(skillsData2, (skill: Skill) => ({ value: skill.id, label: skill.name }), "group");
 
   const qualifications = qualificationsData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const experiences = experiencesData.map(option => ({ value: option.id, label: option.name} as ListItem));

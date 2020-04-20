@@ -10,14 +10,17 @@ export interface GroupedOption {
 
 export const emptyGroup: GroupedOption[] = [];
 
-export const groupingOptions = (data: any[], createListItem: any, groupField: string): GroupedOption[] => {
+export const deepField = (obj: any, field: string) => field.split('.').reduce((att: any, value: any) => att[value], obj);
+
+export const groupingOptions = (data: any[], createListItem: any, groupField: any): GroupedOption[] => {
   const groupedObject: { [key: string]: GroupedOption } = {};
   data.forEach(option => {
     const item: ListItem = createListItem(option);
-    if (groupedObject[option[groupField]]) {
-      groupedObject[option[groupField]].options.push(item)
+    const groupName = (typeof groupField) === "string" ? deepField(option, groupField) : groupField(option);
+    if (groupedObject[groupName]) {
+      groupedObject[groupName].options.push(item)
     } else {
-      groupedObject[option[groupField]] = { label: option[groupField], options: [item] }
+      groupedObject[groupName] = { label: groupName, options: [item] }
     }
   })
 
@@ -29,6 +32,7 @@ export const groupingOptions = (data: any[], createListItem: any, groupField: st
   groupedItems.sort((a: GroupedOption, b: GroupedOption) => a.label.localeCompare(b.label));
   return groupedItems;
 };
+
 
 export const join = (first: any, second: any, create: any) => 
   first.map((fItem: any) => second.find((sItem: any) => create(fItem, sItem)) || fItem);
