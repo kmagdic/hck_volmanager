@@ -6,6 +6,7 @@ import { request } from '../utils/requests';
 import { format } from 'date-fns';
 
 interface Row {
+  id: number,
   firstName: string;
   lastName: string;
   dob: string;
@@ -36,6 +37,10 @@ export default function VolunteersList() {
           setState((prevState) => {
             const data = [...prevState.data];
             rowData.backgroundCheckNeeded = !rowData.backgroundCheckNeeded;
+            request('volunteers/' + rowData.id, (response: any) => {
+              console.log("response:", response);
+            }, "PUT", rowData);
+            //console.log("rowData:", rowData);
             data[data.indexOf(rowData)] = rowData;
             return { ...prevState, data };
           });
@@ -53,13 +58,16 @@ export default function VolunteersList() {
         <CustomSelect 
           status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
           onChange={(status: any) => {
-            //console.log("rowData:", rowData);
+            console.log("onChange bgStatus rowData:", rowData);
             //status = status === "null" ? null : status === "true";
             console.log("new status:", status, typeof status);
             setState((prevState) => {
               const data = [...prevState.data];
               rowData.backgroundCheckPassed = status;
               //console.log("rowData:", rowData);
+              request('volunteers/' + rowData.id, (response: any) => {
+                console.log("response:", response);
+              }, "PUT", rowData);
               data[data.indexOf(rowData)] = rowData;
               return { ...prevState, data };
             });
