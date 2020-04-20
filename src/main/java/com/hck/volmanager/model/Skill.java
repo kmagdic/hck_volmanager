@@ -23,7 +23,7 @@ public class Skill {
     private String name;
 
     @Column(name = "ordernum")
-    private short orderNum;
+    private Short orderNum;
 
     @ManyToMany(mappedBy = "skills")
     private Set<Volunteer> volunteers = new HashSet<>();
@@ -54,11 +54,11 @@ public class Skill {
         this.name = name;
     }
 
-    public short getOrderNum() {
+    public Short getOrderNum() {
         return orderNum;
     }
 
-    public void setOrderNum(short orderNum) {
+    public void setOrderNum(Short orderNum) {
         this.orderNum = orderNum;
     }
 }
