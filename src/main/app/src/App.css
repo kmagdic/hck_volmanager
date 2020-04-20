@@ -1,4 +1,4 @@
-.container {
+.ctnRegister {
   min-width: 300px;
   max-width: 500px;
   awidth: 400px;
@@ -74,15 +74,8 @@ label.MuiFormControlLabel-labelPlacementTop {
   margin-left: 1em;
 }
 
-@media (max-width: 576px) {
-  .container {
-    width: 100%;
-    max-width: 100%;
-  }
-  .ctnSubmit {
-    padding: 0 1rem;
-    amax-width: 100%;
-  }
+.ctnApproval {
+  max-width: 800px;
 }
 
 .approval {
@@ -99,7 +92,7 @@ label.MuiFormControlLabel-labelPlacementTop {
 .approval .header {
   padding: 1em;
   color: white;
-  background-color: green;
+  background-color: #0E8906;
 }
 
 .approval .header a {
@@ -133,6 +126,21 @@ label.MuiFormControlLabel-labelPlacementTop {
 
 .approval-radiobuttons .MuiFormControlLabel-label {
   user-select: none;
+}
+
+.ctnConfirmation {
+  max-width: 800px;
+}
+
+@media (max-width: 576px) {
+  .ctnRegister, ctnApproval, ctnConfirmation {
+    width: 100%;
+    max-width: 100%;
+  }
+  .ctnSubmit {
+    padding: 0 1rem;
+    amax-width: 100%;
+  }
 }
 
 .App {

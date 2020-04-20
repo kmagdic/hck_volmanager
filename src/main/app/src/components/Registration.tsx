@@ -193,7 +193,7 @@ function Registration() {
     <div className="App">
     <header className="App-header">
 
-    <div className="container">
+    <div className="ctnRegister">
       <form onSubmit={onSubmit} action="http://localhost:8080/api/v1/volunteers" target="_self" autoComplete="off">
       <fieldset className="fieldset">
         <legend>Osobni podaci volontera</legend>
