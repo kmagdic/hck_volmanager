@@ -1,5 +1,88 @@
-.App {
+.container {
+  min-width: 300px;
+  max-width: 500px;
+  awidth: 400px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.textField {
+  margin-bottom: 1em !important;
+  width: 100%;
+  margin: 0 !important;
+  aalign-items: flex-start;
+}
+
+label.MuiFormControlLabel-labelPlacementTop {
+  align-items: flex-start;
+  margin-bottom: 1rem !important;
+}
+
+.rdt .MuiFormControl-root.MuiTextField-root.form-control, .fullWidth {
+  width: 100%;
+  amargin-bottom: 1rem;
+}
+
+.rdt-datepicker {
+  position: relative;
+  font-size: 1rem;
+}
+
+.criminalRecord {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.fieldset {
+  display: flex;
+  border-color: rgba(0, 0, 0, 0.15);
+  padding-top: 0.8em;
+  padding-bottom: 0.5em;
+  margin-top: 1em;
+}
+
+.fieldset > legend {
+  font-style: italic;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.fieldset-info {
+  margin-bottom: 1.5em;
+}
+
+.law {
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0 0.5em;
+}
+
+.ctnSubmit {
+  display: flex;
+  margin-top: 1em !important;
   text-align: center;
+  amax-width: 15rem;
+  padding: 0 2rem;
+}
+
+.ctnSubmit .btnSumbit {
+  width: 100%;
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+  }
+  .ctnSubmit {
+    padding: 0 1rem;
+    amax-width: 100%;
+  }
+}
+
+.App {
+  atext-align: center;
 }
 
 .App-logo {
@@ -14,14 +97,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  abackground-color: #bbb;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  afont-size: calc(10px + 2vmin);
+  acolor: white;
 }
 
 .App-link {

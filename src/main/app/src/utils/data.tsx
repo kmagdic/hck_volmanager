@@ -1,3 +1,97 @@
+export interface DataItem { 
+  id: number, 
+  name: string, 
+};
+
+export interface Place { 
+  id: number, 
+  name: string, 
+  county: string, 
+  postCode: number, 
+};
+
+export interface Skill { 
+  id: number, 
+  name: string, 
+  group: string, 
+};
+
+export const genders = [
+  { id: "M", name: "muški" },
+  { id: "F", name: "ženski" },
+  { id: "A", name: "ne želim se izjasniti" }
+];
+export const places = [
+  { id: 1, name: "Place A", county: 1 },
+  { id: 2, name: "Place B", county: 2 },
+  { id: 3, name: "Place C", county: 3 },
+  { id: 4, name: "Place D", county: 1 },
+];
+export const counties = [
+  { id: 1, name: "County A" },
+  { id: 2, name: "County B" },
+  { id: 3, name: "County C" },
+];
+export const qualificationsData: DataItem[] = [
+  { id: 1, name: "Qualification A" },
+  { id: 2, name: "Qualification B" },
+  { id: 3, name: "Qualification C" },
+  { id: 4, name: "Qualification D" },
+  { id: 5, name: "Qualification E" },
+  { id: 6, name: "Qualification F" },
+  { id: 7, name: "Qualification G" },
+  { id: 8, name: "Qualification H" },
+];
+export const experiencesData: DataItem[] = [
+  { id: 1, name: "Experience A" },
+  { id: 2, name: "Experience B" },
+  { id: 3, name: "Experience C" },
+  { id: 4, name: "Experience D" },
+  { id: 5, name: "Experience E" },
+  { id: 6, name: "Experience F" },
+  { id: 7, name: "Experience G" },
+  { id: 8, name: "Experience H" },
+];
+export const servicesData: DataItem[] = [
+  { id: 1, name: "Service A" },
+  { id: 2, name: "Service B" },
+  { id: 3, name: "Service C" },
+  { id: 4, name: "Service D" },
+  { id: 5, name: "Service E" },
+  { id: 6, name: "Service F" },
+  { id: 7, name: "Service G" },
+  { id: 8, name: "Service H" },
+];
+export const skillsData: DataItem[] = [
+  { id: 1, name: "Skill A" },
+  { id: 2, name: "Skill B" },
+  { id: 3, name: "Skill C" },
+  { id: 4, name: "Skill D" },
+  { id: 5, name: "Skill E" },
+  { id: 6, name: "Skill F" },
+  { id: 7, name: "Skill G" },
+  { id: 8, name: "Skill H" },
+];
+export const skillsData2: Skill[] = [
+  { id: 1, name: "Skill A", group: "psycho" },
+  { id: 2, name: "Skill B", group: "psycho" },
+  { id: 3, name: "Skill C", group: "tech" },
+  { id: 4, name: "Skill D", group: "tech" },
+  { id: 5, name: "Skill E", group: "psycho" },
+  { id: 6, name: "Skill F", group: "physical" },
+  { id: 7, name: "Skill G", group: "physical" },
+  { id: 8, name: "Skill H", group: "psycho" },
+];
+export const placesData0: Place[] = [
+	{ id: 1, name: "Varaždin", county: "Varaždinska županija", postCode: 42000 },
+	{ id: 2, name: "Ivanec", county: "Varaždinska županija", postCode: 42000 },
+	{ id: 3, name: "Ludbreg", county: "Varaždinska županija", postCode: 42000 },
+	{ id: 21, name: "Zagreb", county: "Zagrebačka županija", postCode: 10000 },
+	{ id: 31, name: "Bjelovar", county: "Bjelovarska županija", postCode: 43000 },
+	{ id: 41, name: "Zadar", county: "Zadarska županija", postCode: 21000 },
+	{ id: 42, name: "Benkovac", county: "Zadarska županija", postCode: 21000 },
+	{ id: 43, name: "Pakoštane", county: "Zadarska županija", postCode: 21000 },
+];
 export const placesData = [
   {
       "id": 11,

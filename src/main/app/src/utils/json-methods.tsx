@@ -8,6 +8,8 @@ export interface GroupedOption {
   options: ListItem[]
 };
 
+export const emptyGroup: GroupedOption[] = [];
+
 export const groupingOptions = (data: any[], createListItem: any, groupField: string): GroupedOption[] => {
   const groupedObject: { [key: string]: GroupedOption } = {};
   data.forEach(option => {

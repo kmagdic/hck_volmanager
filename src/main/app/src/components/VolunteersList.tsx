@@ -17,7 +17,7 @@ interface TableState {
   data: Row[];
 }
 
-export default function MaterialTableDemo() {
+export default function VolunteersList() {
   const [state, setState] = React.useState<TableState>({
     columns: [
       { title: 'Ime', field: 'firstName' },
