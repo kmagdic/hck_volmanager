@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 import logo from '../assets/volonteri.jpg';
 
 function Approval() {
+  const [approved, setApproved] = useState("null");
+  const onChange = (event: any) => {
+    const approvedSelected: any = (event.target as HTMLInputElement).value;
+    setApproved(approvedSelected);
+  }
+
   return (
     <div className="App">
     <header className="App-header">
@@ -51,18 +57,15 @@ Voditelj obrade Vaših osobnih podataka je društvo Crvenog križa koje će Vas 
       <div>
         <RadioGroup aria-label="approval" name="approval">
           <div className="approval-radiobuttons">
-            <FormControlLabel value="true" control={<Radio required color="primary" />} label="dajem suglasnost"/>
-            <FormControlLabel value="false" control={<Radio required color="primary" />} label="ne dajem suglasnost"/>
+            <FormControlLabel value="true" control={<Radio onChange={onChange} required color="primary" />} label="dajem suglasnost"/>
+            <FormControlLabel value="false" control={<Radio onChange={onChange} required color="primary" />} label="ne dajem suglasnost"/>
           </div>
         </RadioGroup>
       </div>
       <div className="buttons">
         <div className="btnContainer">
-          <Link to="/registration">     
-            <Button className="btn" variant="contained" color="primary">Dalje</Button>
-          </Link>
-          <Link to="/confirmation">     
-            <Button className="btn" variant="contained" color="primary">Dalje</Button>
+          <Link to={approved === "true" ? "/registration" : "/confirmation" }>
+            <Button disabled={approved === "null"} className="btn" variant="contained" color="primary">Dalje</Button>
           </Link>
         </div>
         <div className="btnContainer">

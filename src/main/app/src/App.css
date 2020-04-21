@@ -114,6 +114,10 @@ label.MuiFormControlLabel-labelPlacementTop {
   padding: 0.5em;
 }
 
+.approval .btnContainer a {
+  text-decoration: none;
+}
+
 .approval .btn {
   width: 200px;
 }
