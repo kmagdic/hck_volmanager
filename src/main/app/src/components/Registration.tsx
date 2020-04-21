@@ -9,6 +9,7 @@ import { request } from "../utils/requests"
 import { ListItem, GroupedOption, groupingOptions, join, emptyGroup } from "../utils/json-methods"
 import { Place, Skill, genders, placesData, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
+import { Link, useHistory } from "react-router-dom";
 
 /*
 DateTime.d.ts - at line 101 add next line>
@@ -46,6 +47,8 @@ function Registration() {
   //const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
   const [groupedPlaces, setGroupedPlaces] = useState(emptyGroup);
   const [groupedSkills, setGroupedSkills] = useState(emptyGroup);
+  const history = useHistory();
+
   //setGroupedPlaces(newGroupedPlaces);
 
   //const newPlaces = join(places, counties, (p: any, c: any) => (p.county === c.id) ? { ...p, countyName: c.name } : null );
@@ -136,6 +139,7 @@ function Registration() {
     request('volunteers', (data: any) => {
         console.log("response:", data);
       }, "POST", data);
+    history.push("/confirmation");
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
@@ -295,7 +299,9 @@ function Registration() {
       </RadioGroup>
 
       <div className="ctnSubmit">
-        <Button className="btnSumbit" variant="contained" type="submit" color="primary">Potvrdi</Button>
+          <Button className="btnSumbit" fullWidth variant="contained" type="submit" color="primary">Potvrdi</Button>
+        <Link to="/confirmation">
+        </Link>
       </div>
       </form>
     </div>
