@@ -85,7 +85,7 @@ function Registration() {
       props.onChange({target: {value: ''}});
     };
     return (
-        <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />
+      <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />
     );
   };
 
@@ -139,7 +139,7 @@ function Registration() {
     request('volunteers', (data: any) => {
         console.log("response:", data);
       }, "POST", data);
-    history.push("/confirmation");
+    // history.push("/confirmation");
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
@@ -207,7 +207,7 @@ function Registration() {
           <Datetime viewMode="years" viewDate={new Date("1990-1-1")} dateFormat={"DD.MM.YYYY"} closeOnSelect={true} className="textField rdt-datepicker" renderInput={renderInput} timeFormat={false} locale="hr-HR" />
           }  label="Datum rođenja:" className="textField" labelPlacement="top"
         />
-        <FormControlLabel control={ <TextField id="oib" type="number" className="textField" variant="outlined" />} label="OIB:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="oib" inputProps={{ minlength: 11, maxlength: 11 }} className="textField" variant="outlined" />} label="OIB:" className="textField" labelPlacement="top" />
         <FormControlLabel control={
             <TextField id="gender" name="gender" className="textField" variant="outlined" select>
               {genders.map((option: any) => (
