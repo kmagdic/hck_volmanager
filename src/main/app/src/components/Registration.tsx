@@ -10,6 +10,7 @@ import { ListItem, GroupedOption, groupingOptions, join, emptyGroup } from "../u
 import { Place, Skill, genders, placesData, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
+import { calcOIB, checkOIB } from "../utils/oib";
 
 /*
 DateTime.d.ts - at line 101 add next line>
@@ -100,6 +101,17 @@ function Registration() {
   var placeOfLiving: number | null;
   var placeOfVolunteering: number;
 
+  const validatingFields = (data: any) => {
+    if (!checkOIB(data.oib)) {
+      console.error(`OIB ${data.oib} is not valid`);
+      return;
+    }
+    if (!data.gender) {
+      console.error(`gender is not valid`);
+      return;
+    }
+  }
+
   const onSubmit = (event: any) => {
     event.preventDefault();
     console.log("fields:", event.target.elements);
@@ -136,6 +148,9 @@ function Registration() {
       criminalRecord: event.target.criminalRecord.value,
     };
     console.log("form data:", data);
+    if (!validatingFields(data)) {
+      return;
+    }
     request('volunteers', (data: any) => {
         console.log("response:", data);
       }, "POST", data);
