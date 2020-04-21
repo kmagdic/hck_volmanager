@@ -3,6 +3,7 @@ import React from "react";
 function Law() {
   return (
     <div className="law">
+    <p>VOLONTIRANJE S RANJIVIM SKUPINAMA</p>
     <p>Temeljem čl. 10. Zakona o volonterstvu, a s obzirom na skupine korisnika s kojima ćete potencijalno volontirati (djeca, osobe s invaliditetom, starije i nemoćne osobe, bolesne osobe ili osobe koje su potpuno ili djelomice lišene poslovne sposobnosti), pod kaznenom i materijalnom odgovornošću izjavite spadate li u sljedeće skupine:</p>
     <p>1. osobe kojima traje sigurnosna mjera obveznog psihijatrijskog liječenja, obveznog liječenja od ovisnosti, obveznog psihosocijalnog tretmana, zabrane obavljanja određene dužnosti ili djelatnosti koja je u vezi s djelatnosti volontiranja, zabrane približavanja ili udaljenja iz zajedničkog kućanstva,</p>
     <p>2. osobe kojima traje sigurnosna mjera zabrane obavljanja zvanja, djelatnosti ili dužnosti koja je u vezi s djelatnosti volontiranja izrečena sukladno tada važećim odredbama Kaznenog zakona, </p>

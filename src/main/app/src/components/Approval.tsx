@@ -69,7 +69,7 @@ Voditelj obrade Vaših osobnih podataka je društvo Crvenog križa koje će Vas 
           </Link>
         </div>
         <div className="btnContainer">
-          <Link to="/list">
+          <Link to="/login">
             <Button className="btn" variant="contained" color="primary">Login</Button>
           </Link>
         </div>

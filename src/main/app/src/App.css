@@ -6,6 +6,10 @@
   margin-bottom: 1em;
 }
 
+.no-select {
+  user-select: none;
+}
+
 .textField {
   margin-bottom: 1em !important;
   width: 100%;
@@ -13,9 +17,13 @@
   aalign-items: flex-start;
 }
 
+.MuiOutlinedInput-input, .MuiOutlinedInput-multiline {
+  padding: 0.6rem !important;
+}
+
 label.MuiFormControlLabel-labelPlacementTop {
   align-items: flex-start;
-  margin-bottom: 1rem !important;
+  margin-bottom: 0.8rem !important;
 }
 
 .rdt .MuiFormControl-root.MuiTextField-root.form-control, .fullWidth {
@@ -119,7 +127,7 @@ label.MuiFormControlLabel-labelPlacementTop {
 }
 
 .approval .btn {
-  width: 200px;
+  width: 300px;
 }
 
 .approval-radiobuttons {
