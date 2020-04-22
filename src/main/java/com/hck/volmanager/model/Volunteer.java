@@ -1,9 +1,9 @@
 package com.hck.volmanager.model;
 
-import org.hibernate.annotations.ColumnDefault;
+import com.hck.volmanager.controller.VolunteerController;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 	id bigserial,
@@ -49,6 +50,7 @@ import java.util.Set;
 @Table(name = "volunteers")
 public class Volunteer {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = LoggerFactory.getLogger(VolunteerController.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -155,8 +157,44 @@ public class Volunteer {
         this.qualifications = categories;
     }
 
+/*
     @OneToMany(mappedBy="volunteer")
     private Set<CustomQualification> customQualifications;
+*/
+
+    @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    //@OneToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name = "vcustomqualifications", joinColumns = {
+//            @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, updatable = false) })
+    private Set<CustomQualification> customQualifications;
+
+    //@OneToOne(mappedBy="volunteer")
+    /*
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "vcustomqualifications", joinColumns = {
+            @JoinColumn(name = "volunteerid", referencedColumnName = "volunteerid", nullable = false, updatable = false)
+            //@JoinColumn(name = "item", referencedColumnName = "item", nullable = false, updatable = false)
+    })
+    private Set<CustomQualification> customQualifications;
+    */
+
+    public Set<CustomQualification> getCustomQualifications() {
+        return customQualifications;
+    }
+
+    public void setCustomQualifications(Set<CustomQualification> customQualifications) {
+        log.info("***** setCustomQualifications: ");
+        AtomicReference<Short> i = new AtomicReference<>((short) 0);
+        customQualifications.forEach((value) -> {
+            System.out.println(value);
+            value.setVolunteer(this);
+            //i++;
+            i.getAndSet(new Short((short) (i.get() + 1)));
+            value.setItem(i.get());
+            System.out.println(value);
+        });
+        this.customQualifications = customQualifications;
+    }
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -423,6 +461,7 @@ public class Volunteer {
     }
      */
 
+    /*
     public void addCustomQualification(CustomQualification customQualification) {
         this.customQualifications.add(customQualification);
         customQualification.setVolunteer(this);
@@ -432,6 +471,7 @@ public class Volunteer {
         this.customQualifications.remove(customQualification);
         customQualification.setVolunteer(null);
     }
+    */
 
     // TODO: add CustomSkill, CustomExperience, CustomService
     // TODO: check needs for setters of attributes: dateTimeEntry and datetimeLastUpdate

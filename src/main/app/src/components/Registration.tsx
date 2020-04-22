@@ -11,6 +11,7 @@ import { Place, Skill, genders, placesData, qualificationsData, experiencesData,
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
 import { calcOIB, checkOIB } from "../utils/oib";
+import { parse, toDate } from "date-fns";
 
 /*
 DateTime.d.ts - at line 101 add next line>
@@ -101,15 +102,38 @@ function Registration() {
   var placeOfLiving: number | null;
   var placeOfVolunteering: number;
 
-  const validatingFields = (data: any) => {
+  const validatingFields = (data: any): boolean => {
     if (!checkOIB(data.oib)) {
       console.error(`OIB ${data.oib} is not valid`);
-      return;
+      return false;
     }
     if (!data.gender) {
       console.error(`gender is not valid`);
-      return;
+      return false;
     }
+    const strDate = data.dob.replace(/ /gi, "");
+    var dDate = parse(strDate, "dd.MM.yyyy", new Date());
+    console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
+    if (dDate.toString() == "Invalid Date") {
+      // special char
+      const sc = strDate.split('').find((c: any) => !(c > -1));
+      console.log(`special char "${sc}"`);
+      const dateParts = strDate.split(sc);
+      if (dateParts.length >= 3) {
+        const newDate = dateParts.filter((p: string) => p.length > 0).join(sc);
+        if (dateParts[0].length == 4) {
+          dDate = parse(newDate, `yyyy${sc}MM${sc}dd`, new Date());
+        } else {
+          dDate = parse(newDate, `dd${sc}MM${sc}yyyy`, new Date());
+        }
+      }
+      if (dDate.toString() == "Invalid Date") {
+        console.error(dDate);
+        return false;
+      }
+    }
+    data.dob = new Date(dDate.getTime() - dDate.getTimezoneOffset() * 60000).toISOString().substr(0, 10); // fix time-zone and return only date part of datetime
+    return true;
   }
 
   const onSubmit = (event: any) => {
@@ -161,11 +185,12 @@ function Registration() {
     list.length = 0;
     custom.length = 0;
     if (values) {
-      values.forEach((value: any) => {
-        if (value["__isNew__"]) {
-          custom.push({ name: value.label});
+      const aValues = Array.isArray(values) ? values : [values];
+      aValues.forEach((item: any) => {
+        if (item["__isNew__"]) {
+          custom.push({ name: item.label});
         } else {
-          list.push({ id: value.id });
+          list.push({ id: item.value });
         }
       });
     }
