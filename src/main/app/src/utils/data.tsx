@@ -13,13 +13,14 @@ export interface Place {
 export interface SkillGroup {
 	id: number,
 	name: string,
-	orderNum: number
+	orderNum?: number
 }
 
 export interface Skill { 
   id: number, 
   name: string, 
-  skillGroup: SkillGroup
+	skillGroup: SkillGroup,
+	orderNum?: number
 };
 
 export const genders = [

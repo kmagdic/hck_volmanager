@@ -6,22 +6,19 @@ import Datetime from 'react-datetime';
 import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
-import { ListItem, GroupedOption, groupingOptions, join, emptyGroup } from "../utils/json-methods"
+import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, CompareListItemsByLabel, CompareGroupedOptionsByLabel, toSafeNumber } from "../utils/json-methods"
 import { Place, Skill, genders, placesData, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { zhCN } from '@material-ui/core/locale';
+
 /*
 DateTime.d.ts - at line 101 add next line>
 renderInput?: any;
 */
 
 require('moment/locale/hr');
-
-const theme = createMuiTheme({}, zhCN);
 
 function Registration() {
   const groupStyles: React.CSSProperties = {
@@ -105,14 +102,50 @@ function Registration() {
     // fetching places
     request('places', (placesData: any) => {
       console.log("placesData:", placesData);
-      const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
+      const places = placesData.map((place: any) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`, group: place.county }));
+      const sortedPlaces = sortData(places, ["group", "label"]);
+
+      /*
+      const newGroupedPlaces = groupingOptions(
+        placesData,
+        (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}),
+        "county",
+        CompareListItemsByLabel,
+        CompareGroupedOptionsByLabel);
+      */
+      const newGroupedPlaces = groupingOptions(sortedPlaces);
       setGroupedPlaces(newGroupedPlaces);
     });
 
     // fatching skills
     request('skills', (skillsData: any) => {
       console.log("skillsData:", skillsData);
-      const newGroupedSkills = groupingOptions(skillsData, (skill: Skill) => ({ value: skill.id, label: skill.name, group: skill.skillGroup.name }), "skillGroup.name");
+      const skills = skillsData.map((skill: any) => ({ value: skill.id, label: skill.name, group: skill.skillGroup.name, orderNum: skill.orderNum, groupOrderNum: skill.skillGroup.orderNum }));
+      sortData(skills, [
+          (a: any, b: any) => toSafeNumber(a.groupOrderNum) - toSafeNumber(b.groupOrderNum),
+          "group",
+          (a: any, b: any) => {
+            var cmp = toSafeNumber(a.orderNum) - toSafeNumber(b.orderNum)
+            console.log("comparing", a, b, "with result", cmp);
+            if (cmp === 0) {
+              const groupAName = a.group.toLocaleLowerCase();
+              const groupBName = b.group.toLocaleLowerCase();
+              const indexA = groupAName.indexOf(a.label.toLocaleLowerCase());
+              const indexB = groupBName.indexOf(b.label.toLocaleLowerCase());
+              if ((indexA === -1) && (indexB !== -1)) {
+                cmp = 1;  
+              }
+              if ((indexA !== -1) && (indexB === -1)) {
+                cmp = -1;
+              } else {
+                cmp = a.label.localeCompare(b.label);
+              }
+              console.log("correcting to", cmp);
+            }
+            return cmp;
+            }
+        ]);
+      const newGroupedSkills = groupingOptions(skillsData);
       setGroupedSkills(newGroupedSkills);
     });
     console.log("after fetching...");
@@ -366,7 +399,6 @@ function Registration() {
 
   return (
     <div className="App">
-      <ThemeProvider theme={theme}>
     <header className="App-header">
 
     <div className="ctnRegister">
@@ -493,7 +525,6 @@ function Registration() {
     </div>
 
     </header>
-    </ThemeProvider>
   </div>
   );
 }
