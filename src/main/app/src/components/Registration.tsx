@@ -76,6 +76,10 @@ function Registration() {
   const [errorPlaceOfVolunteering, setErrorPlaceOfVolunteering] = React.useState(false);
   const [helperTextPlaceOfVolunteering, setHelperTextPlaceOfVolunteering] = React.useState('');
 
+  // qualificationList
+  const [qualificationList, setQualificationList] = React.useState([]);
+  const [customQualificationList, setCustomQualificationList] = React.useState([]);
+
   const history = useHistory();
 
   //setGroupedPlaces(newGroupedPlaces);
@@ -118,8 +122,8 @@ function Registration() {
     );
   };
 
-  const qualificationList: any = [];
-  const customQualificationList: any = [];
+  //const qualificationList: any = [];
+  //const customQualificationList: any = [];
   const experienceList: any = [];
   const customExperienceList: any = [];
   const serviceList: any = [];
@@ -132,8 +136,8 @@ function Registration() {
   //alert("gender:" + gender);
 
   const validateOIB = (target: any, oib: string, focus: boolean = false): boolean => {
-    console.log("validateOIB:", target);
-    console.log("validating:", oib);
+    // console.log("validateOIB:", target);
+    // console.log("validating:", oib);
     if (!checkOIB(oib)) {
       console.error(`OIB "${oib}" is not valid`);
       setHelperTextOIB('OIB je neispravan');
@@ -278,8 +282,8 @@ function Registration() {
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
-    list.length = 0;
-    custom.length = 0;
+    //list.length = 0;
+    //custom.length = 0;
     if (values) {
       const aValues = Array.isArray(values) ? values : [values];
       aValues.forEach((item: any) => {
@@ -301,8 +305,12 @@ function Registration() {
   }
 
   const qualificationsOnChange = (values: any, action: any) => {
-    console.log("on change:", values);
-    getValues(values, qualificationList, customQualificationList);
+    console.log("qualifications on change:", values);
+    const lQualificationList: any = [];
+    const lCustomQualificationList: any = [];
+    getValues(values, lQualificationList, lCustomQualificationList);
+    setQualificationList(lQualificationList);
+    setCustomQualificationList(lCustomQualificationList);
   }
 
   const experiencesOnChange = (values: any, action: any) => {
