@@ -10,15 +10,18 @@ import { ListItem, GroupedOption, groupingOptions, join, emptyGroup } from "../u
 import { Place, Skill, genders, placesData, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
-import { calcOIB, checkOIB } from "../utils/oib";
-import { parse, toDate } from "date-fns";
-
+import { checkOIB } from "../utils/oib";
+import { parse } from "date-fns";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { zhCN } from '@material-ui/core/locale';
 /*
 DateTime.d.ts - at line 101 add next line>
 renderInput?: any;
 */
 
 require('moment/locale/hr');
+
+const theme = createMuiTheme({}, zhCN);
 
 function Registration() {
   const groupStyles: React.CSSProperties = {
@@ -49,6 +52,12 @@ function Registration() {
   //const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
   const [groupedPlaces, setGroupedPlaces] = useState(emptyGroup);
   const [groupedSkills, setGroupedSkills] = useState(emptyGroup);
+  // OIB
+  const [errorOIB, setErrorOIB] = React.useState(false);
+  const [helperTextOIB, setHelperTextOIB] = React.useState('');
+  // Gender
+  const [errorGender, setErrorGender] = React.useState(false);
+  const [helperTextGender, setHelperTextGender] = React.useState('');
   const history = useHistory();
 
   //setGroupedPlaces(newGroupedPlaces);
@@ -99,18 +108,31 @@ function Registration() {
   const customServiceList: any = [];
   const skillList: any = [];
   const customSkillList: any = [];
-  var placeOfLiving: number | null;
+  var gender: string;
+  var placeOfLiving: number;
   var placeOfVolunteering: number;
 
-  const validatingFields = (data: any): boolean => {
+  const validatingFields = (data: any, form: any): boolean => {
     if (!checkOIB(data.oib)) {
       console.error(`OIB ${data.oib} is not valid`);
+      setHelperTextOIB(`OIB je neispravan`);
+      setErrorOIB(true);
+      console.error("form :", form.target.oib);
+      form.target.oib.focus();
       return false;
     }
+    setHelperTextOIB('');
+    setErrorOIB(false);
+
     if (!data.gender) {
       console.error(`gender is not valid`);
+      setHelperTextGender(`odaberite spol`);
+      setErrorGender(true);
       return false;
     }
+    setHelperTextGender('');
+    setErrorGender(false);
+
     const strDate = data.dob.replace(/ /gi, "");
     var dDate = parse(strDate, "dd.MM.yyyy", new Date());
     console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
@@ -144,7 +166,7 @@ function Registration() {
       lastName: event.target.lastName.value,
       dob: event.target.dob.value,
       oib: event.target.oib.value,
-      gender: event.target.gender.value,
+      gender,
       address: event.target.address.value,
       placeOfLiving,
       placeOfVolunteering,
@@ -172,7 +194,7 @@ function Registration() {
       criminalRecord: event.target.criminalRecord.value,
     };
     console.log("form data:", data);
-    if (!validatingFields(data)) {
+    if (!validatingFields(data, event)) {
       return;
     }
     request('volunteers', (data: any) => {
@@ -196,6 +218,11 @@ function Registration() {
     }
   };
 
+  const genderOnChange = (newGender: any, action: any) => {
+    console.log("on change:", newGender, action);
+    gender = newGender ? newGender.value : null;
+  }
+
   const qualificationsOnChange = (values: any, action: any) => {
     console.log("on change:", values);
     getValues(values, qualificationList, customQualificationList);
@@ -218,7 +245,7 @@ function Registration() {
 
   const placeOfLivingOnChange = (place: any, action: any) => {
     console.log("on change:", place, action);
-    placeOfLiving = place ? place.value : null;;
+    placeOfLiving = place ? place.value : null;
   }
 
   const placeOfVolunteeringOnChange = (place: any, action: any) => {
@@ -235,54 +262,52 @@ function Registration() {
 
   return (
     <div className="App">
+      <ThemeProvider theme={theme}>
     <header className="App-header">
 
     <div className="ctnRegister">
       <form onSubmit={onSubmit} action="http://localhost:8080/api/v1/volunteers" target="_self" autoComplete="off">
       <fieldset className="fieldset">
         <legend>Osobni podaci volontera</legend>
-        <FormControlLabel control={ <TextField id="firstName" className="textField" variant="outlined" /> }  label="Ime:" className="textField" labelPlacement="top" />
-        <FormControlLabel control={ <TextField id="lastName" className="textField" variant="outlined" /> }  label="Prezime:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="firstName" required={true} className="textField" variant="outlined" /> } label="Ime*:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="lastName" required={true} className="textField" variant="outlined" /> } label="Prezime*:" className="textField" labelPlacement="top" />
         <FormControlLabel id="dob" control={
           <Datetime viewMode="years" viewDate={new Date("1990-1-1")} dateFormat={"DD.MM.YYYY"} closeOnSelect={true} className="textField rdt-datepicker" renderInput={renderInput} timeFormat={false} locale="hr-HR" />
-          }  label="Datum rođenja:" className="textField" labelPlacement="top"
+          }  label="Datum rođenja*:" className="textField" labelPlacement="top"
         />
-        <FormControlLabel control={ <TextField id="oib" inputProps={{ minlength: 11, maxlength: 11 }} className="textField" variant="outlined" />} label="OIB:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="oib" error={errorOIB} required={true} inputProps={{ minLength: 11, maxLength: 11 }} className="textField" variant="outlined" helperText={helperTextOIB} />} label="OIB*:" className="textField" labelPlacement="top" />
         <FormControlLabel control={
-            <TextField id="gender" name="gender" className="textField" variant="outlined" select>
-              {genders.map((option: any) => (
-                <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
-              ))}
-            </TextField>
-          } label="Spol:" className="textField" labelPlacement="top"
+            <Select id="gender" className="fullWidth" error={errorGender} required={true} placeholder="Odaberi..." onChange={genderOnChange} options={genders} noOptionsMessage={noOptionsMessage} helperText={helperTextGender}
+            />
+          } label="Spol*:" className="textField" labelPlacement="top"
         />
 
-        <FormControlLabel control={ <TextField id="address" className="textField" variant="outlined" />} label="Adresa:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="address" required={true} className="textField" variant="outlined" />} label="Adresa*:" className="textField" labelPlacement="top" />
         
         <FormControlLabel id="placeOfLiving" name="placeOfLiving" control={ 
-            <Select className="fullWidth" placeholder="Odaberi..." onChange={placeOfLivingOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
+            <Select className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfLivingOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
             />
           }
-          label="Mjesto prebivališta:" className="textField" labelPlacement="top"
+          label="Mjesto prebivališta*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel id="placeOfLiving" name="placeOfLiving" control={ 
-            <Select className="fullWidth" placeholder="Odaberi..." onChange={placeOfVolunteeringOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
+            <Select className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfVolunteeringOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
             />
           }
-          label="Mjesto u kojem želite volontirati:" className="textField" labelPlacement="top"
+          label="Mjesto u kojem želite volontirati*:" className="textField" labelPlacement="top"
         />
 
-        <FormControlLabel control={ <TextField id="phone" className="textField" variant="outlined" />} label="Broj telefona/mobitela:" className="textField" labelPlacement="top" />
-        <FormControlLabel control={ <TextField id="email" className="textField" variant="outlined" type="email" />} label="Email adresa:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="phone" required={true} className="textField" variant="outlined" />} label="Broj telefona/mobitela*:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="email" required={true} className="textField" variant="outlined" type="email" />} label="Email adresa*:" className="textField" labelPlacement="top" />
         <FormControlLabel
           control={
-            <TextField id="iceName" className="textField" variant="outlined" 
+            <TextField id="iceName" required={true} className="textField" variant="outlined" 
               helperText="Molimo unesite ime i prezime osobe koje možemo kontaktirati u slučaju nužde, kao i broj telefona te osobe."
             />
-          } label="Kontakt u slučaju nužde (član obitelji, prijatelj, sl.):" className="textField" labelPlacement="top"
+          } label="Kontakt u slučaju nužde (član obitelji, prijatelj, sl.)*:" className="textField" labelPlacement="top"
         />
-        <FormControlLabel control={ <TextField id="icePhone" className="textField" variant="outlined" /> } className="textField" label="Broj telefona kontakta u nuždi:" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="icePhone" required={true} className="textField" variant="outlined" /> } className="textField" label="Broj telefona kontakta u nuždi*:" labelPlacement="top" />
       </fieldset>
       <fieldset className="fieldset">
         <legend>Važne informacije</legend>
@@ -298,15 +323,15 @@ function Registration() {
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
         <FormControlLabel id="qualifications" name="qualifications" control={ <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualifications} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
-          label="Zanimanje/profesionalne kvalifikacije:" className="textField" labelPlacement="top"
+          label="Zanimanje/profesionalne kvalifikacije*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experiences} isMulti /> }
-          label="Iskustva:" className="textField" labelPlacement="top"
+          label="Iskustva*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={services} isMulti /> }
-          label="Dodatne usluge:" className="textField" labelPlacement="top"
+          label="Dodatne usluge*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={
@@ -314,17 +339,17 @@ function Registration() {
               isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} isMulti
             />
           }
-          label="Dodatne vještine:" className="textField" labelPlacement="top"
+          label="Dodatne vještine*:" className="textField" labelPlacement="top"
         />
 
-        <FormControlLabel control={ <TextField id="healthDetails" className="textField" variant="outlined" multiline /> } label="Zdravstveni detalji:" className="textField" labelPlacement="top" />
-        <FormControlLabel control={ <TextField id="availabilityHoursWeekly" className="textField" variant="outlined" type="number" /> } label="Koliko ste sati tjedno izdvojiti na volontiranje:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="healthDetails" required={true} className="textField" variant="outlined" multiline /> } label="Zdravstveni detalji*:" className="textField" labelPlacement="top" />
+        <FormControlLabel control={ <TextField id="availabilityHoursWeekly" required={true} className="textField" variant="outlined" type="number" /> } label="Koliko ste sati tjedno izdvojiti na volontiranje*:" className="textField" labelPlacement="top" />
         <FormControlLabel control={
-            <TextField id="availabilityDetails" className="textField" variant="outlined" multiline
+            <TextField id="availabilityDetails" required={true} className="textField" variant="outlined" multiline
               helperText="Navedite kada ste dostupni za volontiranje (što preciznije - koji dani u tjednu i u kojem vremenskom razdoblju)"
             /> 
           } 
-          label="Ostali detalji o vašoj raspoloživosti za volontiranje:" className="textField" labelPlacement="top"
+          label="Ostali detalji o vašoj raspoloživosti za volontiranje*:" className="textField" labelPlacement="top"
       />
       </fieldset>
 
@@ -347,6 +372,7 @@ function Registration() {
     </div>
 
     </header>
+    </ThemeProvider>
   </div>
   );
 }

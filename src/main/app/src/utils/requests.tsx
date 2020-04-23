@@ -14,7 +14,10 @@ export const request = (resource: string, fetching: any, method: string = "GET",
       },
       body: body ? JSON.stringify(body) : undefined
     } )
-    .then(response => response.json())
+    .then(response => {
+      //console.log("Response:", response);
+      return response.json();
+    })
     .then(fetching)
     .catch(() => console.log("Can’t access " + proxyurl + urlAPI + resource + " response."));
 }

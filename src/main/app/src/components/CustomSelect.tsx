@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CustomSelect(props: any) {
-  console.log("CustomSelect props:", props);
+  //console.log("CustomSelect props:", props);
   const classes = useStyles();
   const [status, setStatus] = React.useState(props.status);
   const handleChange = (event: any) => {

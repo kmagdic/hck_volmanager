@@ -23,9 +23,9 @@ export interface Skill {
 };
 
 export const genders = [
-  { id: "M", name: "muški" },
-  { id: "F", name: "ženski" },
-  { id: "A", name: "ne želim se izjasniti" }
+  { value: "M", label: "muški" },
+  { value: "F", label: "ženski" },
+  { value: "A", label: "ne želim se izjasniti" }
 ];
 export const places = [
   { id: 1, name: "Place A", county: 1 },

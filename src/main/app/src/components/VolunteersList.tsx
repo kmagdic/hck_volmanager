@@ -22,7 +22,9 @@ interface TableState {
 export default function VolunteersList() {
   const [state, setState] = React.useState<TableState>({
     columns: [
-      { title: 'Ime', field: 'firstName' },
+      { title: 'Ime', field: 'firstName',
+        render: rowData => rowData.id + '-' + rowData.firstName
+      },
       { title: 'Prezime', field: 'lastName' },
       { title: 'Datum rođenja', field: 'dob', type: 'date',
         render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy')
@@ -33,12 +35,12 @@ export default function VolunteersList() {
         <Switch
         checked={rowData.backgroundCheckNeeded}
         onChange={e => {
-          console.log("rowData:", rowData); 
+          //console.log("rowData:", rowData); 
           setState((prevState) => {
             const data = [...prevState.data];
             rowData.backgroundCheckNeeded = !rowData.backgroundCheckNeeded;
             request('volunteers/' + rowData.id, (response: any) => {
-              console.log("response:", response);
+              //console.log("response:", response);
             }, "PUT", rowData);
             //console.log("rowData:", rowData);
             data[data.indexOf(rowData)] = rowData;
@@ -52,21 +54,19 @@ export default function VolunteersList() {
       { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean',
         render: rowData => {
           const s = rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString();
-          console.log("s:", s, typeof s);
-          console.log("rowData:", rowData, typeof rowData);
+          // console.log("s:", s, typeof s);
+          // console.log("rowData:", rowData, typeof rowData);
           return(
         <CustomSelect 
           status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
           onChange={(status: any) => {
-            console.log("onChange bgStatus rowData:", rowData);
-            //status = status === "null" ? null : status === "true";
-            console.log("new status:", status, typeof status);
+            // console.log("onChange bgStatus rowData:", rowData);
             setState((prevState) => {
               const data = [...prevState.data];
               rowData.backgroundCheckPassed = status;
               //console.log("rowData:", rowData);
               request('volunteers/' + rowData.id, (response: any) => {
-                console.log("response:", response);
+                // console.log("response:", response);
               }, "PUT", rowData);
               data[data.indexOf(rowData)] = rowData;
               return { ...prevState, data };
