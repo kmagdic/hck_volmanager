@@ -76,9 +76,21 @@ function Registration() {
   const [errorPlaceOfVolunteering, setErrorPlaceOfVolunteering] = React.useState(false);
   const [helperTextPlaceOfVolunteering, setHelperTextPlaceOfVolunteering] = React.useState('');
 
-  // qualificationList
+  // qualifications
   const [qualificationList, setQualificationList] = React.useState([]);
   const [customQualificationList, setCustomQualificationList] = React.useState([]);
+
+  // experiences
+  const [experienceList, setExperienceList] = React.useState([]);
+  const [customExperienceList, setCustomExperienceList] = React.useState([]);
+
+  // services
+  const [serviceList, setServiceList] = React.useState([]);
+  const [customServiceList, setCustomServiceList] = React.useState([]);
+
+  // skills
+  const [skillList, setSkillList] = React.useState([]);
+  const [customSkillList, setCustomSkillList] = React.useState([]);
 
   const history = useHistory();
 
@@ -121,19 +133,6 @@ function Registration() {
       <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />
     );
   };
-
-  //const qualificationList: any = [];
-  //const customQualificationList: any = [];
-  const experienceList: any = [];
-  const customExperienceList: any = [];
-  const serviceList: any = [];
-  const customServiceList: any = [];
-  const skillList: any = [];
-  const customSkillList: any = [];
-  //var gender: string = 'A';
-  //var placeOfLiving: number;
-  //var placeOfVolunteering: number;
-  //alert("gender:" + gender);
 
   const validateOIB = (target: any, oib: string, focus: boolean = false): boolean => {
     // console.log("validateOIB:", target);
@@ -277,8 +276,12 @@ function Registration() {
     }
     request('volunteers', (data: any) => {
         console.log("response:", data);
+        /*
+          is status === 200 {
+            history.push("/confirmation");
+        }
+        */
       }, "POST", data);
-    // history.push("/confirmation");
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
@@ -301,7 +304,6 @@ function Registration() {
     setGender(newGender ? newGender.value : null);
     setHelperTextGender('');
     setErrorGender(false);
-    //gender = newGender ? newGender.value : null;
   }
 
   const qualificationsOnChange = (values: any, action: any) => {
@@ -314,18 +316,31 @@ function Registration() {
   }
 
   const experiencesOnChange = (values: any, action: any) => {
-    //console.log("on change:", values);
+    console.log("experiences on change:", values);
     getValues(values, experienceList, customExperienceList);
+    const lExperienceList: any = [];
+    const lCustomExperienceList: any = [];
+    getValues(values, lExperienceList, lCustomExperienceList);
+    setExperienceList(lExperienceList);
+    setCustomExperienceList(lCustomExperienceList);
   }
 
   const servicesOnChange = (values: any, action: any) => {
-    //console.log("on change:", values);
-    getValues(values, serviceList, customServiceList);
+    console.log("services on change:", values);
+    const lServiceList: any = [];
+    const lCustomServiceList: any = [];
+    getValues(values, lServiceList, lCustomServiceList);
+    setServiceList(lServiceList);
+    setCustomServiceList(lCustomServiceList);
   }
 
   const skillsOnChange = (values: any, action: any) => {
-    //console.log("on change:", values);
-    getValues(values, skillList, customSkillList);
+    console.log("skills on change:", values);
+    const lSkillList: any = [];
+    const lCustomSkillList: any = [];
+    getValues(values, lSkillList, lCustomSkillList);
+    setSkillList(lSkillList);
+    setCustomSkillList(lCustomSkillList);
   }
 
   const placeOfLivingOnChange = (place: any, action: any) => {
@@ -431,18 +446,18 @@ function Registration() {
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experiences} isMulti /> }
+          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experiences} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
           label="Iskustva*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={services} isMulti /> }
+          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={services} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
           label="Dodatne usluge*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={
             <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={groupedSkills} 
-              isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} isMulti
+              isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti
             />
           }
           label="Dodatne vještine*:" className="textField" labelPlacement="top"

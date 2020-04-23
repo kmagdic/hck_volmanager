@@ -19,7 +19,7 @@ export const request = (resource: string, fetching: any, method: string = "GET",
       return response.json();
     })
     .then(fetching)
-    .catch(() => console.log("Can’t access " + proxyurl + urlAPI + resource + " response."));
+    .catch((e: any) => console.log("Can’t access " + proxyurl + urlAPI + resource + " response because " + e));
 }
 
 /*
