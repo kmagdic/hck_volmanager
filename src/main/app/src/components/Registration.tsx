@@ -145,7 +145,7 @@ function Registration() {
             return cmp;
             }
         ]);
-      const newGroupedSkills = groupingOptions(skillsData);
+      const newGroupedSkills = groupingOptions(skills);
       setGroupedSkills(newGroupedSkills);
     });
     console.log("after fetching...");
