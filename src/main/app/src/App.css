@@ -17,8 +17,12 @@
   aalign-items: flex-start;
 }
 
-.MuiOutlinedInput-input, .MuiOutlinedInput-multiline {
+.MuiOutlinedInput-input, .MuiOutlinedInput-multilinea {
   padding: 0.6rem !important;
+}
+
+.MuiOutlinedInput-multiline {
+  padding: 0 !important;
 }
 
 label.MuiFormControlLabel-labelPlacementTop {
@@ -149,6 +153,16 @@ label.MuiFormControlLabel-labelPlacementTop {
     padding: 0 1rem;
     amax-width: 100%;
   }
+}
+
+.helper-text {
+  margin-left: 14px !important;
+  margin-top: -11px !important;
+  margin-bottom: 14px !important;
+}
+
+.MuiFormControlLabel-label {
+  user-select: none !important;
 }
 
 .App {

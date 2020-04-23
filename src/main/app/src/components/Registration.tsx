@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, FormControl,  TextField, FormControlLabel, Checkbox, FormLabel, RadioGroup, Radio, MenuItem } from '@material-ui/core';
+import { Button, FormControl,  TextField, FormControlLabel, Checkbox, FormLabel, RadioGroup, Radio, MenuItem, FormHelperText } from '@material-ui/core';
 import Law from './Law';
 import CreatableSelect from 'react-select/creatable';
 import Datetime from 'react-datetime';
@@ -52,12 +52,30 @@ function Registration() {
   //const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
   const [groupedPlaces, setGroupedPlaces] = useState(emptyGroup);
   const [groupedSkills, setGroupedSkills] = useState(emptyGroup);
+
+  // dob
+  const [errorDOB, setErrorDOB] = React.useState(false);
+  const [helperTextDOB, setHelperTextDOB] = React.useState('');
+
   // OIB
   const [errorOIB, setErrorOIB] = React.useState(false);
   const [helperTextOIB, setHelperTextOIB] = React.useState('');
+
   // Gender
+  const [gender, setGender] = React.useState('');
   const [errorGender, setErrorGender] = React.useState(false);
   const [helperTextGender, setHelperTextGender] = React.useState('');
+
+  // placeOfLiving
+  const [placeOfLiving, setPlaceOfLiving] = React.useState({ id: undefined });
+  const [errorPlaceOfLiving, setErrorPlaceOfLiving] = React.useState(false);
+  const [helperTextPlaceOfLiving, setHelperTextPlaceOfLiving] = React.useState('');
+
+  // placeOfVolunteering
+  const [placeOfVolunteering, setPlaceOfVolunteering] = React.useState({ id: undefined });
+  const [errorPlaceOfVolunteering, setErrorPlaceOfVolunteering] = React.useState(false);
+  const [helperTextPlaceOfVolunteering, setHelperTextPlaceOfVolunteering] = React.useState('');
+
   const history = useHistory();
 
   //setGroupedPlaces(newGroupedPlaces);
@@ -108,53 +126,109 @@ function Registration() {
   const customServiceList: any = [];
   const skillList: any = [];
   const customSkillList: any = [];
-  var gender: string;
-  var placeOfLiving: number;
-  var placeOfVolunteering: number;
+  //var gender: string = 'A';
+  //var placeOfLiving: number;
+  //var placeOfVolunteering: number;
+  //alert("gender:" + gender);
 
-  const validatingFields = (data: any, form: any): boolean => {
-    if (!checkOIB(data.oib)) {
-      console.error(`OIB ${data.oib} is not valid`);
-      setHelperTextOIB(`OIB je neispravan`);
+  const validateOIB = (target: any, oib: string, focus: boolean = false): boolean => {
+    console.log("validateOIB:", target);
+    console.log("validating:", oib);
+    if (!checkOIB(oib)) {
+      console.error(`OIB "${oib}" is not valid`);
+      setHelperTextOIB('OIB je neispravan');
       setErrorOIB(true);
-      console.error("form :", form.target.oib);
-      form.target.oib.focus();
+      if (focus) {
+        target.focus();
+      }
       return false;
     }
     setHelperTextOIB('');
     setErrorOIB(false);
+    return true;
+  }
 
-    if (!gender) {
-      console.error(`gender is not valid`);
-      setHelperTextGender(`odaberite spol`);
-      setErrorGender(true);
+  const validatingFields = (form: any, data: any): boolean => {
+    if (!validateOIB(form.oib, data.oib, true)) {
       return false;
     }
-    setHelperTextGender('');
-    setErrorGender(false);
 
+    if (!gender) {
+      console.error('gender is not valid');
+      setHelperTextGender('nije odabran spol');
+      setErrorGender(true);
+      form.gender00.focus();
+      return false;
+    }
+    if (errorGender) {
+      setHelperTextGender('');
+      setErrorGender(false);
+    }
+
+    // dob
+    if (!data.dob) {
+      console.error('dob is null');
+      setHelperTextDOB('nije unesen datum rođenja');
+      setErrorDOB(true);
+      form.dob.focus();
+      return false;
+    }
     const strDate = data.dob.replace(/ /gi, "");
     var dDate = parse(strDate, "dd.MM.yyyy", new Date());
-    console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
-    if (dDate.toString() == "Invalid Date") {
+    //console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
+    if (dDate.toString() === "Invalid Date") {
       // special char
       const sc = strDate.split('').find((c: any) => !(c > -1));
       console.log(`special char "${sc}"`);
       const dateParts = strDate.split(sc);
       if (dateParts.length >= 3) {
         const newDate = dateParts.filter((p: string) => p.length > 0).join(sc);
-        if (dateParts[0].length == 4) {
+        if (dateParts[0].length === 4) {
           dDate = parse(newDate, `yyyy${sc}MM${sc}dd`, new Date());
         } else {
           dDate = parse(newDate, `dd${sc}MM${sc}yyyy`, new Date());
         }
       }
-      if (dDate.toString() == "Invalid Date") {
+      if (dDate.toString() === "Invalid Date") {
         console.error(dDate);
+        setHelperTextDOB('datum rođenja neispravan');
+        setErrorDOB(true);
+        form.dob.focus();
         return false;
       }
     }
     data.dob = new Date(dDate.getTime() - dDate.getTimezoneOffset() * 60000).toISOString().substr(0, 10); // fix time-zone and return only date part of datetime
+    if (errorDOB) {
+      setHelperTextDOB('');
+      setErrorDOB(false);
+    }
+
+    // placeOfLiving
+    if (!placeOfLiving.id) {
+      console.error('placeOfLiving is null');
+      setHelperTextPlaceOfLiving('nije odabrano mjesto prebivališta');
+      setErrorPlaceOfLiving(true);
+      form.placeOfLiving.focus();
+      return false;
+    }
+    if (errorPlaceOfLiving) {
+      setHelperTextPlaceOfLiving('');
+      setErrorPlaceOfLiving(false);
+    }
+
+    // placeOfVolunteering
+    if (!placeOfVolunteering.id) {
+      console.error('placeOfVolunteering is null');
+      setHelperTextPlaceOfLiving('nije odabrano mjesto u kojem želite volontirati');
+      setErrorPlaceOfVolunteering(true);
+      form.placeOfVolunteering.focus();
+      return false;
+    }
+    if (errorPlaceOfVolunteering) {
+      setHelperTextPlaceOfVolunteering('');
+      setErrorPlaceOfVolunteering(false);
+    }
+
     return true;
   }
 
@@ -194,7 +268,7 @@ function Registration() {
       criminalRecord: event.target.criminalRecord.value,
     };
     console.log("form data:", data);
-    if (!validatingFields(data, event)) {
+    if (!validatingFields(event.target, data)) {
       return;
     }
     request('volunteers', (data: any) => {
@@ -220,7 +294,10 @@ function Registration() {
 
   const genderOnChange = (newGender: any, action: any) => {
     console.log("on change:", newGender, action);
-    gender = newGender ? newGender.value : null;
+    setGender(newGender ? newGender.value : null);
+    setHelperTextGender('');
+    setErrorGender(false);
+    //gender = newGender ? newGender.value : null;
   }
 
   const qualificationsOnChange = (values: any, action: any) => {
@@ -245,12 +322,16 @@ function Registration() {
 
   const placeOfLivingOnChange = (place: any, action: any) => {
     console.log("on change:", place, action);
-    placeOfLiving = place ? place.value : null;
+    setPlaceOfLiving({ id: place ? place.value : null });
+    setErrorPlaceOfLiving(false);
+    setHelperTextPlaceOfLiving('');
   }
 
   const placeOfVolunteeringOnChange = (place: any, action: any) => {
     console.log("on change:", place, action);
-    placeOfVolunteering = place ? place.value : null;
+    setPlaceOfVolunteering({ id: place ? place.value : null });
+    setErrorPlaceOfVolunteering(false);
+    setHelperTextPlaceOfVolunteering('');
   }
 
   const noOptionsMessage = (search: any) => `nije nađeno "${search.inputValue}"`;
@@ -271,32 +352,46 @@ function Registration() {
         <legend>Osobni podaci volontera</legend>
         <FormControlLabel control={ <TextField id="firstName" required={true} className="textField" variant="outlined" /> } label="Ime*:" className="textField" labelPlacement="top" />
         <FormControlLabel control={ <TextField id="lastName" required={true} className="textField" variant="outlined" /> } label="Prezime*:" className="textField" labelPlacement="top" />
-        <FormControlLabel id="dob" control={
-          <Datetime viewMode="years" viewDate={new Date("1990-1-1")} dateFormat={"DD.MM.YYYY"} closeOnSelect={true} className="textField rdt-datepicker" renderInput={renderInput} timeFormat={false} locale="hr-HR" />
-          }  label="Datum rođenja*:" className="textField" labelPlacement="top"
-        />
-        <FormControlLabel control={ <TextField id="oib" error={errorOIB} required={true} inputProps={{ minLength: 11, maxLength: 11 }} className="textField" variant="outlined" helperText={helperTextOIB} />} label="OIB*:" className="textField" labelPlacement="top" />
-        <FormControlLabel control={
-            <Select id="gender" className="fullWidth" error={errorGender} required={true} placeholder="Odaberi..." onChange={genderOnChange} options={genders} noOptionsMessage={noOptionsMessage} helperText={helperTextGender}
-            />
-          } label="Spol*:" className="textField" labelPlacement="top"
-        />
+        <FormControl error={errorDOB}>
+          <FormControlLabel id="dob" control={
+            <Datetime viewMode="years" viewDate={new Date("1990-1-1")} dateFormat={"DD.MM.YYYY"} closeOnSelect={true} className="textField rdt-datepicker" renderInput={renderInput} timeFormat={false} locale="hr-HR" />
+            }  label="Datum rođenja*:" className="textField" labelPlacement="top"
+          />
+          <FormHelperText className="helper-text">{helperTextDOB}</FormHelperText>
+        </FormControl>
+
+        <FormControlLabel control={ <TextField id="oib" error={errorOIB} required={true} inputProps={{ onBlur: (event) => validateOIB(event.target, event.target.value), minLength: 11, maxLength: 11 }} className="textField" variant="outlined" helperText={helperTextOIB} />} label="OIB*:" className="textField" labelPlacement="top" />
+
+        <FormControl error={errorGender}>
+          <FormControlLabel control={
+              <Select inputId="gender00" className="fullWidth" required={true} placeholder="Odaberi..." onChange={genderOnChange} options={genders} noOptionsMessage={noOptionsMessage}
+              />
+            } label="Spol*:" className="textField" labelPlacement="top"
+          />
+          <FormHelperText className="helper-text">{helperTextGender}</FormHelperText>
+        </FormControl>
 
         <FormControlLabel control={ <TextField id="address" required={true} className="textField" variant="outlined" />} label="Adresa*:" className="textField" labelPlacement="top" />
         
-        <FormControlLabel id="placeOfLiving" name="placeOfLiving" control={ 
-            <Select className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfLivingOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
+        <FormControl error={errorPlaceOfLiving}>
+          <FormControlLabel control={ 
+            <Select inputId="placeOfLiving" className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfLivingOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
             />
-          }
-          label="Mjesto prebivališta*:" className="textField" labelPlacement="top"
-        />
+            }
+            label="Mjesto prebivališta*:" className="textField" labelPlacement="top"
+          />
+          <FormHelperText className="helper-text">{helperTextPlaceOfLiving}</FormHelperText>
+        </FormControl>
 
-        <FormControlLabel id="placeOfLiving" name="placeOfLiving" control={ 
-            <Select className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfVolunteeringOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
+        <FormControl error={errorPlaceOfVolunteering}>
+          <FormControlLabel control={ 
+            <Select inputId="placeOfVolunteering" className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfVolunteeringOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
             />
-          }
-          label="Mjesto u kojem želite volontirati*:" className="textField" labelPlacement="top"
-        />
+            }
+            label="Mjesto u kojem želite volontirati*:" className="textField" labelPlacement="top"
+          />
+          <FormHelperText className="helper-text">{helperTextPlaceOfVolunteering}</FormHelperText>
+        </FormControl>
 
         <FormControlLabel control={ <TextField id="phone" required={true} className="textField" variant="outlined" />} label="Broj telefona/mobitela*:" className="textField" labelPlacement="top" />
         <FormControlLabel control={ <TextField id="email" required={true} className="textField" variant="outlined" type="email" />} label="Email adresa*:" className="textField" labelPlacement="top" />
@@ -322,20 +417,23 @@ function Registration() {
         <legend>Dodatne informacije</legend>
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
-        <FormControlLabel id="qualifications" name="qualifications" control={ <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualifications} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
+        <FormControlLabel control={ 
+          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualifications} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
           label="Zanimanje/profesionalne kvalifikacije*:" className="textField" labelPlacement="top"
         />
 
-        <FormControlLabel control={ <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experiences} isMulti /> }
+        <FormControlLabel control={ 
+          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experiences} isMulti /> }
           label="Iskustva*:" className="textField" labelPlacement="top"
         />
 
-        <FormControlLabel control={ <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={services} isMulti /> }
+        <FormControlLabel control={ 
+          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={services} isMulti /> }
           label="Dodatne usluge*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={
-            <CreatableSelect className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={groupedSkills} 
+            <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={groupedSkills} 
               isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} isMulti
             />
           }
@@ -358,8 +456,8 @@ function Registration() {
       </FormLabel>
       <RadioGroup aria-label="criminalRecord" name="criminalRecord">
         <div className="criminalRecord">
-          <FormControlLabel value="true" control={<Radio color="primary" />} label="Da"/>
-          <FormControlLabel value="false" control={<Radio color="primary" />} label="Ne"/>
+          <FormControlLabel value="true" control={<Radio required={true} className="no-select" color="primary" />} label="Da"/>
+          <FormControlLabel value="false" control={<Radio required={true} className="no-select" color="primary" />} label="Ne"/>
         </div>
       </RadioGroup>
 
