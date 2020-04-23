@@ -18,11 +18,6 @@ public class CustomQualification implements Serializable {
     @JoinColumn(name = "volunteerid", referencedColumnName = "id")
     private Volunteer volunteer;
 
-    /*
-    @Id
-    @Column(name = "volunteerid")
-    private Long volunteer;
-    */
     @Id
     @Column(name = "item")
     private short item;
@@ -47,15 +42,7 @@ public class CustomQualification implements Serializable {
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
     }
-/*
-    public Long getVolunteer() {
-        return volunteer;
-    }
 
-    public void setVolunteer(Long volunteer) {
-        this.volunteer = volunteer;
-    }
-*/
     public short getItem() {
         return item;
     }

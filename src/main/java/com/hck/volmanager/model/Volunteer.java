@@ -157,42 +157,22 @@ public class Volunteer {
         this.qualifications = categories;
     }
 
-/*
-    @OneToMany(mappedBy="volunteer")
-    private Set<CustomQualification> customQualifications;
-*/
-
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
-    //@OneToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "vcustomqualifications", joinColumns = {
-//            @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, updatable = false) })
     private Set<CustomQualification> customQualifications;
-
-    //@OneToOne(mappedBy="volunteer")
-    /*
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "vcustomqualifications", joinColumns = {
-            @JoinColumn(name = "volunteerid", referencedColumnName = "volunteerid", nullable = false, updatable = false)
-            //@JoinColumn(name = "item", referencedColumnName = "item", nullable = false, updatable = false)
-    })
-    private Set<CustomQualification> customQualifications;
-    */
 
     public Set<CustomQualification> getCustomQualifications() {
         return customQualifications;
     }
 
     public void setCustomQualifications(Set<CustomQualification> customQualifications) {
+        log.info("***** Hibernate version: ");
+        System.out.println(org.hibernate.Version.getVersionString());
         log.info("***** setCustomQualifications: ");
-        AtomicReference<Short> i = new AtomicReference<>((short) 0);
-        customQualifications.forEach((value) -> {
-            System.out.println(value);
-            value.setVolunteer(this);
-            //i++;
-            i.getAndSet(new Short((short) (i.get() + 1)));
-            value.setItem(i.get());
-            System.out.println(value);
-        });
+        short i = 0;
+        for (CustomQualification cq: customQualifications) {
+            cq.setVolunteer(this);
+            cq.setItem(++i);
+        }
         this.customQualifications = customQualifications;
     }
 
