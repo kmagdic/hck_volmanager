@@ -124,7 +124,7 @@ function Registration() {
     setHelperTextOIB('');
     setErrorOIB(false);
 
-    if (!data.gender) {
+    if (!gender) {
       console.error(`gender is not valid`);
       setHelperTextGender(`odaberite spol`);
       setErrorGender(true);
