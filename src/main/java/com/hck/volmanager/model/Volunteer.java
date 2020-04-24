@@ -182,6 +182,23 @@ public class Volunteer {
     )
     Set<Skill> skills = new HashSet<>();
 
+    @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    private Set<CustomSkill> customSkills;
+
+    public Set<CustomSkill> getCustomSkills() {
+        return customSkills;
+    }
+
+    public void setCustomSkills(Set<CustomSkill> customSkills) {
+        short i = 0;
+        for (CustomSkill s: customSkills) {
+            s.setVolunteer(this);
+            s.setItem(++i);
+        }
+        this.customSkills = customSkills;
+    }
+    
+    
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "vexperiences",
@@ -190,6 +207,23 @@ public class Volunteer {
     )
     Set<Experience> experiences = new HashSet<>();
 
+    @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    private Set<CustomExperience> customExperiences;
+
+    public Set<CustomExperience> getCustomExperiences() {
+        return customExperiences;
+    }
+
+    public void setCustomExperiences(Set<CustomExperience> customExperiences) {
+        short i = 0;
+        for (CustomExperience s: customExperiences) {
+            s.setVolunteer(this);
+            s.setItem(++i);
+        }
+        this.customExperiences = customExperiences;
+    }
+    
+    
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "vservices",
@@ -198,6 +232,22 @@ public class Volunteer {
     )
     Set<Qualification> services = new HashSet<>();
 
+    @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    private Set<CustomService> customServices;
+
+    public Set<CustomService> getCustomServices() {
+        return customServices;
+    }
+
+    public void setCustomServices(Set<CustomService> customServices) {
+        short i = 0;
+        for (CustomService s: customServices) {
+            s.setVolunteer(this);
+            s.setItem(++i);
+        }
+        this.customServices = customServices;
+    }
+    
     @Override
     public String toString() {
         return "Volunteer{" +

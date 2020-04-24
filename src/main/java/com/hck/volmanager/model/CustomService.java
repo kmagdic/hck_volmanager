@@ -35,9 +35,10 @@ public class CustomService implements Serializable {
     }
 
     // Setters and getters
-    public Volunteer getVolunteer() {
+    /* public Volunteer getVolunteer() {
         return volunteer;
     }
+    */
 
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
