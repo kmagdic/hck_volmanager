@@ -7,7 +7,7 @@ import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
 import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
-import { Place, Skill, genders, placesData0, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
+import { Place, Skill, genders, placesData0, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
@@ -171,12 +171,34 @@ function Registration() {
       const newGroupedSkills = groupingOptions(skills);
       setGroupedSkills(newGroupedSkills);
     });
+
+    // fetching qualifications
+    request('qualifications', (qualificationsData: any) => {
+      console.log("qualificationsData:", qualificationsData);
+      const qualifications = qualificationsData.map((qualification: any) => ({ value: qualification.id, label: qualification.name, orderNum: qualification.orderNum }));
+      setQualificationList(qualifications);
+    });
+
+    // fetching experiences
+    request('experiences', (experiencesData: any) => {
+      console.log("experiencesData:", experiencesData);
+      const experiences = experiencesData.map((experience: any) => ({ value: experience.id, label: experience.name, orderNum: experience.orderNum }));
+      setExperienceList(experiences);
+    });
+
+    // fetching services
+    request('services', (servicesData: any) => {
+      console.log("servicesData:", servicesData);
+      const services = servicesData.map((service: any) => ({ value: service.id, label: service.name, orderNum: service.orderNum }));
+      setServiceList(services);
+    });
+
     console.log("after fetching...");
   }, []);
 
   //const groupedSkills = groupingOptions(skillsData2, (skill: Skill) => ({ value: skill.id, label: skill.name }), "group");
 
-  const qualifications = qualificationsData.map(option => ({ value: option.id, label: option.name} as ListItem));
+  //const qualifications = qualificationsData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const experiences = experiencesData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const services = servicesData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const skills = skillsData.map(option => ({ value: option.id, label: option.name} as ListItem));
@@ -411,7 +433,11 @@ function Registration() {
     setHelperTextPlaceOfVolunteering('');
   }
 
-  const noOptionsMessage = (search: any) => `nije nađeno "${search.inputValue}"`;
+  const noOptionsMessage = (search: any) => {
+    console.log("search:", search);
+    console.log("typeof search:", typeof search);
+    return search.inputValue ? `nije nađeno "${search.inputValue}"` : "nema podataka";
+  };
 
   const includes = (search: string, options: GroupedOption[]): boolean => {
     search = search.trim().toLocaleLowerCase();
@@ -522,23 +548,23 @@ function Registration() {
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualifications} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
+          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationList} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti /> }
           label="Zanimanje/profesionalne kvalifikacije*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experiences} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
+          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceList} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti /> }
           label="Iskustva*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={services} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti /> }
+          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceList} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti /> }
           label="Dodatne usluge*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={
             <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={groupedSkills} 
-              isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} isMulti
+              isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
             />
           }
           label="Dodatne vještine*:" className="textField" labelPlacement="top"
