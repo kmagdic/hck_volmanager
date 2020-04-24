@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, Checkbox } from "@material-ui/core";
 import { Link } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,26 +24,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 function Login() {
   const classes = useStyles();
-  
+
+  const [email, setEmail] = useState("admin");
+  const [password, setPassword] = useState("test123");
+
+  const history = useHistory();
+
+  const validateForm = () => {
+    if(email === "admin" && password === "test123") {
+      history.push("/list");
+      return true;
+    }
+    else
+      return false;
+
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
-        <form className={classes.form} noValidate>
-          <FormControlLabel control={ <TextField id="email" required fullWidth margin="normal" className="textField" variant="outlined" autoFocus /> } label="Korisničko ime:" className="textField" labelPlacement="top" />
-          <FormControlLabel control={ <TextField id="password" required fullWidth className="textField" variant="outlined" type="password" /> } label="Lozinka:" className="textField" labelPlacement="top" />
+        <form className={classes.form} noValidate onSubmit={validateForm}>
+          <FormControlLabel control={ <TextField id="email" required value={email} onChange={setEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus /> } label="Korisničko ime:" className="textField" labelPlacement="top" />
+          <FormControlLabel control={ <TextField id="password" required value={password} onChange={setPassword} fullWidth className="textField" variant="outlined" type="password" /> } label="Lozinka:" className="textField" labelPlacement="top" />
 
           <FormControlLabel
             className="no-select"
             control={<Checkbox value="remember" color="primary" />}
             label="Zapamti prijavu"
           />
-          <Link to="/list">
-            <Button className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
-          </Link>
+          <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
+
         </form>
       </div>
     </Container>
