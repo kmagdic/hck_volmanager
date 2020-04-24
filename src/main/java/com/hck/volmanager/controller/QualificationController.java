@@ -2,9 +2,7 @@ package com.hck.volmanager.controller;
 
 import com.hck.volmanager.exception.ResourceNotFoundException;
 import com.hck.volmanager.model.Qualification;
-import com.hck.volmanager.model.Skill;
 import com.hck.volmanager.repository.QualificationRepository;
-import com.hck.volmanager.repository.SkillRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
