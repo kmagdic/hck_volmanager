@@ -165,8 +165,6 @@ public class Volunteer {
     }
 
     public void setCustomQualifications(Set<CustomQualification> customQualifications) {
-        log.info("***** Hibernate version: ");
-        System.out.println(org.hibernate.Version.getVersionString());
         log.info("***** setCustomQualifications: ");
         short i = 0;
         for (CustomQualification cq: customQualifications) {
