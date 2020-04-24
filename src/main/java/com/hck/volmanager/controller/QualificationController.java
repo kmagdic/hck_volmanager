@@ -25,7 +25,7 @@ public class QualificationController {
     @Autowired
     private QualificationRepository qualificationRepository;
 
-    @GetMapping("/Qualification")
+    @GetMapping("/qualifications")
     public List<Qualification> getAllQualifications() {
         log.info("Listing all qualifications ...");
         return qualificationRepository.findAll();
