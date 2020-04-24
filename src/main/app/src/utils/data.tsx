@@ -92,10 +92,10 @@ export const skillsData2: Skill[] = [
 ];
 */
 export const placesData0: Place[] = [
-	{ id: 1, name: "Varaždin", county: "Varaždinska županija", postCode: 42000 },
-	{ id: 2, name: "Ivanec", county: "Varaždinska županija", postCode: 42000 },
+	{ id: 2, name: "Ivanec", county: "Varaždinska županija", postCode: 42100 },
 	{ id: 3, name: "Ludbreg", county: "Varaždinska županija", postCode: 42000 },
 	{ id: 21, name: "Zagreb", county: "Zagrebačka županija", postCode: 10000 },
+	{ id: 1, name: "Varaždin", county: "Varaždinska županija", postCode: 42000 },
 	{ id: 31, name: "Bjelovar", county: "Bjelovarska županija", postCode: 43000 },
 	{ id: 41, name: "Zadar", county: "Zadarska županija", postCode: 21000 },
 	{ id: 42, name: "Benkovac", county: "Zadarska županija", postCode: 21000 },

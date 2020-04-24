@@ -46,28 +46,6 @@ export const sortData = (values: any[], compare: any[]): any[] => {
   });
 }
 
-export const groupingOptions0 = (data: any[], createListItem: any, groupField: any): GroupedOption[] => {
-  const groupedObject: { [key: string]: GroupedOption } = {};
-
-  data.forEach(option => {
-    const item: ListItem = createListItem(option);
-    const groupName = (typeof groupField) === "string" ? deepField(option, groupField) : groupField(option);
-    if (groupedObject[groupName]) {
-      groupedObject[groupName].options.push(item)
-    } else {
-      groupedObject[groupName] = { label: groupName, options: [item] }
-    }
-  })
-
-  var groupedItems: GroupedOption[] = [];
-  for(const group in groupedObject) {
-    groupedObject[group].options.sort((a: ListItem, b: ListItem) => a.label.localeCompare(b.label));
-    groupedItems.push(groupedObject[group]);
-  }
-  groupedItems.sort((a: GroupedOption, b: GroupedOption) => a.label.localeCompare(b.label));
-  return groupedItems;
-};
-
 export const groupingOptions = (data: any[]): GroupedOption[] => {
   const groupedObject: { [key: string]: GroupedOption } = {};
 

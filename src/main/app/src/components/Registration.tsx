@@ -7,7 +7,7 @@ import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
 import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, CompareListItemsByLabel, CompareGroupedOptionsByLabel, toSafeNumber } from "../utils/json-methods"
-import { Place, Skill, genders, placesData, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
+import { Place, Skill, genders, placesData0, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
@@ -102,8 +102,40 @@ function Registration() {
     // fetching places
     request('places', (placesData: any) => {
       console.log("placesData:", placesData);
-      const places = placesData.map((place: any) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`, group: place.county }));
-      const sortedPlaces = sortData(places, ["group", "label"]);
+      const places = placesData.map((place: any) => ({ value: place.id, name: place.name, postcode: place.postCode, label: `${place.name}, ${place.postCode}, ${place.county}`, group: place.county }));
+      // const sortedPlaces = sortData(places, ["group", "label"]);
+
+      const sortedPlaces = sortData(places, [
+        "group",
+        (a: any, b: any) => {
+          var cmp = 0;
+          const groupAName = a.group.toLocaleLowerCase();
+          const groupBName = b.group.toLocaleLowerCase();
+          const indexA = groupAName.indexOf(a.name.toLocaleLowerCase());
+          const indexB = groupBName.indexOf(b.name.toLocaleLowerCase());
+          if ((indexA === -1) && (indexB !== -1)) {
+            cmp = 1;  
+          }
+          else if ((indexA !== -1) && (indexB === -1)) {
+            cmp = -1;
+          } else {
+            if ((indexA >= 0) && (indexB >= 0)) {
+              cmp = b.name.length - a.name.length;
+            }
+            if (cmp === 0) {
+              cmp = a.postcode - b.postcode;
+            }
+            if (cmp === 0) {
+              cmp = a.label.localeCompare(b.label);
+            }
+          }
+          console.log("comparing", a, b, "with result", cmp);
+          console.log("groupAName", groupAName, "groupBName", groupBName);
+          console.log("indexA", indexA, "indexB", indexB);
+          return cmp;
+          }
+      ]);
+
       const newGroupedPlaces = groupingOptions(sortedPlaces);
       setGroupedPlaces(newGroupedPlaces);
     });
@@ -117,7 +149,7 @@ function Registration() {
           "group",
           (a: any, b: any) => {
             var cmp = toSafeNumber(a.orderNum) - toSafeNumber(b.orderNum)
-            console.log("comparing", a, b, "with result", cmp);
+            //console.log("comparing", a, b, "with result", cmp);
             if (cmp === 0) {
               const groupAName = a.group.toLocaleLowerCase();
               const groupBName = b.group.toLocaleLowerCase();
@@ -126,12 +158,12 @@ function Registration() {
               if ((indexA === -1) && (indexB !== -1)) {
                 cmp = 1;  
               }
-              if ((indexA !== -1) && (indexB === -1)) {
+              else if ((indexA !== -1) && (indexB === -1)) {
                 cmp = -1;
               } else {
                 cmp = a.label.localeCompare(b.label);
               }
-              console.log("correcting to", cmp);
+              //console.log("correcting to", cmp);
             }
             return cmp;
             }
@@ -309,8 +341,6 @@ function Registration() {
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
-    //list.length = 0;
-    //custom.length = 0;
     if (values) {
       const aValues = Array.isArray(values) ? values : [values];
       aValues.forEach((item: any) => {
