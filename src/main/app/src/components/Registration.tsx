@@ -7,9 +7,9 @@ import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
 import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
-import { Place, Skill, genders, placesData0, experiencesData, servicesData, skillsData } from "../utils/data"
+import { genders } from "../utils/data"
 import { latinize } from "../utils/string-search";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
 
@@ -197,11 +197,12 @@ function Registration() {
   }, []);
 
   //const groupedSkills = groupingOptions(skillsData2, (skill: Skill) => ({ value: skill.id, label: skill.name }), "group");
-
-  //const qualifications = qualificationsData.map(option => ({ value: option.id, label: option.name} as ListItem));
+  /*
+  const qualifications = qualificationsData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const experiences = experiencesData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const services = servicesData.map(option => ({ value: option.id, label: option.name} as ListItem));
   const skills = skillsData.map(option => ({ value: option.id, label: option.name} as ListItem));
+  */
 
   const renderInput = (props: any, openCalendar: any, closeCalendar: any) => {
     function clear(){
@@ -354,9 +355,9 @@ function Registration() {
     }
     request('volunteers', (data: any) => {
         console.log("response:", data);
+        history.push("/confirmation");
         /*
           is status === 200 {
-            history.push("/confirmation");
         }
         */
       }, "POST", data);
