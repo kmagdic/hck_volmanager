@@ -22,8 +22,8 @@ export interface CompareGroupedOptionsFunction {
   (a: GroupedOption, b: GroupedOption): number;
 }
 
-export const CompareListItemsByLabel: CompareListItemsFunction = (a: ListItem, b: ListItem) => a.label.localeCompare(b.label);
-export const CompareGroupedOptionsByLabel: CompareGroupedOptionsFunction = (a: GroupedOption, b: GroupedOption) => a.label.localeCompare(b.label);
+//export const CompareListItemsByLabel: CompareListItemsFunction = (a: ListItem, b: ListItem) => a.label.localeCompare(b.label);
+//export const CompareGroupedOptionsByLabel: CompareGroupedOptionsFunction = (a: GroupedOption, b: GroupedOption) => a.label.localeCompare(b.label);
 
 export const isEmpty = (value: any): boolean => (value === undefined) || (value === null) || isNaN(value);
 export const toSafeNumber = (value: any, nullsFirst: boolean = false): number => 

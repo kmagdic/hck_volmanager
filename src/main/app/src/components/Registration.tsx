@@ -6,7 +6,7 @@ import Datetime from 'react-datetime';
 import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
-import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, CompareListItemsByLabel, CompareGroupedOptionsByLabel, toSafeNumber } from "../utils/json-methods"
+import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
 import { Place, Skill, genders, placesData0, qualificationsData, experiencesData, servicesData, skillsData } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { Link, useHistory } from "react-router-dom";
