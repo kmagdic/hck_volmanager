@@ -29,19 +29,31 @@ const useStyles = makeStyles((theme) => ({
 function Login() {
   const classes = useStyles();
 
-  const [email, setEmail] = useState("admin");
-  const [password, setPassword] = useState("test123");
+  const adminEmail = "admin";
+  const adminPassword = "admin-hck2020";
+
+  const [email, setEmail] = useState(adminEmail);
+  const [password, setPassword] = useState(adminPassword);
 
   const history = useHistory();
 
-  const validateForm = () => {
-    if(email === "admin" && password === "test123") {
+  const changeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  }
+
+  const changePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  }
+
+  const validateForm = (event: any) => {
+    event.preventDefault();
+    if((email === adminEmail) && (password === adminPassword)) {
       history.push("/list");
       return true;
     }
-    else
+    else {
       return false;
-
+    }
   };
 
   return (
@@ -50,8 +62,8 @@ function Login() {
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
         <form className={classes.form} noValidate onSubmit={validateForm}>
-          <FormControlLabel control={ <TextField id="email" required value={email} onChange={setEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus /> } label="Korisničko ime:" className="textField" labelPlacement="top" />
-          <FormControlLabel control={ <TextField id="password" required value={password} onChange={setPassword} fullWidth className="textField" variant="outlined" type="password" /> } label="Lozinka:" className="textField" labelPlacement="top" />
+          <FormControlLabel control={ <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus /> } label="Korisničko ime:" className="textField" labelPlacement="top" />
+          <FormControlLabel control={ <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type="password" /> } label="Lozinka:" className="textField" labelPlacement="top" />
 
           <FormControlLabel
             className="no-select"
@@ -59,7 +71,6 @@ function Login() {
             label="Zapamti prijavu"
           />
           <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
-
         </form>
       </div>
     </Container>
