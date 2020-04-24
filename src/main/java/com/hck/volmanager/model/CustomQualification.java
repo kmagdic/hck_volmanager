@@ -35,11 +35,10 @@ public class CustomQualification implements Serializable {
     }
 
     // Setters and getters
-    /*
     public Volunteer getVolunteer() {
         return volunteer;
     }
-    */
+
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
     }

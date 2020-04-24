@@ -55,12 +55,12 @@ public class VolunteerController {
     }
 
     @PostMapping("/volunteers")
-    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteer) throws ResourceNotFoundException {
-        Volunteer newVolunteer = volunteerRepository.save(volunteer);
-        log.info("Creating volunteer:  " + volunteer.getId());
+    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
+        Volunteer newVolunteer = volunteerRepository.save(volunteerJSON);
+        log.info("Creating volunteer:  " + volunteerJSON.getId());
 
-        newVolunteer = volunteerRepository.findById(volunteer.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteer.getId()));
+        newVolunteer = volunteerRepository.findById(volunteerJSON.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerJSON.getId()));
 
         return newVolunteer;
     }
