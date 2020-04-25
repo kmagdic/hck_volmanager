@@ -1,6 +1,8 @@
 package com.hck.volmanager.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 	id bigserial,
@@ -22,6 +24,13 @@ public class Qualification {
 
     @Column(name = "ordernum")
     private Short orderNum;
+
+    @ManyToMany(mappedBy = "qualifications")
+    private Set<Volunteer> volunteers = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "groupid")
+    private QualificationGroup qualificationGroup;
 
     /*
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "qualifications")
@@ -71,6 +80,14 @@ public class Qualification {
 
     public void setOrderNum(Short orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public QualificationGroup getQualificationGroup() {
+        return qualificationGroup;
+    }
+
+    public void setQualificationGroup(QualificationGroup qualificationGroup) {
+        this.qualificationGroup = qualificationGroup;
     }
 
     /*

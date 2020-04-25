@@ -6,7 +6,7 @@ import Datetime from 'react-datetime';
 import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
-import { ListItem, GroupedOption, groupingOptions, sortData, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
+import { ListItem, GroupedOption, groupingOptions, sortData, defaultDataGroupSort, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
 import { genders } from "../utils/data"
 import { latinize } from "../utils/string-search";
 import { useHistory } from "react-router-dom";
@@ -48,7 +48,6 @@ function Registration() {
   );
   //const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
   const [groupedPlaces, setGroupedPlaces] = useState(emptyGroup);
-  const [groupedSkills, setGroupedSkills] = useState(emptyGroup);
 
   // dob
   const [errorDOB, setErrorDOB] = React.useState(false);
@@ -74,19 +73,19 @@ function Registration() {
   const [helperTextPlaceOfVolunteering, setHelperTextPlaceOfVolunteering] = React.useState('');
 
   // qualifications
-  const [qualificationList, setQualificationList] = React.useState([]);
+  const [qualificationList, setQualificationList] = React.useState(emptyGroup);
   const [customQualificationList, setCustomQualificationList] = React.useState([]);
 
   // experiences
-  const [experienceList, setExperienceList] = React.useState([]);
+  const [experienceList, setExperienceList] = React.useState(emptyGroup);
   const [customExperienceList, setCustomExperienceList] = React.useState([]);
 
   // services
-  const [serviceList, setServiceList] = React.useState([]);
+  const [serviceList, setServiceList] = React.useState(emptyGroup);
   const [customServiceList, setCustomServiceList] = React.useState([]);
 
   // skills
-  const [skillList, setSkillList] = React.useState([]);
+  const [skillList, setSkillList] = React.useState(emptyGroup);
   const [customSkillList, setCustomSkillList] = React.useState([]);
 
   const history = useHistory();
@@ -140,57 +139,65 @@ function Registration() {
       setGroupedPlaces(newGroupedPlaces);
     });
 
-    // fatching skills
-    request('skills', (skillsData: any) => {
-      console.log("skillsData:", skillsData);
-      const skills = skillsData.map((skill: any) => ({ value: skill.id, label: skill.name, group: skill.skillGroup.name, orderNum: skill.orderNum, groupOrderNum: skill.skillGroup.orderNum }));
-      sortData(skills, [
-          (a: any, b: any) => toSafeNumber(a.groupOrderNum) - toSafeNumber(b.groupOrderNum),
-          "group",
-          (a: any, b: any) => {
-            var cmp = toSafeNumber(a.orderNum) - toSafeNumber(b.orderNum)
-            //console.log("comparing", a, b, "with result", cmp);
-            if (cmp === 0) {
-              const groupAName = a.group.toLocaleLowerCase();
-              const groupBName = b.group.toLocaleLowerCase();
-              const indexA = groupAName.indexOf(a.label.toLocaleLowerCase());
-              const indexB = groupBName.indexOf(b.label.toLocaleLowerCase());
-              if ((indexA === -1) && (indexB !== -1)) {
-                cmp = 1;  
-              }
-              else if ((indexA !== -1) && (indexB === -1)) {
-                cmp = -1;
-              } else {
-                cmp = a.label.localeCompare(b.label);
-              }
-              //console.log("correcting to", cmp);
-            }
-            return cmp;
-            }
-        ]);
-      const newGroupedSkills = groupingOptions(skills);
-      setGroupedSkills(newGroupedSkills);
-    });
-
     // fetching qualifications
     request('qualifications', (qualificationsData: any) => {
       console.log("qualificationsData:", qualificationsData);
-      const qualifications = qualificationsData.map((qualification: any) => ({ value: qualification.id, label: qualification.name, orderNum: qualification.orderNum }));
-      setQualificationList(qualifications);
+      const qualifications = qualificationsData.map((qualification: any) => (
+        {
+          value: qualification.id, 
+          label: qualification.name, 
+          group: qualification.qualificationGroup ? qualification.qualificationGroup.name : '', 
+          orderNum: qualification.orderNum, 
+          groupOrderNum: qualification.qualificationGroup ? qualification.qualificationGroup.orderNum : undefined
+        }));
+      const sortedQualifications = sortData(qualifications, defaultDataGroupSort);
+      const newGroupedQualifications = groupingOptions(sortedQualifications);
+      setQualificationList(newGroupedQualifications);
     });
 
     // fetching experiences
     request('experiences', (experiencesData: any) => {
       console.log("experiencesData:", experiencesData);
-      const experiences = experiencesData.map((experience: any) => ({ value: experience.id, label: experience.name, orderNum: experience.orderNum }));
-      setExperienceList(experiences);
+      const experiences = experiencesData.map((experience: any) => (
+        { 
+          value: experience.id, 
+          label: experience.name, 
+          group: experience.experienceGroup ? experience.experienceGroup.name : '', 
+          orderNum: experience.orderNum,
+          groupOrderNum: experience.experienceGroup ? experience.experienceGroup.orderNum : undefined
+        }));
+      const sortedExperiences = sortData(experiences, defaultDataGroupSort);
+      const newGroupedExperiences = groupingOptions(sortedExperiences);
+      setExperienceList(newGroupedExperiences);
     });
 
     // fetching services
     request('services', (servicesData: any) => {
       console.log("servicesData:", servicesData);
-      const services = servicesData.map((service: any) => ({ value: service.id, label: service.name, orderNum: service.orderNum }));
-      setServiceList(services);
+      const services = servicesData.map((service: any) => (
+        { 
+          value: service.id, 
+          label: service.name, 
+          orderNum: service.orderNum 
+        }));
+      const sortedServices = sortData(services, ["orderNum", "label"]);
+      setServiceList(sortedServices);
+    });
+
+    // fatching skills
+    request('skills', (skillsData: any) => {
+      console.log("skillsData:", skillsData);
+      const skills = skillsData.map((skill: any) => (
+        { 
+          value: skill.id, 
+          label: skill.name, 
+          group: skill.skillGroup ? skill.skillGroup.name : '', 
+          orderNum: skill.orderNum, 
+          groupOrderNum: skill.skillGroup ? skill.skillGroup.orderNum : undefined
+        }));
+      const sortedSkills = sortData(skills, defaultDataGroupSort);
+      const newGroupedSkills = groupingOptions(sortedSkills);
+      setSkillList(newGroupedSkills);
     });
 
     console.log("after fetching...");
@@ -564,8 +571,8 @@ function Registration() {
         />
 
         <FormControlLabel control={
-            <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={groupedSkills} 
-              isValidNewOption={search => !includes(search, groupedSkills)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+            <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillList} 
+              isValidNewOption={search => !includes(search, skillList)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
             />
           }
           label="Dodatne vještine*:" className="textField" labelPlacement="top"
