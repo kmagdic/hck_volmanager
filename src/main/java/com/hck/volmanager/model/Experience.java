@@ -23,10 +23,14 @@ public class Experience {
     private String name;
 
     @Column(name = "ordernum")
-    private short orderNum;
+    private Short orderNum;
 
     @ManyToMany(mappedBy = "experiences")
     private Set<Volunteer> volunteers = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "groupid")
+    private ExperienceGroup experienceGroup;
 
     @Override
     public String toString() {
@@ -54,11 +58,19 @@ public class Experience {
         this.name = name;
     }
 
-    public short getOrderNum() {
+    public Short getOrderNum() {
         return orderNum;
     }
 
-    public void setOrderNum(short orderNum) {
+    public void setOrderNum(Short orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public ExperienceGroup getExperienceGroup() {
+        return experienceGroup;
+    }
+
+    public void setExperienceGroup(ExperienceGroup experienceGroup) {
+        this.experienceGroup = experienceGroup;
     }
 }

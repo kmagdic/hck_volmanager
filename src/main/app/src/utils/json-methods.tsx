@@ -29,6 +29,32 @@ export const isEmpty = (value: any): boolean => (value === undefined) || (value 
 export const toSafeNumber = (value: any, nullsFirst: boolean = false): number => 
   isEmpty(value) ? nullsFirst ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER : value;
 
+export const defaultDataGroupSort: any[] = [
+    (a: any, b: any) => toSafeNumber(a.groupOrderNum) - toSafeNumber(b.groupOrderNum),
+    "group",
+    (a: any, b: any) => {
+      var cmp = toSafeNumber(a.orderNum) - toSafeNumber(b.orderNum)
+      //console.log("comparing", a, b, "with result", cmp);
+      if (cmp === 0) {
+        const groupAName = a.group.toLocaleLowerCase();
+        const groupBName = b.group.toLocaleLowerCase();
+        const indexA = groupAName.indexOf(a.label.toLocaleLowerCase());
+        const indexB = groupBName.indexOf(b.label.toLocaleLowerCase());
+        if ((indexA === -1) && (indexB !== -1)) {
+          cmp = 1;  
+        }
+        else if ((indexA !== -1) && (indexB === -1)) {
+          cmp = -1;
+        } else {
+          cmp = a.label.localeCompare(b.label);
+        }
+        //console.log("correcting to", cmp);
+      }
+      return cmp;
+      }
+  ];
+
+
 export const sortData = (values: any[], compare: any[]): any[] => {
   return values.sort((a: any, b: any): number => {
     var compared = 0;

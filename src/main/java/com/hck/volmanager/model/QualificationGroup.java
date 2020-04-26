@@ -1,18 +1,16 @@
 package com.hck.volmanager.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * 	id bigserial,
- * 	name text not null,
- * 	ordernum int2,
+ * 	id bigserial NOT NULL,
+ * 	"name" text NOT NULL,
+ * 	ordernum int2 NULL,
  */
 
 @Entity
-@Table(name = "services")
-public class Service {
+@Table(name = "qualificationgroups")
+public class QualificationGroup {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -25,12 +23,16 @@ public class Service {
     @Column(name = "ordernum")
     private Short orderNum;
 
-    @ManyToMany(mappedBy = "services")
-    private Set<Volunteer> volunteers = new HashSet<>();
+    /*
+    @OneToMany
+    @JoinTable(name = "skills")
+    @JoinColumn(name = "groupid")
+    private Set<Qualification> qualifications;
+    */
 
     @Override
     public String toString() {
-        return "Service{" +
+        return "QualificationGroup{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
