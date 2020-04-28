@@ -73,18 +73,22 @@ function Registration() {
   const [helperTextPlaceOfVolunteering, setHelperTextPlaceOfVolunteering] = React.useState('');
 
   // qualifications
+  const [qualificationSelect, setQualificationSelect] = React.useState(emptyGroup);
   const [qualificationList, setQualificationList] = React.useState(emptyGroup);
   const [customQualificationList, setCustomQualificationList] = React.useState([]);
 
   // experiences
+  const [experienceSelect, setExperienceSelect] = React.useState(emptyGroup);
   const [experienceList, setExperienceList] = React.useState(emptyGroup);
   const [customExperienceList, setCustomExperienceList] = React.useState([]);
 
   // services
+  const [serviceSelect, setServiceSelect] = React.useState(emptyGroup);
   const [serviceList, setServiceList] = React.useState(emptyGroup);
   const [customServiceList, setCustomServiceList] = React.useState([]);
 
   // skills
+  const [skillSelect, setSkillSelect] = React.useState(emptyGroup);
   const [skillList, setSkillList] = React.useState(emptyGroup);
   const [customSkillList, setCustomSkillList] = React.useState([]);
 
@@ -152,7 +156,7 @@ function Registration() {
         }));
       const sortedQualifications = sortData(qualifications, defaultDataGroupSort);
       const newGroupedQualifications = groupingOptions(sortedQualifications);
-      setQualificationList(newGroupedQualifications);
+      setQualificationSelect(newGroupedQualifications);
     });
 
     // fetching experiences
@@ -168,7 +172,7 @@ function Registration() {
         }));
       const sortedExperiences = sortData(experiences, defaultDataGroupSort);
       const newGroupedExperiences = groupingOptions(sortedExperiences);
-      setExperienceList(newGroupedExperiences);
+      setExperienceSelect(newGroupedExperiences);
     });
 
     // fetching services
@@ -181,7 +185,7 @@ function Registration() {
           orderNum: service.orderNum 
         }));
       const sortedServices = sortData(services, ["orderNum", "label"]);
-      setServiceList(sortedServices);
+      setServiceSelect(sortedServices);
     });
 
     // fatching skills
@@ -197,19 +201,11 @@ function Registration() {
         }));
       const sortedSkills = sortData(skills, defaultDataGroupSort);
       const newGroupedSkills = groupingOptions(sortedSkills);
-      setSkillList(newGroupedSkills);
+      setSkillSelect(newGroupedSkills);
     });
 
     console.log("after fetching...");
   }, []);
-
-  //const groupedSkills = groupingOptions(skillsData2, (skill: Skill) => ({ value: skill.id, label: skill.name }), "group");
-  /*
-  const qualifications = qualificationsData.map(option => ({ value: option.id, label: option.name} as ListItem));
-  const experiences = experiencesData.map(option => ({ value: option.id, label: option.name} as ListItem));
-  const services = servicesData.map(option => ({ value: option.id, label: option.name} as ListItem));
-  const skills = skillsData.map(option => ({ value: option.id, label: option.name} as ListItem));
-  */
 
   const renderInput = (props: any, openCalendar: any, closeCalendar: any) => {
     function clear(){
@@ -449,7 +445,7 @@ function Registration() {
 
   const includes = (search: string, options: GroupedOption[]): boolean => {
     search = search.trim().toLocaleLowerCase();
-    return !search.length || !!options.find(category => category.options.find((item: ListItem) => item.label.toLocaleLowerCase() === search));
+    return !search.length || !!options.find(category => category && category.options && category.options.find((item: ListItem) => item && item.label && item.label.toLocaleLowerCase() === search));
   }
 
   return (
@@ -556,24 +552,33 @@ function Registration() {
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationList} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti /> }
+          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationSelect} 
+            isValidNewOption={search => !includes(search, qualificationSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+          />
+          }
           label="Zanimanje/profesionalne kvalifikacije*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceList} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti /> }
+          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceSelect} 
+            isValidNewOption={search => !includes(search, experienceSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+          />
+          }
           label="Iskustva*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceList} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti /> }
+          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceSelect} 
+            isValidNewOption={search => !includes(search, serviceSelect)} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+          />
+          }
           label="Dodatne usluge*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={
-            <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillList} 
-              isValidNewOption={search => !includes(search, skillList)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
-            />
+          <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillSelect} 
+            isValidNewOption={search => !includes(search, skillSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+          />
           }
           label="Dodatne vještine*:" className="textField" labelPlacement="top"
         />
@@ -587,7 +592,7 @@ function Registration() {
         <FormControlLabel control={ 
           <TextField id="availabilityHoursWeekly" required={true} className="textField" variant="outlined" type="number" /> 
           }
-          label="Koliko ste sati tjedno izdvojiti na volontiranje*:" className="textField" labelPlacement="top"
+          label="Koliko ste sati tjedno spremni izdvojiti na volontiranje*:" className="textField" labelPlacement="top"
         />
 
         <FormControlLabel control={
