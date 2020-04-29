@@ -9,6 +9,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import { useHistory, Link } from "react-router-dom";
 
 function ElevationScroll(props: any) {
   const { children, window } = props;
@@ -41,7 +42,7 @@ export default function MenuAppBar(props: any) {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
+  const history = useHistory();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
   };
@@ -53,6 +54,10 @@ export default function MenuAppBar(props: any) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
+  const goToLogin = () => {
+    history.push("/login");
+  }
 
   return (
     <div className={classes.root}>
@@ -92,8 +97,8 @@ export default function MenuAppBar(props: any) {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Profil</MenuItem>
-                  <MenuItem onClick={handleClose}>Odjava</MenuItem>
+                  <MenuItem>Profil</MenuItem>
+                  <MenuItem onClick={goToLogin}>Odjava</MenuItem>
                 </Menu>
               </div>
             )}
