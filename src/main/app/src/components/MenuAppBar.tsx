@@ -72,7 +72,7 @@ export default function MenuAppBar(props: any) {
             </Typography>
             {auth && (
               <div>
-                <span>Admin</span>
+                <span>admin</span>
                 <IconButton
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
