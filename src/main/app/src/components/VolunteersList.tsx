@@ -4,6 +4,7 @@ import Switch from '@material-ui/core/Switch';
 import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
+import MenuAppBar from './MenuAppBar';
 
 interface Row {
   id: number,
@@ -22,10 +23,10 @@ interface TableState {
 export default function VolunteersList() {
   const [state, setState] = React.useState<TableState>({
     columns: [
-      { title: 'Ime', field: 'firstName',
-        render: rowData => rowData.id + '-' + rowData.firstName
+      { title: 'ID', field: 'id' },
+      { title: 'Ime i prezime',
+        render: rowData => rowData.firstName + ' ' + rowData.lastName
       },
-      { title: 'Prezime', field: 'lastName' },
       { title: 'Datum rođenja', field: 'dob', type: 'date',
         render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy')
        },
@@ -93,8 +94,9 @@ export default function VolunteersList() {
   }, []);
   
   return (
+    <>
+    <MenuAppBar title="HCK - pregled volontera"></MenuAppBar>
     <MaterialTable
-      title="Hrvatski Crveni Križ - Sustav za upravljanje volonterima"
       columns={state.columns}
       data={state.data}
       options={{paging: false}}
@@ -138,5 +140,6 @@ export default function VolunteersList() {
       }}
       */
     />
+    </>
   );
 }
