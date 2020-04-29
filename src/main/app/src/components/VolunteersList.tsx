@@ -29,7 +29,7 @@ export default function VolunteersList() {
   const [state, setState] = React.useState<TableState>({
     columns: [
       { title: 'ID', field: 'id', cellStyle, defaultSort: 'asc' },
-      { title: 'Ime i prezime', export: true, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
+      { title: 'Ime i prezime', export: false, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
           const s = getForRenderFullName(rowData).toLocaleLowerCase();
           return s.indexOf(filter.toLocaleLowerCase()) >= 0;
         },
@@ -88,11 +88,7 @@ export default function VolunteersList() {
         }
      }
     ],
-    data: [/*
-      { firstName: 'Mehmet', lastName: 'Baran', dob: "1997", backgroundCheckNeeded: true, backgroundCheckPassed: false },
-      { firstName: 'Mehmet', lastName: 'Baran', dob: "1997", backgroundCheckNeeded: true, backgroundCheckPassed: true },
-      { firstName: 'Zerya Betül', lastName: 'Baran', dob: "2017", backgroundCheckNeeded: false, backgroundCheckPassed: null },*/
-    ],
+    data: [],
   });
 
   useEffect(() => {
@@ -113,16 +109,17 @@ export default function VolunteersList() {
       options={
         {
           paging: false,
-          columnsButton: true,
+          //columnsButton: true,
           exportAllData: false,
           exportButton: true,
           exportDelimiter: ';',
           exportFileName: 'Volonteri',
+          /*
           fixedColumns: {
             right: 2
-          },
-          //headerStyle: { position: 'sticky', top: 0 },
-          //maxBodyHeight: 500,
+          },*/
+          headerStyle: { position: 'sticky', top: 0 },
+          maxBodyHeight: 500,
         }
       }
       localization={{
