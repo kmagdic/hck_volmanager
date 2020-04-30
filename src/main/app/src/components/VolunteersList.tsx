@@ -5,7 +5,6 @@ import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
 import MenuAppBar from './MenuAppBar';
-//const CsvBuilder = require('filefy');
 const _filefy = require("filefy");
 
 interface Row {
@@ -181,7 +180,7 @@ export default function VolunteersList() {
             console.log('data:', allData);
             const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false);
             const exportedData = allData
-              .filter((rowData: any) => rowData.backgroundCheckNeeded && rowData.backgroundCheckPassed === null)
+              .filter((rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null || rowData.backgroundCheckPassed === "null"))
               .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
       
             console.log('exported data:', exportedData);
