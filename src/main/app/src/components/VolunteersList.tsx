@@ -192,7 +192,7 @@ export default function VolunteersList() {
               .exportFile();
           },
           headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
-          maxBodyHeight: 500,
+          //maxBodyHeight: 500,
         }
       }
       localization={{
