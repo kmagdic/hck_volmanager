@@ -55,7 +55,8 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap',
   },
   margin: {
-    margin: theme.spacing(1),
+    // margin: theme.spacing(1),
+    margin: '1px ' + theme.spacing(1) + 'px 1px 0',
   },
   'label-not-sent': {
     display: 'block',
