@@ -46,7 +46,6 @@ export default function MenuAppBar(props: any) {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  //const open = Boolean(anchorEl);
   const history = useHistory();
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -57,10 +56,6 @@ export default function MenuAppBar(props: any) {
 
   const handleMenu = () => {
     setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleMenu0 = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {

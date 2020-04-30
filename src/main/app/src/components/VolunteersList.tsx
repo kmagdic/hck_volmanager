@@ -5,6 +5,8 @@ import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
 import MenuAppBar from './MenuAppBar';
+//const CsvBuilder = require('filefy');
+const _filefy = require("filefy");
 
 interface Row {
   id: number,
@@ -79,9 +81,10 @@ export default function VolunteersList() {
   const [state, setState] = React.useState<TableState>({
     columns: [
       { title: 'ID', field: 'id',
-          ...(true && ({ width: 60 } as object)), // width of column - https://github.com/mbrn/material-table/issues/291
-          cellStyle: {  color: '#CACACA'},
-          defaultSort: 'asc' },
+          ...{ width: 60 }, // width of column - https://github.com/mbrn/material-table/issues/291
+          cellStyle: { color: '#cacaca'},
+          defaultSort: 'asc'
+      },
       { title: 'Ime i prezime', export: true, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
           const s = getForRenderFullName(rowData).toLocaleLowerCase();
           return s.indexOf(filter.toLocaleLowerCase()) >= 0;
@@ -96,27 +99,27 @@ export default function VolunteersList() {
       { title: 'OIB', field: 'oib', cellStyle, export: true,
         hidden: true,
       },
-      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', cellStyle },
+      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', export: false, cellStyle },
       { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle,
         render: rowData =>
         <Switch
-        checked={rowData.backgroundCheckNeeded}
-        onChange={e => {
-          //console.log("rowData:", rowData);
-          setState((prevState) => {
-            const data = [...prevState.data];
-            rowData.backgroundCheckNeeded = !rowData.backgroundCheckNeeded;
-            request('volunteers/' + rowData.id, (response: any) => {
-              //console.log("response:", response);
-            }, "PUT", rowData);
+          checked={rowData.backgroundCheckNeeded}
+          onChange={e => {
             //console.log("rowData:", rowData);
-            data[data.indexOf(rowData)] = rowData;
-            return { ...prevState, data };
-          });
-        }}
-        name="checkedA"
-        inputProps={{ 'aria-label': 'secondary checkbox' }}
-      />
+            setState((prevState) => {
+              const data = [...prevState.data];
+              rowData.backgroundCheckNeeded = !rowData.backgroundCheckNeeded;
+              request('volunteers/' + rowData.id, (response: any) => {
+                //console.log("response:", response);
+              }, "PUT", rowData);
+              //console.log("rowData:", rowData);
+              data[data.indexOf(rowData)] = rowData;
+              return { ...prevState, data };
+            });
+          }}
+          name="checkedA"
+          inputProps={{ 'aria-label': 'secondary checkbox' }}
+        />
      },
       { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean', export: false, cellStyle,
         render: rowData => {
@@ -124,27 +127,25 @@ export default function VolunteersList() {
           // console.log("s:", s, typeof s);
           // console.log("rowData:", rowData, typeof rowData);
           return(
-
-        <CustomSelect 
-          status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
-          onChange={(status: any) => {
-            // console.log("onChange bgStatus rowData:", rowData);
-            setState((prevState) => {
-              const data = [...prevState.data];
-              rowData.backgroundCheckPassed = status;
-              //console.log("rowData:", rowData);
-              request('volunteers/' + rowData.id, (response: any) => {
-                // console.log("response:", response);
-              }, "PUT", rowData);
-              data[data.indexOf(rowData)] = rowData;
-              return { ...prevState, data };
-            });
-            console.log("state:", state);
-          }}
-          >
-        </CustomSelect>
-        )
-
+            <CustomSelect 
+              status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
+              onChange={(status: any) => {
+                // console.log("onChange bgStatus rowData:", rowData);
+                setState((prevState) => {
+                  const data = [...prevState.data];
+                  rowData.backgroundCheckPassed = status;
+                  //console.log("rowData:", rowData);
+                  request('volunteers/' + rowData.id, (response: any) => {
+                    // console.log("response:", response);
+                  }, "PUT", rowData);
+                  data[data.indexOf(rowData)] = rowData;
+                  return { ...prevState, data };
+                });
+                console.log("state:", state);
+              }}
+              >
+            </CustomSelect>
+          )
         }
      }
     ],
@@ -165,28 +166,31 @@ export default function VolunteersList() {
     <MaterialTable
       title=''
       columns={state.columns}
-
-
       data={state.data}
       options={
         {
           paging: false,
-          //columnsButton: true,
           exportAllData: true,
-          //exportButton: true,
+          exportButton: true,
           exportDelimiter: ';',
           exportFileName: 'Volonteri',
           tableLayout: 'fixed',
 
-          /*exportCsv: (columns, data) => {
-            downloadCSV(columns, data);
-          },*/
-
-          /*fixedColumns: {
-            left: 1,
-            right: 3
-          },*/
-
+          exportCsv: (allColumns, allData) => {
+            console.log('columns:', allColumns);
+            console.log('data:', allData);
+            const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false);
+            const exportedData = allData
+              .filter((rowData: any) => rowData.backgroundCheckNeeded && rowData.backgroundCheckPassed === null)
+              .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
+      
+            console.log('exported data:', exportedData);
+            new _filefy.CsvBuilder("Volonteri.csv")
+              .setDelimeter(';')
+              .setColumns(columns.map((columnDef: any) => columnDef.title))
+              .addRows(exportedData)
+              .exportFile();
+          },
           headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
           maxBodyHeight: 500,
         }
