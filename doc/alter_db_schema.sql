@@ -22,10 +22,10 @@ create table hck.experiencegroups (
 
 alter table if exists hck.experiences add column groupid int8
 create table hck.qualificationgroups (
-  id  bigserial not null,
-  name varchar(255),
-  ordernum int2,
-  primary key (id)
+    id  bigserial not null,
+    name varchar(255),
+    ordernum int2,
+    primary key (id)
 )
 alter table if exists hck.qualifications add column groupid int8
 alter table if exists hck.experiences add constraint fk_experiences_groups foreign key (groupid) references hck.experiencegroups

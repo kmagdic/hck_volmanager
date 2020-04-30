@@ -138,15 +138,21 @@ public class VolunteerController {
 
 
     @GetMapping("/volunteers/export-csv")
-    public void downloadUsersCSV(@Context HttpServletResponse response){
-        String filename = "someFileName.csv";
+    public void downloadUsersCSV(@Context HttpServletResponse response) {
+        log.info("Exporting volonteers ");
+
+        String filename = "HCK_volonteri_export.csv";
         List<Volunteer> volunteers = volunteerRepository.findAll();
         try {
             response.setContentType("text/csv");
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                     "attachment; filename=\"" + filename + "\"");
+            response.setHeader(HttpHeaders.CONTENT_ENCODING, "UTF-8");
             CSVPrinter csvPrinter = new CSVPrinter(response.getWriter(),
-                    CSVFormat.DEFAULT.withHeader("ID", "Ime", "Prezima"));
+                    CSVFormat.EXCEL
+                            .withHeader("ID", "Ime", "Prezime")
+                            .withQuote('"')
+                    );
             for (Volunteer v : volunteers) {
                 csvPrinter.printRecord(Arrays.asList(v.getId(), v.getFirstName(), v.getLastName()));
             }
