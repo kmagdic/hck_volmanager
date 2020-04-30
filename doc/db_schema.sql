@@ -251,3 +251,5 @@ create table hck.users(
 	constraint pk_users primary key(id),
 	constraint fk_users_hcksociety foreign key(hcksocietyid) references hck.hcksociety(id)
 );
+
+create unique index ui_users_user on hck.users(username);
