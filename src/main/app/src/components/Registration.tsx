@@ -47,6 +47,10 @@ function Registration() {
     </div>
   );
   //const newGroupedPlaces = groupingOptions(placesData, (place: Place) => ({ value: place.id, label: `${place.name}, ${place.postCode}, ${place.county}`}), "county");
+  const initDateTime: any = undefined;
+  const [dateTimeOpened, setDateTimeOpen] = useState(initDateTime);
+  const [dateTimeValue, setDateTimeValue] = useState(new Date("1990-1-1"));
+
   const [groupedPlaces, setGroupedPlaces] = useState(emptyGroup);
 
   // dob
@@ -132,9 +136,11 @@ function Registration() {
               cmp = a.label.localeCompare(b.label);
             }
           }
+          /*
           console.log("comparing", a, b, "with result", cmp);
           console.log("groupAName", groupAName, "groupBName", groupBName);
           console.log("indexA", indexA, "indexB", indexB);
+          */
           return cmp;
           }
       ]);
@@ -233,6 +239,34 @@ function Registration() {
     return true;
   }
 
+  const parseDate = (s: string): Date | null => {
+    const strDate = s.replace(/ /gi, "");
+    var dDate = parse(strDate, "dd.MM.yyyy", new Date());
+    //console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
+    if (dDate.toString() === "Invalid Date") {
+      // special char
+      const sc: any = strDate.split('').find((c: any) => !(c > -1));
+      if (!sc) {
+        return null;
+      }
+      console.log(`special char "${sc}"`);
+      const dateParts = strDate.split(sc);
+      if (dateParts.length >= 3) {
+        const newDate = dateParts.filter((p: string) => p.length > 0).join(sc);
+        if (dateParts[0].length === 4) {
+          dDate = parse(newDate, `yyyy${sc}MM${sc}dd`, new Date());
+        } else {
+          dDate = parse(newDate, `dd${sc}MM${sc}yyyy`, new Date());
+        }
+      }
+    }
+    if (dDate.toString() === "Invalid Date") {
+      return null;
+    }
+    const d = new Date(dDate.getTime() - dDate.getTimezoneOffset() * 60000); // fix time-zone and return only date part of datetime
+    return d;
+  }
+
   const validatingFields = (form: any, data: any): boolean => {
     if (!validateOIB(form.oib, data.oib, true)) {
       return false;
@@ -258,6 +292,20 @@ function Registration() {
       form.dob.focus();
       return false;
     }
+    data.dob = parseDate(data.dob);
+    if (!data.dob) {
+      console.error("Invalid date:", data.dob);
+      setHelperTextDOB('datum rođenja neispravan');
+      setErrorDOB(true);
+      form.dob.focus();
+      return false;
+    }
+    data.dob = data.dob.toISOString().substr(0, 10);
+    if (errorDOB) {
+      setHelperTextDOB('');
+      setErrorDOB(false);
+    }
+    /*
     const strDate = data.dob.replace(/ /gi, "");
     var dDate = parse(strDate, "dd.MM.yyyy", new Date());
     //console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
@@ -287,6 +335,7 @@ function Registration() {
       setHelperTextDOB('');
       setErrorDOB(false);
     }
+    */
 
     // placeOfLiving
     if (!placeOfLiving.id) {
@@ -364,6 +413,16 @@ function Registration() {
         }
         */
       }, "POST", data);
+  }
+
+  const onChangeDateTime = (event: any) => {
+    console.log("datetime changed:", event); 
+    setDateTimeOpen(false);
+    const dateTime = event._isValid ? event._d : parseDate(event);
+    if (dateTime) {
+      setDateTimeValue(dateTime);
+    }
+    setTimeout(() => setDateTimeOpen(initDateTime), 100);
   }
 
   const getValues = (values: any[], list: any[], custom: any[]) => {
@@ -468,7 +527,7 @@ function Registration() {
 
         <FormControl error={errorDOB}>
           <FormControlLabel id="dob" control={
-            <Datetime viewMode="years" viewDate={new Date("1990-1-1")} dateFormat={"DD.MM.YYYY"} closeOnSelect={true} className="textField rdt-datepicker" renderInput={renderInput} timeFormat={false} locale="hr-HR" />
+            <Datetime viewMode="years" viewDate={dateTimeValue} dateFormat={"DD.MM.YYYY"} open={dateTimeOpened} onChange={onChangeDateTime} closeOnSelect={true} className="textField rdt-datepicker" renderInput={renderInput} timeFormat={false} locale="hr-HR" />
             }  label="Datum rođenja*:" className="textField" labelPlacement="top"
           />
           <FormHelperText className="helper-text">{helperTextDOB}</FormHelperText>
@@ -590,7 +649,7 @@ function Registration() {
         />
 
         <FormControlLabel control={ 
-          <TextField id="availabilityHoursWeekly" required={true} className="textField" variant="outlined" type="number" /> 
+          <TextField id="availabilityHoursWeekly" required={true} className="textField" variant="outlined" type="number" />
           }
           label="Koliko ste sati tjedno spremni izdvojiti na volontiranje*:" className="textField" labelPlacement="top"
         />

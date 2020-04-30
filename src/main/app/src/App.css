@@ -198,3 +198,9 @@ label.MuiFormControlLabel-labelPlacementTop {
     transform: rotate(360deg);
   }
 }
+
+
+.MuiTable-root th:nth-child(1) div {
+  color: grey;
+}
+

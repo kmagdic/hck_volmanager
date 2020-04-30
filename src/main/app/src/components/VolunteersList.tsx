@@ -4,6 +4,7 @@ import Switch from '@material-ui/core/Switch';
 import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
+import MenuAppBar from './MenuAppBar';
 
 interface Row {
   id: number,
@@ -18,24 +19,90 @@ interface TableState {
   columns: Array<Column<Row>>;
   data: Row[];
 }
+/*
+
+// https://github.com/mbrn/material-table/issues/1359
+
+
+function convertArrayOfObjectsToCSV(array:any, data:any) {
+  let result: any;
+  let keys: any[] = [];
+  array.forEach(element => {
+    keys.push(element.field);
+  });
+
+  const columnDelimiter = ",";
+  const lineDelimiter = "\n";
+
+  result = "";
+  result += keys.join(columnDelimiter);
+  result += lineDelimiter;
+
+  data.forEach(item => {
+    let ctr = 0;
+    keys.forEach(key => {
+      if (ctr > 0) result += columnDelimiter;
+
+      result += item[key];
+
+      ctr++;
+    });
+    result += lineDelimiter;
+  });
+
+  return result;
+}
+
+function downloadCSV(array:any, data:any) {
+  const link = document.createElement("a");
+  let csv = convertArrayOfObjectsToCSV(array, data);
+  if (csv == null) return;
+
+  const filename = "export.csv";
+
+  if (!csv.match(/^data:text\/csv/i)) {
+    csv = `data:text/csv;charset=utf-8,${csv}`;
+  }
+
+  link.setAttribute("href", encodeURI(csv));
+  link.setAttribute("download", filename);
+  link.click();
+}
+*/
 
 export default function VolunteersList() {
+  const cellStyle = {
+    padding: '0 14px',
+  };
+  const getForRenderFullName = (rowData: any)  => rowData.firstName + ' ' + rowData.lastName;
+
   const [state, setState] = React.useState<TableState>({
     columns: [
-      { title: 'Ime', field: 'firstName',
-        render: rowData => rowData.id + '-' + rowData.firstName
+      { title: 'ID', field: 'id',
+          ...(true && ({ width: 60 } as object)), // width of column - https://github.com/mbrn/material-table/issues/291
+          cellStyle: {  color: '#CACACA'},
+          defaultSort: 'asc' },
+      { title: 'Ime i prezime', export: true, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
+          const s = getForRenderFullName(rowData).toLocaleLowerCase();
+          return s.indexOf(filter.toLocaleLowerCase()) >= 0;
+        },
+        //render: rowData => rowData.firstName + ' ' + rowData.lastName
+        render: getForRenderFullName
       },
-      { title: 'Prezime', field: 'lastName' },
-      { title: 'Datum rođenja', field: 'dob', type: 'date',
-        render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy')
-       },
-      { title: 'HCK Društvo', field: 'placeOfVolunteering.name' },
-      { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean',
-        render: rowData => 
+      { title: 'Datum rođenja', field: 'dob', type: 'date', cellStyle,
+              render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy'),
+              hidden: false,
+             },
+      { title: 'OIB', field: 'oib', cellStyle, export: true,
+        hidden: true,
+      },
+      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', cellStyle },
+      { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle,
+        render: rowData =>
         <Switch
         checked={rowData.backgroundCheckNeeded}
         onChange={e => {
-          //console.log("rowData:", rowData); 
+          //console.log("rowData:", rowData);
           setState((prevState) => {
             const data = [...prevState.data];
             rowData.backgroundCheckNeeded = !rowData.backgroundCheckNeeded;
@@ -51,12 +118,13 @@ export default function VolunteersList() {
         inputProps={{ 'aria-label': 'secondary checkbox' }}
       />
      },
-      { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean',
+      { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean', export: false, cellStyle,
         render: rowData => {
           const s = rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString();
           // console.log("s:", s, typeof s);
           // console.log("rowData:", rowData, typeof rowData);
           return(
+
         <CustomSelect 
           status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
           onChange={(status: any) => {
@@ -74,15 +142,13 @@ export default function VolunteersList() {
             console.log("state:", state);
           }}
           >
-        </CustomSelect>)
+        </CustomSelect>
+        )
+
         }
      }
     ],
-    data: [/*
-      { firstName: 'Mehmet', lastName: 'Baran', dob: "1997", backgroundCheckNeeded: true, backgroundCheckPassed: false },
-      { firstName: 'Mehmet', lastName: 'Baran', dob: "1997", backgroundCheckNeeded: true, backgroundCheckPassed: true },
-      { firstName: 'Zerya Betül', lastName: 'Baran', dob: "2017", backgroundCheckNeeded: false, backgroundCheckPassed: null },*/
-    ],
+    data: [],
   });
 
   useEffect(() => {
@@ -93,11 +159,50 @@ export default function VolunteersList() {
   }, []);
   
   return (
+    <>
+    <MenuAppBar title="HCK - pregled volontera"></MenuAppBar>
+    <div style={{height: "4rem"}}></div>
     <MaterialTable
-      title="Hrvatski Crveni Križ - Sustav za upravljanje volonterima"
+      title=''
       columns={state.columns}
+
+
       data={state.data}
-      options={{paging: false}}
+      options={
+        {
+          paging: false,
+          //columnsButton: true,
+          exportAllData: true,
+          //exportButton: true,
+          exportDelimiter: ';',
+          exportFileName: 'Volonteri',
+          tableLayout: 'fixed',
+
+          /*exportCsv: (columns, data) => {
+            downloadCSV(columns, data);
+          },*/
+
+          /*fixedColumns: {
+            left: 1,
+            right: 3
+          },*/
+
+          headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
+          /*maxBodyHeight: 500,*/
+        }
+      }
+      localization={{
+        toolbar: {
+          exportTitle: 'izvoz podataka',
+          exportAriaLabel: 'Izvoz podataka u CSV',
+          exportName: 'Izvoz podataka u CSV',
+          searchPlaceholder: 'Pretraživanje...',
+          searchTooltip: 'Pretraživanje volontera'
+        },
+        body: {
+          emptyDataSourceMessage: '',
+      },
+    }}
       /*
       editable={{
         onRowAdd: (newData) =>
@@ -138,5 +243,6 @@ export default function VolunteersList() {
       }}
       */
     />
+    </>
   );
 }
