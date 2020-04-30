@@ -106,8 +106,16 @@ create or replace function hck.test_create_data() returns void as
 $$
 declare
 	vid int8;
+	max_fn int;
+	max_ln int;
+	max_pl int;
+	max_streets int;
 	maxr int;
 begin
+	select count(*) into max_fn from hck.test_firstnames;
+	select count(*) into max_ln from hck.test_lastnames;
+	select count(*) into max_pl from hck.places;
+	select count(*) into max_streets from hck.test_streets;
 	insert into hck.volunteers
 	(
 		firstname, lastname, gender, oib, dob, addressofliving, placeoflivingid, placeofvolunteeringid, phone, email, icename, icephone,
@@ -138,13 +146,13 @@ begin
 		(select row_number() over (order  by ex) rn, ex from (select '1' ex union select '2' union select '5' union select '8' union select '9') iphones) phones,
 		(select row_number() over (order by name) rn, name from hck.test_streets) streets,
 		(select row_number() over (order by name) rn, name, gender from hck.test_firstnames) icefn,
-		(select hck.random_between(1, 20) r) rand_fn,
-		(select hck.random_between(1, 40) r) rand_ln,
-		(select hck.random_between(1, 571) r) rand_pl,
-		(select hck.random_between(1, 571) r) rand_vl,
+		(select hck.random_between(1, max_fn) r) rand_fn,
+		(select hck.random_between(1, max_ln) r) rand_ln,
+		(select hck.random_between(1, max_pl) r) rand_pl,
+		(select hck.random_between(1, max_pl) r) rand_vl,
 		(select hck.random_between(1, 5) r) rand_phones,
-		(select hck.random_between(1, 15) r) rand_streets,
-		(select hck.random_between(1, 20) r) rand_icefn
+		(select hck.random_between(1, max_streets) r) rand_streets,
+		(select hck.random_between(1, max_fn) r) rand_icefn
 	where
 		fn.rn = rand_fn.r and
 		ln.rn = rand_ln.r and
@@ -195,3 +203,6 @@ begin
 	perform hck.test_create_data() from generate_series(1, icount);
 end;
 $$ language 'plpgsql';
+
+-- usage: to create 100 random data execute:
+-- select hck.random_data(100)
