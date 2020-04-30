@@ -58,7 +58,7 @@ export const defaultDataGroupSort: any[] = [
 export const sortData = (values: any[], compare: any[]): any[] => {
   return values.sort((a: any, b: any): number => {
     var compared = 0;
-    const f = compare.find(cmp => {
+    compare.find(cmp => {
       var comparator: any;
       if (typeof cmp === "string") {
         comparator = (a: any, b: any) => a[cmp].localeCompare(b[cmp]);

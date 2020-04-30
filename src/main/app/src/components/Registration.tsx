@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, FormControl,  TextField, FormControlLabel, Checkbox, FormLabel, RadioGroup, Radio, MenuItem, FormHelperText } from '@material-ui/core';
+import { Button, FormControl,  TextField, FormControlLabel, Checkbox, FormLabel, RadioGroup, Radio, FormHelperText } from '@material-ui/core';
 import Law from './Law';
 import CreatableSelect from 'react-select/creatable';
 import Datetime from 'react-datetime';
 import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
-import { ListItem, GroupedOption, groupingOptions, sortData, defaultDataGroupSort, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
+import { ListItem, GroupedOption, groupingOptions, sortData, defaultDataGroupSort, emptyGroup } from "../utils/json-methods"
 import { genders } from "../utils/data"
-import { latinize } from "../utils/string-search";
 import { useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
@@ -213,14 +212,7 @@ function Registration() {
     console.log("after fetching...");
   }, []);
 
-  const renderInput = (props: any, openCalendar: any, closeCalendar: any) => {
-    function clear(){
-      props.onChange({target: {value: ''}});
-    };
-    return (
-      <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />
-    );
-  };
+  const renderInput = (props: any) => <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />;
 
   const validateOIB = (target: any, oib: string, focus: boolean = false): boolean => {
     // console.log("validateOIB:", target);

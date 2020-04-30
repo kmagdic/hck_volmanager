@@ -91,7 +91,7 @@ export default function VolunteersList() {
         //render: rowData => rowData.firstName + ' ' + rowData.lastName
         render: getForRenderFullName
       },
-      { title: 'Datum rođenja', field: 'dob', type: 'date', cellStyle,
+      { title: 'Datum rođenja', field: 'dob', type: 'date', export: false, cellStyle,
               render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy'),
               hidden: false,
              },
@@ -122,7 +122,7 @@ export default function VolunteersList() {
      },
       { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean', export: false, cellStyle,
         render: rowData => {
-          const s = rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString();
+          // const s = rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString();
           // console.log("s:", s, typeof s);
           // console.log("rowData:", rowData, typeof rowData);
           return(
@@ -132,7 +132,7 @@ export default function VolunteersList() {
                 // console.log("onChange bgStatus rowData:", rowData);
                 setState((prevState) => {
                   const data = [...prevState.data];
-                  rowData.backgroundCheckPassed = status;
+                  rowData.backgroundCheckPassed = (status === "null") ? null : status;
                   //console.log("rowData:", rowData);
                   request('volunteers/' + rowData.id, (response: any) => {
                     // console.log("response:", response);
@@ -180,7 +180,7 @@ export default function VolunteersList() {
             console.log('data:', allData);
             const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false);
             const exportedData = allData
-              .filter((rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null || rowData.backgroundCheckPassed === "null"))
+              .filter((rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null))
               .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
       
             console.log('exported data:', exportedData);
