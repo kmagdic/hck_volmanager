@@ -64,9 +64,11 @@ export default function MenuAppBar(props: any) {
       <ElevationScroll {...props}>
         <AppBar position="fixed">
           <Toolbar>
+            {/* commenting hamburger menu
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
+            */}
             <Typography variant="h6" className={classes.title}>
               {props.title}
             </Typography>
@@ -86,7 +88,7 @@ export default function MenuAppBar(props: any) {
                   id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
-                    vertical: 'top',
+                    vertical: 'bottom',
                     horizontal: 'right',
                   }}
                   keepMounted

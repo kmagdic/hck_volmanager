@@ -649,7 +649,7 @@ function Registration() {
         />
 
         <FormControlLabel control={ 
-          <TextField id="availabilityHoursWeekly" required={true} className="textField" variant="outlined" type="number" /> 
+          <TextField id="availabilityHoursWeekly" required={true} className="textField" variant="outlined" type="number" />
           }
           label="Koliko ste sati tjedno spremni izdvojiti na volontiranje*:" className="textField" labelPlacement="top"
         />

@@ -19,6 +19,56 @@ interface TableState {
   columns: Array<Column<Row>>;
   data: Row[];
 }
+/*
+
+// https://github.com/mbrn/material-table/issues/1359
+
+
+function convertArrayOfObjectsToCSV(array:any, data:any) {
+  let result: any;
+  let keys: any[] = [];
+  array.forEach(element => {
+    keys.push(element.field);
+  });
+
+  const columnDelimiter = ",";
+  const lineDelimiter = "\n";
+
+  result = "";
+  result += keys.join(columnDelimiter);
+  result += lineDelimiter;
+
+  data.forEach(item => {
+    let ctr = 0;
+    keys.forEach(key => {
+      if (ctr > 0) result += columnDelimiter;
+
+      result += item[key];
+
+      ctr++;
+    });
+    result += lineDelimiter;
+  });
+
+  return result;
+}
+
+function downloadCSV(array:any, data:any) {
+  const link = document.createElement("a");
+  let csv = convertArrayOfObjectsToCSV(array, data);
+  if (csv == null) return;
+
+  const filename = "export.csv";
+
+  if (!csv.match(/^data:text\/csv/i)) {
+    csv = `data:text/csv;charset=utf-8,${csv}`;
+  }
+
+  link.setAttribute("href", encodeURI(csv));
+  link.setAttribute("download", filename);
+  link.click();
+}
+*/
 
 export default function VolunteersList() {
   const cellStyle = {
@@ -28,8 +78,11 @@ export default function VolunteersList() {
 
   const [state, setState] = React.useState<TableState>({
     columns: [
-      { title: 'ID', field: 'id', cellStyle, defaultSort: 'asc' },
-      { title: 'Ime i prezime', export: false, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
+      { title: 'ID', field: 'id',
+          ...(true && ({ width: 60 } as object)), // width of column - https://github.com/mbrn/material-table/issues/291
+          cellStyle: {  color: '#CACACA'},
+          defaultSort: 'asc' },
+      { title: 'Ime i prezime', export: true, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
           const s = getForRenderFullName(rowData).toLocaleLowerCase();
           return s.indexOf(filter.toLocaleLowerCase()) >= 0;
         },
@@ -37,15 +90,19 @@ export default function VolunteersList() {
         render: getForRenderFullName
       },
       { title: 'Datum rođenja', field: 'dob', type: 'date', cellStyle,
-        render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy')
-       },
+              render: rowData => format(new Date(rowData.dob), 'dd.MM.yyyy'),
+              hidden: false,
+             },
+      { title: 'OIB', field: 'oib', cellStyle, export: true,
+        hidden: true,
+      },
       { title: 'HCK Društvo', field: 'placeOfVolunteering.name', cellStyle },
       { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle,
-        render: rowData => 
+        render: rowData =>
         <Switch
         checked={rowData.backgroundCheckNeeded}
         onChange={e => {
-          //console.log("rowData:", rowData); 
+          //console.log("rowData:", rowData);
           setState((prevState) => {
             const data = [...prevState.data];
             rowData.backgroundCheckNeeded = !rowData.backgroundCheckNeeded;
@@ -67,6 +124,7 @@ export default function VolunteersList() {
           // console.log("s:", s, typeof s);
           // console.log("rowData:", rowData, typeof rowData);
           return(
+
         <CustomSelect 
           status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
           onChange={(status: any) => {
@@ -84,7 +142,9 @@ export default function VolunteersList() {
             console.log("state:", state);
           }}
           >
-        </CustomSelect>)
+        </CustomSelect>
+        )
+
         }
      }
     ],
@@ -105,21 +165,30 @@ export default function VolunteersList() {
     <MaterialTable
       title=''
       columns={state.columns}
+
+
       data={state.data}
       options={
         {
           paging: false,
           //columnsButton: true,
-          exportAllData: false,
-          exportButton: true,
+          exportAllData: true,
+          //exportButton: true,
           exportDelimiter: ';',
           exportFileName: 'Volonteri',
-          /*
-          fixedColumns: {
-            right: 2
+          tableLayout: 'fixed',
+
+          /*exportCsv: (columns, data) => {
+            downloadCSV(columns, data);
           },*/
-          headerStyle: { position: 'sticky', top: 0 },
-          maxBodyHeight: 500,
+
+          /*fixedColumns: {
+            left: 1,
+            right: 3
+          },*/
+
+          headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
+          /*maxBodyHeight: 500,*/
         }
       }
       localization={{
@@ -131,7 +200,7 @@ export default function VolunteersList() {
           searchTooltip: 'Pretraživanje volontera'
         },
         body: {
-          emptyDataSourceMessage: 'Nema podataka',
+          emptyDataSourceMessage: '',
       },
     }}
       /*
