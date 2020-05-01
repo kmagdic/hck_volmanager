@@ -4,18 +4,28 @@ import com.hck.volmanager.exception.ResourceNotFoundException;
 import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.repository.VolunteerRepository;
+import org.mapstruct.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -125,4 +135,33 @@ public class VolunteerController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+
+
+    @GetMapping("/volunteers/export-csv")
+    public void downloadUsersCSV(@Context HttpServletResponse response) {
+        log.info("Exporting volonteers ");
+
+        String filename = "HCK_volonteri_export.csv";
+        List<Volunteer> volunteers = volunteerRepository.findAll();
+        try {
+            response.setContentType("text/csv");
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"" + filename + "\"");
+            response.setHeader(HttpHeaders.CONTENT_ENCODING, "UTF-8");
+            CSVPrinter csvPrinter = new CSVPrinter(response.getWriter(),
+                    CSVFormat.EXCEL
+                            .withHeader("ID", "Ime", "Prezime")
+                            .withQuote('"')
+                    );
+            for (Volunteer v : volunteers) {
+                csvPrinter.printRecord(Arrays.asList(v.getId(), v.getFirstName(), v.getLastName()));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
+

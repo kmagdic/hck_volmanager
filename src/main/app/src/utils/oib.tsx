@@ -22,7 +22,7 @@ export const calcOIB = (s: string): string => {
   return cnumber.toString();
 };
 
-export const checkOIB = (s: string): boolean => (s.length == 11) && (calcOIB(s) == s[10]);
+export const checkOIB = (s: string): boolean => (s.length === 11) && (calcOIB(s) === s[10]);
 
 /*
   if (s.length != 11) {

@@ -1,0 +1,8 @@
+TODO IDEA/GIT:
+- naučiti kako napraviti hot restart
+   - kako napraviti da se start napravi brže (izbaciti npm install)
+- naučiti kako napraviti start as debug
+- naučiti raditi sa tagovima u git-u i imati version history
+
+
+

@@ -4,17 +4,8 @@ import Registration from './components/Registration';
 import Approval from './components/Approval';
 import Confirmation from './components/Confirmation';
 import Login from './components/Login';
-import logo from './logo.svg';
 import './App.css';
-import HckMaterialTable from './HckMaterialTable';
 import VolunteersList from './components/VolunteersList';
-
-/*
-        <Registration />
-
-        <HckMaterialTable />
-        <VolunteersList />
-*/
 
 class App extends React.Component {
   render() {
@@ -28,17 +19,6 @@ class App extends React.Component {
       </Switch>
     )
   }
-  /*
-  render() {
-    return (
-    <div className="App">
-      <header className="App-header">
-        <PreRegistration />
-      </header>
-    </div>
-    )
-  };
-  */
 }
 
 export default App;
