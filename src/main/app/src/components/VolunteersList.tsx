@@ -196,9 +196,9 @@ export default function VolunteersList() {
       }
       localization={{
         toolbar: {
-          exportTitle: 'izvoz podataka',
-          exportAriaLabel: 'Izvoz podataka u CSV',
-          exportName: 'Izvoz podataka u CSV',
+          exportTitle: 'Izvoz podataka za provjeru',
+          exportAriaLabel: 'Izvoz podataka za provjeru u CSV',
+          exportName: 'Izvoz podataka za provjeru u CSV',
           searchPlaceholder: 'Pretraživanje...',
           searchTooltip: 'Pretraživanje volontera'
         },
