@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, Checkbox } from "@material-ui/core";
-import { Link } from 'react-router-dom'
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({

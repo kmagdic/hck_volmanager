@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, FormControl,  TextField, FormControlLabel, Checkbox, FormLabel, RadioGroup, Radio, MenuItem, FormHelperText } from '@material-ui/core';
+import { Button, FormControl,  TextField, FormControlLabel, Checkbox, FormLabel, RadioGroup, Radio, FormHelperText } from '@material-ui/core';
 import Law from './Law';
 import CreatableSelect from 'react-select/creatable';
 import Datetime from 'react-datetime';
 import '../../node_modules/react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import { request } from "../utils/requests"
-import { ListItem, GroupedOption, groupingOptions, sortData, defaultDataGroupSort, join, emptyGroup, toSafeNumber } from "../utils/json-methods"
+import { ListItem, GroupedOption, groupingOptions, sortData, defaultDataGroupSort, emptyGroup } from "../utils/json-methods"
 import { genders } from "../utils/data"
-import { latinize } from "../utils/string-search";
 import { useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
@@ -213,14 +212,7 @@ function Registration() {
     console.log("after fetching...");
   }, []);
 
-  const renderInput = (props: any, openCalendar: any, closeCalendar: any) => {
-    function clear(){
-      props.onChange({target: {value: ''}});
-    };
-    return (
-      <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />
-    );
-  };
+  const renderInput = (props: any) => <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />;
 
   const validateOIB = (target: any, oib: string, focus: boolean = false): boolean => {
     // console.log("validateOIB:", target);
@@ -305,37 +297,6 @@ function Registration() {
       setHelperTextDOB('');
       setErrorDOB(false);
     }
-    /*
-    const strDate = data.dob.replace(/ /gi, "");
-    var dDate = parse(strDate, "dd.MM.yyyy", new Date());
-    //console.log(`"${dDate.toString()}" typeof ${typeof dDate}`);
-    if (dDate.toString() === "Invalid Date") {
-      // special char
-      const sc = strDate.split('').find((c: any) => !(c > -1));
-      console.log(`special char "${sc}"`);
-      const dateParts = strDate.split(sc);
-      if (dateParts.length >= 3) {
-        const newDate = dateParts.filter((p: string) => p.length > 0).join(sc);
-        if (dateParts[0].length === 4) {
-          dDate = parse(newDate, `yyyy${sc}MM${sc}dd`, new Date());
-        } else {
-          dDate = parse(newDate, `dd${sc}MM${sc}yyyy`, new Date());
-        }
-      }
-      if (dDate.toString() === "Invalid Date") {
-        console.error(dDate);
-        setHelperTextDOB('datum rođenja neispravan');
-        setErrorDOB(true);
-        form.dob.focus();
-        return false;
-      }
-    }
-    data.dob = new Date(dDate.getTime() - dDate.getTimezoneOffset() * 60000).toISOString().substr(0, 10); // fix time-zone and return only date part of datetime
-    if (errorDOB) {
-      setHelperTextDOB('');
-      setErrorDOB(false);
-    }
-    */
 
     // placeOfLiving
     if (!placeOfLiving.id) {
@@ -598,12 +559,15 @@ function Registration() {
 
       <fieldset className="fieldset">
         <legend>Važne informacije</legend>
-        <FormControlLabel control={ <Checkbox name="householdElderly" color="primary" /> } label="imate li u kućanstvu stariju osobu?" />
-        <FormControlLabel control={ <Checkbox name="householdPregnatWomen" color="primary" /> } label="imate li u kućanstvu trudnicu?" />
-        <FormControlLabel control={ <Checkbox name="pregnatWoman" color="primary" /> } label="jeste li vi trudnica?" />
-        <FormControlLabel control={ <Checkbox name="householdChild" color="primary" /> } label="imate li u kućanstvu malo dijete?" />
-        <FormControlLabel control={ <Checkbox name="householdChronicPatient" color="primary" /> } label="imate li u kućanstvu kroničnog bolesnika?" />
-        <FormControlLabel control={ <Checkbox name="healthfine" color="primary" /> } label="imate li sami zdravstvenih poteškoća?" />
+        <FormControl>
+          <FormControlLabel control={ <Checkbox name="householdElderly" color="primary" /> } label="Imate li u kućanstvu osobu stariju od 65 godina?"/>
+        <FormHelperText className="helper-text">Važne informacije tijekom voloniranja za vrijeme epidemije COVID-19</FormHelperText>
+        </FormControl>
+        <FormControlLabel control={ <Checkbox name="householdPregnatWomen" color="primary" /> } label="Imate li u kućanstvu trudnicu?" />
+        <FormControlLabel control={ <Checkbox name="pregnatWoman" color="primary" /> } label="Jeste li vi trudnica?" />
+        <FormControlLabel control={ <Checkbox name="householdChild" color="primary" /> } label="Imate li u kućanstvu malo dijete?" />
+        <FormControlLabel control={ <Checkbox name="householdChronicPatient" color="primary" /> } label="Imate li u kućanstvu kroničnog bolesnika?" />
+        <FormControlLabel control={ <Checkbox name="healthfine" color="primary" /> } label="Imate li sami zdravstvenih poteškoća?" />
       </fieldset>
 
       <fieldset className="fieldset">
@@ -643,7 +607,9 @@ function Registration() {
         />
 
         <FormControlLabel control={ 
-          <TextField id="healthDetails" required={true} className="textField" variant="outlined" multiline /> 
+          <TextField id="healthDetails" required={true} className="textField" variant="outlined" multiline
+            helperText="U svrhu zaštite vašeg zdravlja molimo da navedete zdravstvene detalje (npr. alergije, kronične bolesti i sl.)"
+          /> 
           }
           label="Zdravstveni detalji*:" className="textField" labelPlacement="top"
         />
@@ -656,7 +622,7 @@ function Registration() {
 
         <FormControlLabel control={
             <TextField id="availabilityDetails" required={true} className="textField" variant="outlined" multiline
-              helperText="Navedite kada ste dostupni za volontiranje (što preciznije - koji dani u tjednu i u kojem vremenskom razdoblju)" /> 
+              helperText="Što preciznije navedite kada ste dostupni za volontiranje,  koje dane u tjednu i u kojem vremenskom razdoblju (npr. pon od 18-20h, uto od 11-14h)" /> 
           } 
           label="Ostali detalji o vašoj raspoloživosti za volontiranje*:" className="textField" labelPlacement="top"
         />

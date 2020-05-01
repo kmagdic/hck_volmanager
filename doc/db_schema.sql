@@ -6,7 +6,7 @@ create table hck.hckSociety(
 	id bigserial,
 	name text not null,
 	type text not null,
-	ordernum int2 not null default '0',
+	ordernum int2,
 	constraint pk_hckSociety primary key(id)
 );
 
@@ -14,7 +14,7 @@ create table hck.places(
 	id bigserial,
 	name text not null,
 	county text not null,
-	postcode integer,
+	postcode int2,
 	hckSocietyId int8 not null,
 	constraint pk_places primary key(id),
 	constraint fk_places_hckSocietyId foreign key(hckSocietyId) references hck.hckSociety(id)
@@ -34,7 +34,6 @@ create table hck.volunteers(
 	email text,
 	iceName text,
 	icePhone text,
-	consentProcessPersonalData bool,
 	householdElderly bool,
 	householdPregnantWomen bool,
 	pregnantWoman bool,
@@ -42,7 +41,7 @@ create table hck.volunteers(
 	householdChronicPatient bool,
 	healthFine bool,
 	healthDetails text,
-	availabilityHoursWeekly int2 not null default '0',
+	availabilityHoursWeekly int2,
 	availabilityDetails text,
 	criminalRecord bool,
 	note text,
@@ -118,11 +117,20 @@ create trigger trg_check_oib
 	for each row
 	execute procedure hck.trgfn_check_oib();
 
-create table hck.qualifications(
+create table hck.qualificationgroups(
 	id bigserial,
 	name text not null,
 	ordernum int2,
-	constraint pk_qualifications primary key(id)
+	constraint pk_qualificationgroups primary key (id)
+);
+
+create table hck.qualifications(
+	id bigserial,
+	name text not null,
+	groupid int8,
+	ordernum int2,
+	constraint pk_qualifications primary key(id),
+	fk_qualifications_groupid foreign key(groupid) references hck.qualificationgroups(id)
 );
 
 create table hck.vqualifications(
@@ -141,11 +149,20 @@ create table hck.vcustomqualifications(
 	constraint fk_cqualifications_volunteerId foreign key(volunteerId) references hck.volunteers(id)
 );
 
-create table hck.skills(
+create table hck.skillgroups(
 	id bigserial,
 	name text not null,
 	ordernum int2,
-	constraint pk_skills primary key(id)
+	constraint pk_skillgroups primary key (id)
+);
+
+create table hck.skills(
+	id bigserial,
+	name text not null,
+	groupid int8,
+	ordernum int2,
+	constraint pk_skills primary key(id),
+	constraint fk_skills_groupid foreign key(groupid) references hck.skillgroups(id)
 );
 
 create table hck.vskills(
@@ -164,11 +181,20 @@ create table hck.vcustomskills(
 	constraint fk_cskills_volunteerId foreign key(volunteerId) references hck.volunteers(id)
 );
 
-create table hck.experiences(
+create table hck.experiencegroups(
 	id bigserial,
 	name text not null,
 	ordernum int2,
-	constraint pk_experiences primary key(id)
+	constraint pk_experiencegroups primary key (id)
+);
+
+create table hck.experiences(
+	id bigserial,
+	name text not null,
+	groupid int8,
+	ordernum int2,
+	constraint pk_experiences primary key(id),
+	constraint fk_experiences_groupid foreign key(groupid) references hck.experiencegroups(id)
 );
 
 create table hck.vexperiences(
@@ -209,3 +235,21 @@ create table hck.vcustomservices(
 	constraint pk_cservices primary key(volunteerId, item),
 	constraint fk_cservices_volunteerId foreign key(volunteerId) references hck.volunteers(id)
 );
+
+create table hck.users(
+	id bigserial,
+	username text not null,
+	pass text not null,
+	salt text,
+	hcksocietyid int8,
+	admin boolean default false not null,
+	enabled boolean default true not null,
+	exportAll boolean,
+	exportForCheck boolean,
+	changeStatus boolean,
+	changeCheck boolean,
+	constraint pk_users primary key(id),
+	constraint fk_users_hcksociety foreign key(hcksocietyid) references hck.hcksociety(id)
+);
+
+create unique index ui_users_user on hck.users(username);
