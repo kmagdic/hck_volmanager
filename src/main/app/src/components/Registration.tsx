@@ -575,7 +575,7 @@ function Registration() {
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationSelect} 
+          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationSelect} closeMenuOnSelect={false}
             isValidNewOption={search => !includes(search, qualificationSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
           />
           }
@@ -583,7 +583,7 @@ function Registration() {
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceSelect} 
+          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceSelect} closeMenuOnSelect={false}
             isValidNewOption={search => !includes(search, experienceSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
           />
           }
@@ -591,7 +591,7 @@ function Registration() {
         />
 
         <FormControlLabel control={ 
-          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceSelect} 
+          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceSelect} closeMenuOnSelect={false}
             isValidNewOption={search => !includes(search, serviceSelect)} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
           />
           }
@@ -599,7 +599,7 @@ function Registration() {
         />
 
         <FormControlLabel control={
-          <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillSelect} 
+          <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillSelect} closeMenuOnSelect={false}
             isValidNewOption={search => !includes(search, skillSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
           />
           }
