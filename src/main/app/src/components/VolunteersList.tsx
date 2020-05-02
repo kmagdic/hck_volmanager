@@ -27,10 +27,12 @@ export default function VolunteersList() {
     padding: '0 14px',
   };
   const getForRenderFullName = (rowData: any)  => rowData.firstName + ' ' + rowData.lastName;
-
+  const getForRenderDob = (rowData: any) => format(new Date(rowData.dob), 'dd.MM.yyyy');
+  const tableTitle = (count: number) => `Ukupno ${count} volonter` + (((count % 100 === 11) || (count % 10) !== 1) ? 'a' : '');
+  const [title, setTitle] = React.useState(tableTitle(0));
   const [state, setState] = React.useState<TableState>({
     columns: [
-      { title: 'ID', field: 'id',
+      { title: 'ID', field: 'id', searchable: true,
           ...{ width: 60 }, // width of column - https://github.com/mbrn/material-table/issues/291
           cellStyle: { color: '#cacaca'},
           defaultSort: 'asc'
@@ -39,18 +41,17 @@ export default function VolunteersList() {
           const s = getForRenderFullName(rowData).toLocaleLowerCase();
           return s.indexOf(filter.toLocaleLowerCase()) >= 0;
         },
-        //render: rowData => rowData.firstName + ' ' + rowData.lastName
         render: getForRenderFullName
       },
-      { title: 'Datum rođenja', field: 'dob', type: 'date', export: false, cellStyle,
-              render: (rowData: any) => format(new Date(rowData.dob), 'dd.MM.yyyy'),
-              hidden: false,
-             },
-      { title: 'OIB', field: 'oib', cellStyle, export: true,
-        hidden: true,
+      { title: 'Datum rođenja', field: 'dob', type: 'date', export: false, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
+          const s = getForRenderDob(rowData);
+          return s.indexOf(filter.toLocaleLowerCase()) >= 0;
+        },          
+        render: getForRenderDob
       },
-      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', export: false, cellStyle },
-      { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle,
+      { title: 'OIB', field: 'oib', cellStyle, export: true, hidden: true, searchable: true },
+      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', export: false, cellStyle, searchable: false },
+      { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle, searchable: false,
         render: (rowData: any) =>
         <Switch
           checked={rowData.backgroundCheckNeeded}
@@ -71,7 +72,7 @@ export default function VolunteersList() {
           inputProps={{ 'aria-label': 'secondary checkbox' }}
         />
      },
-      { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean', export: false, cellStyle,
+      { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean', export: false, cellStyle, searchable: false,
         render: (rowData: any) => {
           return(
             <CustomSelect 
@@ -104,6 +105,8 @@ export default function VolunteersList() {
     request('volunteers', (data: any) => {
       console.log("volunteers:", data);
       setState((prevState) => ({ ...prevState, data, isLoading: false }));
+      const count= tableRef.current.dataManager.searchedData.length;
+      setTitle(tableTitle(count));
     })
   }, []);
   
@@ -123,15 +126,24 @@ export default function VolunteersList() {
       .exportFile();
   }
 
+  const tableRef: any = React.useRef();
+
   return (
     <>
       <MenuAppBar title="HCK - pregled volontera"></MenuAppBar>
       <div style={{height: "4rem"}}></div>
       <MaterialTable
-        title=''
+        title={title}
         columns={state.columns}
         data={state.data}
         isLoading={state.isLoading}
+        tableRef={tableRef}
+        onSearchChange={() => {
+          if (tableRef && tableRef.current) {
+            const count= tableRef.current.dataManager.searchedData.length;
+            setTitle(tableTitle(count));
+          }
+        }}
         options={
           {
             paging: false,
