@@ -4,5 +4,6 @@ TODO IDEA/GIT:
 - naučiti kako napraviti start as debug
 - naučiti raditi sa tagovima u git-u i imati version history
 
-
-
+Improve app stability
+- on registration submit catch and log api service's exception/error
+- test performance with high volume volunteers in db
