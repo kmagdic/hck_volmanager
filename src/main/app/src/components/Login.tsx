@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, Checkbox } from "@material-ui/core";
+import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, Checkbox, InputAdornment, IconButton } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,6 +35,7 @@ function Login() {
 
   const [email, setEmail] = useState(adminEmail);
   const [password, setPassword] = useState(adminPassword);
+  const [showPassword, setShowPassword] = useState(false);
 
   const history = useHistory();
 
@@ -43,6 +46,14 @@ function Login() {
   const changePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   }
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   const validateForm = (event: any) => {
     event.preventDefault();
@@ -61,8 +72,31 @@ function Login() {
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
         <form className={classes.form} noValidate onSubmit={validateForm}>
-          <FormControlLabel control={ <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus /> } label="Korisničko ime:" className="textField" labelPlacement="top" />
-          <FormControlLabel control={ <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type="password" /> } label="Lozinka:" className="textField" labelPlacement="top" />
+          <FormControlLabel control={
+              <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus
+              />
+            }
+            label="Korisničko ime:" className="textField" labelPlacement="top"
+          />
+          <FormControlLabel control={
+              <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type={showPassword ? 'text' : 'password' }
+                InputProps={{
+                  endAdornment: 
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                }}
+              />
+            }
+            label="Lozinka:" className="textField" labelPlacement="top"
+          />
 
           <FormControlLabel
             className="no-select"
