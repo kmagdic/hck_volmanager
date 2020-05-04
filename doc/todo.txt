@@ -7,3 +7,23 @@ TODO IDEA/GIT:
 Improve app stability
 - on registration submit catch and log api service's exception/error
 - test performance with high volume volunteers in db
+  - improve fetching volunteers data thru single select instead multi selects
+
+Useability
+- implement custom fields in (important info) Registration form
+  - DB:
+    - table hck.registrationfields(id text, label text, enabled boolean, ordernum int)
+    - table hck.vregistrationfields(volunteerid int4, field text, checked boolean)
+  - middleware
+    - rest controller
+      - for fetching list of all enabled registrationfields
+      - saving volunteer's registration fields values into hck.vregistrationfields table
+  - front
+    - fetch list of all enabled registrationfields
+    - order field list by orderNum
+    - map and display checkbox components for every field
+- add orderNum into hck.places table to define place item in select list on Registration form
+- add place status to differentiate places from the non-places (county, country) and filter only places in placeOfLiving select list
+- after submitting the Registraton form check response status code
+  - and display error message (if error exists) or
+  - automatically go to confirmation page (if error does not exists)
