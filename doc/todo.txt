@@ -1,4 +1,4 @@
-TODO IDEA/GIT:
+TODO - LEARN IDEA/GIT:
 - naučiti kako napraviti hot restart
    - kako napraviti da se start napravi brže (izbaciti npm install)
 - naučiti kako napraviti start as debug
@@ -6,3 +6,5 @@ TODO IDEA/GIT:
 
 
 
+TODO HCK VOLMANAGER
+- Whitelabel error page
