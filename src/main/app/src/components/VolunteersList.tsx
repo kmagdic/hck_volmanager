@@ -102,11 +102,13 @@ export default function VolunteersList() {
   });
 
   useEffect(() => {
-    request('volunteers', (data: any) => {
-      console.log("volunteers:", data);
-      setState((prevState) => ({ ...prevState, data, isLoading: false }));
-      const count= tableRef.current.dataManager.searchedData.length;
-      setTitle(tableTitle(count));
+    request('volunteers', (response: any) => {
+      //console.log("volunteers:", data);
+      response.json().then((data: any) => {
+        setState((prevState) => ({ ...prevState, data, isLoading: false }));
+        const count= tableRef.current.dataManager.searchedData.length;
+        setTitle(tableTitle(count));
+      });
     })
   }, []);
   

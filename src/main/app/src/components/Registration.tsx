@@ -366,13 +366,12 @@ function Registration() {
     if (!validatingFields(event.target, data)) {
       return;
     }
-    request('volunteers', (data: any) => {
-        console.log("response:", data);
-        history.push("/confirmation");
-        /*
-          is status === 200 {
+    request('volunteers', (response: any) => {
+        console.log("response:", response);
+        if (!response.ok) {
+          throw new Error('Response was not ok');
         }
-        */
+        history.push("/confirmation");
       }, "POST", data);
   }
 
