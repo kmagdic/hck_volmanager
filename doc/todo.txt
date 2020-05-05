@@ -6,6 +6,7 @@ TODO - LEARN IDEA/GIT:
 
 
 
-TODO HCK VOLMANAGER
+TODO HCK VOLMANAGER GENERAL
+- Whitelabel error page na produkciji (na refresh ili dohvat direktnog linka)
 - Srediti build
-- Whitelabel error page na produkciji
+
