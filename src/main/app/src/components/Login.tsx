@@ -3,6 +3,8 @@ import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button
 import { useHistory } from "react-router-dom";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import WarningIcon from '@material-ui/icons/Warning';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,7 +27,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
+interface LoginMessage {
+  show: boolean,
+  type?: 'error' | 'warning',
+  message?: string
+};
 
 function Login() {
   const classes = useStyles();
@@ -36,6 +42,7 @@ function Login() {
   const [email, setEmail] = useState(adminEmail);
   const [password, setPassword] = useState(adminPassword);
   const [showPassword, setShowPassword] = useState(false);
+  const [showMessage, setShowMessage] = useState<LoginMessage>({ show: false });
 
   const history = useHistory();
 
@@ -62,6 +69,7 @@ function Login() {
       return true;
     }
     else {
+      setShowMessage({ show: true, type: 'error', message: 'pogrešno korisničko ime ili lozinka' });
       return false;
     }
   };
@@ -72,6 +80,12 @@ function Login() {
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
         <form className={classes.form} noValidate onSubmit={validateForm}>
+          <Typography variant="h6" gutterBottom color="error">
+            <div className="login-message">
+              { showMessage.show ? (showMessage.type === 'warning' ? <WarningIcon /> : <ErrorIcon />) : null }
+              <div className="login-message-text">{showMessage.message}</div>
+            </div>
+          </Typography>
           <FormControlLabel control={
               <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus
               />

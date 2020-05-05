@@ -206,3 +206,24 @@ $$ language 'plpgsql';
 
 -- usage: to create 100 random data execute:
 -- select hck.random_data(100)
+
+create or replace function hck.delete_volunteer(pvolunteerid int) returns void as
+$$
+begin
+	delete from hck.vqualifications where volunteerid = pvolunteerid;
+	delete from hck.vskills where volunteerid = pvolunteerid;
+	delete from hck.vexperiences where volunteerid = pvolunteerid;
+	delete from hck.vservices where volunteerid = pvolunteerid;
+	delete from hck.volunteers where id = pvolunteerid;
+end;
+$$ language 'plpgsql';
+
+create or replace function hck.delete_data(fromvolunteerid int, tovolunteerid int) returns void as
+$$
+begin
+	perform hck.delete_volunteer(generate_series) from generate_series(fromvolunteerid, tovolunteerid);
+end;
+$$ language 'plpgsql';
+
+-- usage: to delete volunteer's data between 110 and 120 (volunteers' id) execute:
+-- select hck.delete_data(110, 120)
