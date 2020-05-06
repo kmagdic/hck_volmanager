@@ -106,107 +106,117 @@ function Registration() {
     console.log("before fetching...");
 
     // fetching places
-    request('places', (placesData: any) => {
-      console.log("placesData:", placesData);
-      const places = placesData.map((place: any) => ({ value: place.id, name: place.name, postcode: place.postCode, label: `${place.name}, ${place.postCode}, ${place.county}`, group: place.county }));
-      // const sortedPlaces = sortData(places, ["group", "label"]);
+    request('places', (placesResponse: any) => {
+      console.log("placesResponse:", placesResponse);
+      placesResponse.json().then((placesData: any) => {
+        const places = placesData.map((place: any) => ({ value: place.id, name: place.name, postcode: place.postCode, label: `${place.name}, ${place.postCode}, ${place.county}`, group: place.county }));
+        // const sortedPlaces = sortData(places, ["group", "label"]);
 
-      const sortedPlaces = sortData(places, [
-        "group",
-        (a: any, b: any) => {
-          var cmp = 0;
-          const groupAName = a.group.toLocaleLowerCase();
-          const groupBName = b.group.toLocaleLowerCase();
-          const indexA = groupAName.indexOf(a.name.toLocaleLowerCase());
-          const indexB = groupBName.indexOf(b.name.toLocaleLowerCase());
-          if ((indexA === -1) && (indexB !== -1)) {
-            cmp = 1;  
-          }
-          else if ((indexA !== -1) && (indexB === -1)) {
-            cmp = -1;
-          } else {
-            if ((indexA >= 0) && (indexB >= 0)) {
-              cmp = b.name.length - a.name.length;
+        const sortedPlaces = sortData(places, [
+          "group",
+          (a: any, b: any) => {
+            var cmp = 0;
+            const groupAName = a.group.toLocaleLowerCase();
+            const groupBName = b.group.toLocaleLowerCase();
+            const indexA = groupAName.indexOf(a.name.toLocaleLowerCase());
+            const indexB = groupBName.indexOf(b.name.toLocaleLowerCase());
+            if ((indexA === -1) && (indexB !== -1)) {
+              cmp = 1;  
             }
-            if (cmp === 0) {
-              cmp = a.postcode - b.postcode;
+            else if ((indexA !== -1) && (indexB === -1)) {
+              cmp = -1;
+            } else {
+              if ((indexA >= 0) && (indexB >= 0)) {
+                cmp = b.name.length - a.name.length;
+              }
+              if (cmp === 0) {
+                cmp = a.postcode - b.postcode;
+              }
+              if (cmp === 0) {
+                cmp = a.label.localeCompare(b.label);
+              }
             }
-            if (cmp === 0) {
-              cmp = a.label.localeCompare(b.label);
+            /*
+            console.log("comparing", a, b, "with result", cmp);
+            console.log("groupAName", groupAName, "groupBName", groupBName);
+            console.log("indexA", indexA, "indexB", indexB);
+            */
+            return cmp;
             }
-          }
-          /*
-          console.log("comparing", a, b, "with result", cmp);
-          console.log("groupAName", groupAName, "groupBName", groupBName);
-          console.log("indexA", indexA, "indexB", indexB);
-          */
-          return cmp;
-          }
-      ]);
+        ]);
 
       const newGroupedPlaces = groupingOptions(sortedPlaces);
       setGroupedPlaces(newGroupedPlaces);
+      });
     });
 
     // fetching qualifications
-    request('qualifications', (qualificationsData: any) => {
-      console.log("qualificationsData:", qualificationsData);
-      const qualifications = qualificationsData.map((qualification: any) => (
-        {
-          value: qualification.id, 
-          label: qualification.name, 
-          group: qualification.qualificationGroup ? qualification.qualificationGroup.name : '', 
-          orderNum: qualification.orderNum, 
-          groupOrderNum: qualification.qualificationGroup ? qualification.qualificationGroup.orderNum : undefined
-        }));
-      const sortedQualifications = sortData(qualifications, defaultDataGroupSort);
-      const newGroupedQualifications = groupingOptions(sortedQualifications);
-      setQualificationSelect(newGroupedQualifications);
+    request('qualifications', (qualificationsResponse: any) => {
+      console.log("qualificationsResponse:", qualificationsResponse);
+      qualificationsResponse.json().then((qualificationsData: any) => {
+        const qualifications = qualificationsData.map((qualification: any) => (
+          {
+            value: qualification.id, 
+            label: qualification.name, 
+            group: qualification.qualificationGroup ? qualification.qualificationGroup.name : '', 
+            orderNum: qualification.orderNum, 
+            groupOrderNum: qualification.qualificationGroup ? qualification.qualificationGroup.orderNum : undefined
+          }));
+        const sortedQualifications = sortData(qualifications, defaultDataGroupSort);
+        const newGroupedQualifications = groupingOptions(sortedQualifications);
+        setQualificationSelect(newGroupedQualifications);
+      });
     });
 
     // fetching experiences
-    request('experiences', (experiencesData: any) => {
-      console.log("experiencesData:", experiencesData);
-      const experiences = experiencesData.map((experience: any) => (
-        { 
-          value: experience.id, 
-          label: experience.name, 
-          group: experience.experienceGroup ? experience.experienceGroup.name : '', 
-          orderNum: experience.orderNum,
-          groupOrderNum: experience.experienceGroup ? experience.experienceGroup.orderNum : undefined
-        }));
-      const sortedExperiences = sortData(experiences, defaultDataGroupSort);
-      const newGroupedExperiences = groupingOptions(sortedExperiences);
-      setExperienceSelect(newGroupedExperiences);
+    request('experiences', (experiencesResponse: any) => {
+      console.log("experiencesResponse:", experiencesResponse);
+      experiencesResponse.json().then((experiencesData: any) => {
+        const experiences = experiencesData.map((experience: any) => (
+          { 
+            value: experience.id, 
+            label: experience.name, 
+            group: experience.experienceGroup ? experience.experienceGroup.name : '', 
+            orderNum: experience.orderNum,
+            groupOrderNum: experience.experienceGroup ? experience.experienceGroup.orderNum : undefined
+          }));
+        const sortedExperiences = sortData(experiences, defaultDataGroupSort);
+        const newGroupedExperiences = groupingOptions(sortedExperiences);
+        setExperienceSelect(newGroupedExperiences);
+      });
     });
 
     // fetching services
-    request('services', (servicesData: any) => {
-      console.log("servicesData:", servicesData);
-      const services = servicesData.map((service: any) => (
-        { 
-          value: service.id, 
-          label: service.name, 
-          orderNum: service.orderNum 
-        }));
-      const sortedServices = sortData(services, ["orderNum", "label"]);
-      setServiceSelect(sortedServices);
+    request('services', (servicesResponse: any) => {
+      console.log("servicesResponse:", servicesResponse);
+      servicesResponse.json().then((servicesData: any) => {
+        const services = servicesData.map((service: any) => (
+          { 
+            value: service.id, 
+            label: service.name, 
+            orderNum: service.orderNum 
+          }));
+        const sortedServices = sortData(services, ["orderNum", "label"]);
+        setServiceSelect(sortedServices);
+      });
     });
 
     // fatching skills
-    request('skills', (skillsData: any) => {
-      console.log("skillsData:", skillsData);
-      const skills = skillsData.map((skill: any) => (
-        { 
-          value: skill.id, 
-          label: skill.name, 
-          group: skill.skillGroup ? skill.skillGroup.name : '', 
-          orderNum: skill.orderNum, 
-          groupOrderNum: skill.skillGroup ? skill.skillGroup.orderNum : undefined
-        }));
-      const sortedSkills = sortData(skills, defaultDataGroupSort);
-      const newGroupedSkills = groupingOptions(sortedSkills);
-      setSkillSelect(newGroupedSkills);
+    request('skills', (skillsResponse: any) => {
+      console.log("skillsResponse:", skillsResponse);
+      skillsResponse.json().then((skillsData: any) => {
+        const skills = skillsData.map((skill: any) => (
+          { 
+            value: skill.id, 
+            label: skill.name, 
+            group: skill.skillGroup ? skill.skillGroup.name : '', 
+            orderNum: skill.orderNum, 
+            groupOrderNum: skill.skillGroup ? skill.skillGroup.orderNum : undefined
+          }));
+        const sortedSkills = sortData(skills, defaultDataGroupSort);
+        const newGroupedSkills = groupingOptions(sortedSkills);
+        setSkillSelect(newGroupedSkills);
+      });
     });
 
     console.log("after fetching...");
