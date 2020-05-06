@@ -14,6 +14,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+
+@ResponseStatus(value = HttpStatus.FORBIDDEN)
+class ForbiddenException extends RuntimeException {}
 
 @RestController
 @RequestMapping("/api/v1")
@@ -49,9 +53,8 @@ public class VolunteerController {
         User user = (User) session.getAttribute("webUser");
         log.info("Current user is " + user);
         if(user == null) {
-           return null; // TODO: return 403 Forbidden
-        }
-        if(user.getAdmin()) {
+            return null; // TODO: return 403 Forbidden
+        } else if (user.getAdmin()) {
             return volunteerRepository.findAll();
         } else if(user.getHckSociety().getName() == "nacionalno") {
             return volunteerRepository.findAllByNational(user.getHckSociety().getId());

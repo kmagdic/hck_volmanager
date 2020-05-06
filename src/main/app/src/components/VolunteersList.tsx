@@ -108,6 +108,9 @@ export default function VolunteersList() {
         setState((prevState) => ({ ...prevState, data, isLoading: false }));
         const count= tableRef.current.dataManager.searchedData.length;
         setTitle(tableTitle(count));
+      })
+      .catch((error: any) => {
+        console.log("error:", error);
       });
     })
   }, []);
