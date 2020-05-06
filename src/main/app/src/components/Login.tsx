@@ -5,6 +5,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
+import { request } from "../utils/requests"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -64,6 +65,25 @@ function Login() {
 
   const validateForm = (event: any) => {
     event.preventDefault();
+
+    /*const data = {
+      username: event.target.username.value,
+      password: event.target.lastName.value,
+      admin: event.target.dob.value,
+      enabled: event.target.oib.value,
+      gender,
+      address: event.target.address.value,
+      placeOfLiving,
+      placeOfVolunteering,
+    }*/
+
+    request('auth?username=' + email + '&password=' + password , (response: any) => {
+        console.log("Auth response:", response);
+        response.json().then((user:any) => {
+          console.log("User: ", user)
+        })
+    }, "POST");
+
     if((email === adminEmail) && (password === adminPassword)) {
       history.push("/list");
       return true;
