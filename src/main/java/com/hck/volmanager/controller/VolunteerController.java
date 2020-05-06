@@ -1,6 +1,7 @@
 package com.hck.volmanager.controller;
 
 import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.model.User;
 import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.repository.VolunteerRepository;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,8 +44,13 @@ public class VolunteerController {
     }
 
     @GetMapping("/volunteers")
-    public List<Volunteer> getAllVolunteers() {
+    public List<Volunteer> getAllVolunteers(HttpSession session) {
         log.info("Listing all volunteers ...");
+        User user = (User) session.getAttribute("webUser");
+        if(user != null) {
+            log.info("Current user is " + user);
+            return volunteerRepository.findAllByUsername(user.getUsername());
+        }
         return volunteerRepository.findAll();
     }
 

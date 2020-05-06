@@ -12,8 +12,8 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/v1")
-public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+public class AuthController {
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private UserRepository userRepository;

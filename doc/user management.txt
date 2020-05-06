@@ -17,3 +17,25 @@ other secured APIs:
 check auth
 checkSession.orThrowException
 ...
+
+
+
+
+
+
+
+
+
+----------
+
+Volunteers List (GET):
+- if user.admin == true list all
+- if user.hcksociety.type == 'nacionalno' then
+
+      select v.* from hck.volunteers v, hck.hcksociety s, hck.places p, hck.users u where
+       (u.username = <webUser.username> and u.hcksocietyid = s.id and p.id = v.placeofvolunteeringid and s.id = p.hcksocietyid) or
+       (v.b
+
+- if user.hcksocietyid == not null
+      select v.* from hck.volunteers v, hck.hcksociety s, hck.places p, hck.users u where
+       u.username = <webUser.username> and u.hcksocietyid = s.id and p.id = v.placeofvolunteeringid and s.id = p.hcksocietyid
