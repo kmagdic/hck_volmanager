@@ -174,13 +174,21 @@ public class Volunteer {
         this.customQualifications = customQualifications;
     }
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "vskills",
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "skillid") }
     )
     Set<Skill> skills = new HashSet<>();
+
+    public Set<Skill> getSkills() {
+        return this.skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
     private Set<CustomSkill> customSkills;
@@ -198,14 +206,21 @@ public class Volunteer {
         this.customSkills = customSkills;
     }
     
-    
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "vexperiences",
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "experienceid") }
     )
     Set<Experience> experiences = new HashSet<>();
+
+    public Set<Experience> getExperiences() {
+        return this.experiences;
+    }
+
+    public void setExperiences(Set<Experience> experiences) {
+        this.experiences = experiences;
+    }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
     private Set<CustomExperience> customExperiences;
@@ -222,15 +237,22 @@ public class Volunteer {
         }
         this.customExperiences = customExperiences;
     }
-    
-    
-    @ManyToMany(cascade = { CascadeType.ALL })
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "vservices",
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "serviceid") }
     )
-    Set<Qualification> services = new HashSet<>();
+    Set<Service> services = new HashSet<>();
+
+    public Set<Service> getServices() {
+        return this.services;
+    }
+
+    public void setServices(Set<Service> services) {
+        this.services = services;
+    }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
     private Set<CustomService> customServices;

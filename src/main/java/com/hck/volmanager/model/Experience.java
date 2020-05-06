@@ -32,6 +32,9 @@ public class Experience {
     @JoinColumn(name = "groupid")
     private ExperienceGroup experienceGroup;
 
+    public Experience() {
+    }
+
     @Override
     public String toString() {
         return "Experience{" +
