@@ -19,9 +19,8 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-
     @PostMapping("/auth")
-    public User login(@RequestParam String username, @RequestParam String password, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException {
+    public User login(@RequestParam String username, @RequestParam String password, HttpSession session) throws ForbiddenHttpException {
         log.info("Login with username '" + username + "' and password '" + password + "'");
         User user = userRepository.findOneByUsername(username);
         if(user != null && user.getEnabled() && user.getPassword().equals(password)) {
@@ -32,27 +31,10 @@ public class AuthController {
         else {
             throw new ForbiddenHttpException("Enabled user with this username and password is not found");
         }
-
     }
 
-    /*
-
-    @PostMapping("/skills")
-    public Skill createSkill(@Valid @RequestBody Skill skill) throws ResourceNotFoundException {
-        Skill newSkill = userRepository.save(skill);
-        log.info("Creating skill:  " + skill.getId());
-
-        newSkill = userRepository.findById(skill.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found for this id :: " + skill.getId()));
-
-        return newSkill;
+    @DeleteMapping("/auth")
+    public User logout(HttpSession session) {
+        session.setAttribute("webUser", null);
     }
-
-    /**
-     * @param skillId
-     * @param skillJSON
-     * @return
-     * @throws ResourceNotFoundException
-     */
-
 }
