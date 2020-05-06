@@ -77,10 +77,10 @@ function Login() {
       placeOfVolunteering,
     }*/
 
-    request('auth?username=' + email + '&password=' + password , (response: any) => {
+    request('auth?username=' + email + '&password=' + password, (response: any) => {
         console.log("Auth response:", response);
-        response.json().then((user:any) => {
-          console.log("User: ", user)
+        response.json().then((user: any) => {
+          console.log("User: ", user);
         })
     }, "POST");
 

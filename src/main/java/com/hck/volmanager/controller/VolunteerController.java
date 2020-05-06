@@ -47,11 +47,17 @@ public class VolunteerController {
     public List<Volunteer> getAllVolunteers(HttpSession session) {
         log.info("Listing all volunteers ...");
         User user = (User) session.getAttribute("webUser");
-        if(user != null) {
-            log.info("Current user is " + user);
-            return volunteerRepository.findAllByUsername(user.getUsername());
+        log.info("Current user is " + user);
+        if(user == null) {
+           return null; // TODO: return 403 Forbidden
         }
-        return volunteerRepository.findAll();
+        if(user.getAdmin()) {
+            return volunteerRepository.findAll();
+        } else if(user.getHckSociety().getName() == "nacionalno") {
+            return volunteerRepository.findAllByNational(user.getHckSociety().getId());
+        } else {
+            return volunteerRepository.findAllByHcksocietyid(user.getHckSociety().getId());
+        }
     }
 
 

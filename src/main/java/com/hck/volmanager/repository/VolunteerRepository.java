@@ -3,6 +3,7 @@ package com.hck.volmanager.repository;
 import com.hck.volmanager.model.Volunteer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,9 +11,28 @@ import java.util.List;
 @Repository
 public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
 
-    @Query(value = "select v.* from hck.volunteers v, hck.hcksociety s, hck.places p, hck.users u where " +
-            "u.username = ?1 and u.hcksocietyid = s.id and p.id = v.placeofvolunteeringid and s.id = p.hcksocietyid",
+    @Query(value = "select v.* from " +
+            "hck.volunteers v left join hck.places p on (p.id = v.placeofvolunteeringid) " +
+            "where " +
+            "p.hcksocietyid = :hcksocietyid " +
+            "order by " +
+            "v.id",
             nativeQuery = true
     )
-    List<Volunteer> findAllByUsername(String username);
+    List<Volunteer> findAllByHcksocietyid(
+        @Param("hcksocietyid") Long hcksocietyid
+    );
+
+    @Query(value = "select v.* from " +
+            "hck.volunteers v left join hck.places p on (p.id = v.placeofvolunteeringid) " +
+            "where " +
+            "p.hcksocietyid = :hcksocietyid or " +
+            "v.backgroundcheckneeded " +
+            "order by " +
+            "v.id",
+            nativeQuery = true
+    )
+    List<Volunteer> findAllByNational(
+        @Param("hcksocietyid") Long hcksocietyid
+    );
 }
