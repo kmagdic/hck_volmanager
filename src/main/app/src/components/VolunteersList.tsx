@@ -115,7 +115,21 @@ export default function VolunteersList() {
   const exportCsv = (allColumns: any, allData: any) => {
     console.log('columns:', allColumns);
     console.log('data:', allData);
-    const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false);
+    const additionalColumns = [
+      { 
+        field: 'years', title: 'Dob',
+        render: (rowData: any) => {
+          const now = new Date();
+          const dob = new Date(rowData.dob);
+          const diff = now.valueOf() - dob.valueOf();
+          //return new Date(diff).getFullYear() - 1970;
+          return Math.abs(new Date(new Date().valueOf() - new Date(rowData.dob).valueOf()).getUTCFullYear() - 1970);
+          //return Math.abs(diff.getUTCFullYear() - 1970);
+        }
+      }
+    ];
+    const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false)
+      .concat(additionalColumns);
     const exportedData = allData
       .filter((rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null))
       .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
