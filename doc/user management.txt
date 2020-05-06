@@ -1,0 +1,19 @@
+POST /auth - login
+request - username, password
+
+User user = findByEnabledUsername.orThrowException
+checkPassword(hash(request.password) === user.password).orThrowException('bad username or password')
+create session with:
+-admin bool,
+-exportAll bool,
+-exportForCheck bool,
+-changeStatus bool,
+-changeCheck bool
+
+DELETE /auth - logout
+delete session
+
+other secured APIs:
+check auth
+checkSession.orThrowException
+...
