@@ -1,6 +1,6 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.Qualification;
 import com.hck.volmanager.repository.QualificationRepository;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ public class QualificationController {
     }
 
     @PostMapping("/qualifications")
-    public Qualification createQualification(@Valid @RequestBody Qualification qualification) throws ResourceNotFoundException {
+    public Qualification createQualification(@Valid @RequestBody Qualification qualification) throws ResourceNotFoundHttpException {
         Qualification newQualification = qualificationRepository.save(qualification);
         log.info("Creating qualification:  " + qualification.getId());
 
         newQualification = qualificationRepository.findById(qualification.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Qualification not found for this id :: " + qualification.getId()));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Qualification not found for this id :: " + qualification.getId()));
 
         return newQualification;
     }
@@ -44,14 +44,14 @@ public class QualificationController {
      * @param qualificationId
      * @param qualificationJSON
      * @return
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundHttpException
      */
 
     @PutMapping("/qualifications/{id}")
     public ResponseEntity<Qualification> updateQualification(@PathVariable(value = "id") Long qualificationId,
-                                                     @Valid @RequestBody Qualification qualificationJSON) throws ResourceNotFoundException {
+                                                     @Valid @RequestBody Qualification qualificationJSON) throws ResourceNotFoundHttpException {
         Qualification qualificationDB = qualificationRepository.findById(qualificationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Qualification not found for this id :: " + qualificationId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Qualification not found for this id :: " + qualificationId));
 
         BeanUtils.copyProperties(qualificationJSON, qualificationDB);
         log.info("Updated: " + qualificationDB.getId() + ", Qualification: " + qualificationDB);
@@ -61,9 +61,9 @@ public class QualificationController {
 
     @DeleteMapping("/qualifications/{id}")
     public Map<String, Boolean> deleteQualification(@PathVariable(value = "id") Long qualificationId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Qualification qualification = qualificationRepository.findById(qualificationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Qualification not found for this id :: " + qualificationId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Qualification not found for this id :: " + qualificationId));
 
         log.info("Deleting qualification by id: " + qualification.getId());
 

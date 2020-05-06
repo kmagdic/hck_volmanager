@@ -1,8 +1,8 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ForbiddenHttpException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.User;
-import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.repository.VolunteerRepository;
 import org.mapstruct.Context;
@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,8 +28,7 @@ import java.util.Map;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-@ResponseStatus(value = HttpStatus.FORBIDDEN)
-class ForbiddenException extends RuntimeException {}
+
 
 @RestController
 @RequestMapping("/api/v1")
@@ -48,12 +45,14 @@ public class VolunteerController {
     }
 
     @GetMapping("/volunteers")
-    public List<Volunteer> getAllVolunteers(HttpSession session) {
+    public List<Volunteer> getAllVolunteers(HttpSession session) throws ForbiddenHttpException {
         log.info("Listing all volunteers ...");
         User user = (User) session.getAttribute("webUser");
         log.info("Current user is " + user);
         if(user == null) {
-            return null; // TODO: return 403 Forbidden
+            throw new ForbiddenHttpException("Unauthorized operation.");
+            //return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
+            //return null; // TODO: return 403 Forbidden
         } else if (user.getAdmin()) {
             return volunteerRepository.findAll();
         } else if(user.getHckSociety().getName() == "nacionalno") {
@@ -72,21 +71,21 @@ public class VolunteerController {
 
     @GetMapping("/volunteers/{id}")
     public ResponseEntity<Volunteer> getVolunteerById(@PathVariable(value = "id") Long id)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Volunteer volunteer = volunteerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + id));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + id));
 
         log.info("Get volunteer by id " + volunteer.getId() + ": " + volunteer);
         return ResponseEntity.ok().body(volunteer);
     }
 
     @PostMapping("/volunteers")
-    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
+    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundHttpException {
         Volunteer newVolunteer = volunteerRepository.save(volunteerJSON);
         log.info("Creating volunteer:  " + volunteerJSON.getId());
 
         newVolunteer = volunteerRepository.findById(volunteerJSON.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerJSON.getId()));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerJSON.getId()));
 
         return newVolunteer;
     }
@@ -95,7 +94,7 @@ public class VolunteerController {
      * @param volunteerId
      * @param volunteerJSON
      * @return
-     * @throws ResourceNotFoundException {
+     * @throws ResourceNotFoundHttpException {
      *                                   "id": 2,
      *                                   "firstName": "Tihomir",
      *                                   "lastName": "Magdić",
@@ -112,12 +111,12 @@ public class VolunteerController {
 
     @PutMapping("/volunteers/{id}")
     public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
-                                                     @Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundException {
+                                                     @Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundHttpException {
         //final Volunteer updatedVolunteer = volunteerRepository.save(volunteerJSON);
         //return ResponseEntity.ok(updatedVolunteer);
 
         Volunteer volunteerDB = volunteerRepository.findById(volunteerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerId));
 
         log.info("volunteerJSON: " + volunteerJSON.getId() + ", Volunteer: " + volunteerJSON);
         log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Volunteer: " + volunteerDB);
@@ -140,9 +139,9 @@ public class VolunteerController {
 
     @DeleteMapping("/volunteers/{id}")
     public Map<String, Boolean> deleteVolunteer(@PathVariable(value = "id") Long volunteerId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Volunteer volunteer = volunteerRepository.findById(volunteerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Volunteer not found for this id :: " + volunteerId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerId));
 
         log.info("Deleting volunteer by id: " + volunteer.getId());
 

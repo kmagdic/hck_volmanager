@@ -1,6 +1,6 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.Service;
 import com.hck.volmanager.repository.ServiceRepository;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ public class ServiceController {
     }
 
     @PostMapping("/services")
-    public Service createService(@Valid @RequestBody Service service) throws ResourceNotFoundException {
+    public Service createService(@Valid @RequestBody Service service) throws ResourceNotFoundHttpException {
         Service newService = serviceRepository.save(service);
         log.info("Creating service:  " + service.getId());
 
         newService = serviceRepository.findById(service.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found for this id :: " + service.getId()));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Service not found for this id :: " + service.getId()));
 
         return newService;
     }
@@ -44,14 +44,14 @@ public class ServiceController {
      * @param serviceId
      * @param serviceJSON
      * @return
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundHttpException
      */
 
     @PutMapping("/services/{id}")
     public ResponseEntity<Service> updateService(@PathVariable(value = "id") Long serviceId,
-                                                     @Valid @RequestBody Service serviceJSON) throws ResourceNotFoundException {
+                                                     @Valid @RequestBody Service serviceJSON) throws ResourceNotFoundHttpException {
         Service serviceDB = serviceRepository.findById(serviceId)
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found for this id :: " + serviceId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Service not found for this id :: " + serviceId));
 
         BeanUtils.copyProperties(serviceJSON, serviceDB);
         log.info("Updated: " + serviceDB.getId() + ", Service: " + serviceDB);
@@ -61,9 +61,9 @@ public class ServiceController {
 
     @DeleteMapping("/services/{id}")
     public Map<String, Boolean> deleteService(@PathVariable(value = "id") Long serviceId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Service service = serviceRepository.findById(serviceId)
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found for this id :: " + serviceId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Service not found for this id :: " + serviceId));
 
         log.info("Deleting service by id: " + service.getId());
 

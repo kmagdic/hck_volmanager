@@ -1,6 +1,6 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.Skill;
 import com.hck.volmanager.repository.SkillRepository;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ public class SkillController {
     }
 
     @PostMapping("/skills")
-    public Skill createSkill(@Valid @RequestBody Skill skill) throws ResourceNotFoundException {
+    public Skill createSkill(@Valid @RequestBody Skill skill) throws ResourceNotFoundHttpException {
         Skill newSkill = skillRepository.save(skill);
         log.info("Creating skill:  " + skill.getId());
 
         newSkill = skillRepository.findById(skill.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found for this id :: " + skill.getId()));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Skill not found for this id :: " + skill.getId()));
 
         return newSkill;
     }
@@ -44,14 +44,14 @@ public class SkillController {
      * @param skillId
      * @param skillJSON
      * @return
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundHttpException
      */
 
     @PutMapping("/skills/{id}")
     public ResponseEntity<Skill> updateSkill(@PathVariable(value = "id") Long skillId,
-                                                     @Valid @RequestBody Skill skillJSON) throws ResourceNotFoundException {
+                                                     @Valid @RequestBody Skill skillJSON) throws ResourceNotFoundHttpException {
         Skill skillDB = skillRepository.findById(skillId)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found for this id :: " + skillId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Skill not found for this id :: " + skillId));
 
         BeanUtils.copyProperties(skillJSON, skillDB);
         log.info("Updated: " + skillDB.getId() + ", Skill: " + skillDB);
@@ -61,9 +61,9 @@ public class SkillController {
 
     @DeleteMapping("/skills/{id}")
     public Map<String, Boolean> deleteSkill(@PathVariable(value = "id") Long skillId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Skill skill = skillRepository.findById(skillId)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found for this id :: " + skillId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Skill not found for this id :: " + skillId));
 
         log.info("Deleting skill by id: " + skill.getId());
 

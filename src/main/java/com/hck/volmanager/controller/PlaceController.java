@@ -1,6 +1,6 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.Place;
 import com.hck.volmanager.repository.PlaceRepository;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ public class PlaceController {
     }
 
     @PostMapping("/places")
-    public Place createPlace(@Valid @RequestBody Place place) throws ResourceNotFoundException {
+    public Place createPlace(@Valid @RequestBody Place place) throws ResourceNotFoundHttpException {
         Place newPlace = placeRepository.save(place);
         log.info("Creating place:  " + place.getId());
 
         newPlace = placeRepository.findById(place.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Place not found for this id :: " + place.getId()));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Place not found for this id :: " + place.getId()));
 
         return newPlace;
     }
@@ -44,14 +44,14 @@ public class PlaceController {
      * @param placeId
      * @param placeJSON
      * @return
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundHttpException
      */
 
     @PutMapping("/places/{id}")
     public ResponseEntity<Place> updatePlace(@PathVariable(value = "id") Long placeId,
-                                                     @Valid @RequestBody Place placeJSON) throws ResourceNotFoundException {
+                                                     @Valid @RequestBody Place placeJSON) throws ResourceNotFoundHttpException {
         Place placeDB = placeRepository.findById(placeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Place not found for this id :: " + placeId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Place not found for this id :: " + placeId));
 
         BeanUtils.copyProperties(placeJSON, placeDB);
         log.info("Updated: " + placeDB.getId() + ", Place: " + placeDB);
@@ -61,9 +61,9 @@ public class PlaceController {
 
     @DeleteMapping("/places/{id}")
     public Map<String, Boolean> deletePlace(@PathVariable(value = "id") Long placeId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Place place = placeRepository.findById(placeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Place not found for this id :: " + placeId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Place not found for this id :: " + placeId));
 
         log.info("Deleting place by id: " + place.getId());
 

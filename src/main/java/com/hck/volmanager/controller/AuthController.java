@@ -1,6 +1,7 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ForbiddenHttpException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.User;
 import com.hck.volmanager.repository.UserRepository;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class AuthController {
 
 
     @PostMapping("/auth")
-    public User login(@RequestParam String username, @RequestParam String password, HttpSession session) throws ResourceNotFoundException {
+    public User login(@RequestParam String username, @RequestParam String password, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException {
         log.info("Login with username '" + username + "' and password '" + password + "'");
         User user = userRepository.findOneByUsername(username);
         if(user != null && user.getEnabled() && user.getPassword().equals(password)) {
@@ -29,7 +30,7 @@ public class AuthController {
             return user;
         }
         else {
-            throw new ResourceNotFoundException("Enabled user with this username and password is not found");
+            throw new ForbiddenHttpException("Enabled user with this username and password is not found");
         }
 
     }

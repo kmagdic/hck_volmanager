@@ -1,6 +1,6 @@
 package com.hck.volmanager.controller;
 
-import com.hck.volmanager.exception.ResourceNotFoundException;
+import com.hck.volmanager.exception.ResourceNotFoundHttpException;
 import com.hck.volmanager.model.Experience;
 import com.hck.volmanager.repository.ExperienceRepository;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ public class ExperienceController {
     }
 
     @PostMapping("/experiences")
-    public Experience createExperience(@Valid @RequestBody Experience experience) throws ResourceNotFoundException {
+    public Experience createExperience(@Valid @RequestBody Experience experience) throws ResourceNotFoundHttpException {
         Experience newExperience = experienceRepository.save(experience);
         log.info("Creating experience:  " + experience.getId());
 
         newExperience = experienceRepository.findById(experience.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Experience not found for this id :: " + experience.getId()));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Experience not found for this id :: " + experience.getId()));
 
         return newExperience;
     }
@@ -44,14 +44,14 @@ public class ExperienceController {
      * @param experienceId
      * @param experienceJSON
      * @return
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundHttpException
      */
 
     @PutMapping("/experiences/{id}")
     public ResponseEntity<Experience> updateExperience(@PathVariable(value = "id") Long experienceId,
-                                                     @Valid @RequestBody Experience experienceJSON) throws ResourceNotFoundException {
+                                                     @Valid @RequestBody Experience experienceJSON) throws ResourceNotFoundHttpException {
         Experience experienceDB = experienceRepository.findById(experienceId)
-                .orElseThrow(() -> new ResourceNotFoundException("Experience not found for this id :: " + experienceId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Experience not found for this id :: " + experienceId));
 
         BeanUtils.copyProperties(experienceJSON, experienceDB);
         log.info("Updated: " + experienceDB.getId() + ", Experience: " + experienceDB);
@@ -61,9 +61,9 @@ public class ExperienceController {
 
     @DeleteMapping("/experiences/{id}")
     public Map<String, Boolean> deleteExperience(@PathVariable(value = "id") Long experienceId)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundHttpException {
         Experience experience = experienceRepository.findById(experienceId)
-                .orElseThrow(() -> new ResourceNotFoundException("Experience not found for this id :: " + experienceId));
+                .orElseThrow(() -> new ResourceNotFoundHttpException("Experience not found for this id :: " + experienceId));
 
         log.info("Deleting experience by id: " + experience.getId());
 
