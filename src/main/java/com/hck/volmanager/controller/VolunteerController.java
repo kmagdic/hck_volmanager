@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -88,15 +89,25 @@ public class VolunteerController {
     }
 
     @PostMapping("/volunteers")
-    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException {
-        WebUser webUser = (WebUser) session.getAttribute("webUser");
-        if(webUser == null) {
-            throw new ForbiddenHttpException("Unauthorized operation.");
+    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException, IllegalAccessException {
+        Volunteer newVolunteer = null;
+        try {
+            newVolunteer = volunteerRepository.save(volunteerJSON);
+
+        } catch(Exception e) {
+            log.warn("Error in creating volunteer: " + e.getMessage());
+            log.warn("Volunteer: " + volunteerJSON);
+
+            for (Field field : volunteerJSON.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                String name = field.getName();
+                Object value = field.get(volunteerJSON);
+                log.warn("Field '" + name + "': value: '" + value + "'");
+            }
+
+            throw new ResourceNotFoundHttpException("Volunteer is not created! Error: " + e.getMessage());
         }
-
-
-        Volunteer newVolunteer = volunteerRepository.save(volunteerJSON);
-        log.info("Creating volunteer:  " + volunteerJSON.getId());
+        log.info("Created volunteer id:  " + volunteerJSON.getId());
 
         newVolunteer = volunteerRepository.findById(volunteerJSON.getId())
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerJSON.getId()));
