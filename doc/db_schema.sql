@@ -253,3 +253,21 @@ create table hck.users(
 );
 
 create unique index ui_users_user on hck.users(username);
+
+
+DROP TRIGGER IF EXISTS encrypt_userdata on users;
+DROP FUNCTION IF EXISTS encrypt_password();
+
+
+CREATE FUNCTION encrypt_password()
+  RETURNS TRIGGER AS
+$func$
+BEGIN
+ NEW.pass := md5(NEW.pass);
+ RETURN NEW;
+END
+$func$ LANGUAGE plpgsql;  -- don't quote the language name
+
+CREATE TRIGGER encrypt_userdata
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW EXECUTE PROCEDURE encrypt_password();
