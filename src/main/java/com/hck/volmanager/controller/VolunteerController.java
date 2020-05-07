@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +37,6 @@ public class VolunteerController {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    @GetMapping("/info")
-    public String getInfo() {
-        log.info("Get info ...");
-        return "App HCK VolManager";
-    }
-
     @GetMapping("/volunteers")
     public List<Volunteer> getAllVolunteers(HttpSession session) throws ForbiddenHttpException, ResourceNotFoundHttpException {
         WebUser webUser = (WebUser) session.getAttribute("webUser");
@@ -65,21 +58,12 @@ public class VolunteerController {
         }
     }
 
-
-    /*@GetMapping("/volunteersInPages")
-    public List<Volunteer> getAllVolunteersPages(Pageable pageable) {
-        log.info("Listing all volunteers ...");
-        return (List<Volunteer>) volunteerRepository.findAll(pageable);
-    }*/
-
     @GetMapping("/volunteers/{id}")
     public ResponseEntity<Volunteer> getVolunteerById(@PathVariable(value = "id") Long id, HttpSession session)
             throws ResourceNotFoundHttpException, ForbiddenHttpException {
 
         WebUser webUser = (WebUser) session.getAttribute("webUser");
-        if(webUser == null) {
-            throw new ForbiddenHttpException("Unauthorized operation.");
-        }
+        if(webUser == null) throw new ForbiddenHttpException("Unauthorized operation.");
 
         Volunteer volunteer = volunteerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + id));
@@ -90,7 +74,7 @@ public class VolunteerController {
 
     @PostMapping("/volunteers")
     public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException, IllegalAccessException {
-        Volunteer newVolunteer = null;
+        Volunteer newVolunteer;
         try {
             newVolunteer = volunteerRepository.save(volunteerJSON);
 
@@ -107,7 +91,7 @@ public class VolunteerController {
 
             throw new ResourceNotFoundHttpException("Volunteer is not created! Error: " + e.getMessage());
         }
-        log.info("Created volunteer id:  " + volunteerJSON.getId());
+        log.info("Created volunteer id:  " + newVolunteer.getId());
 
         newVolunteer = volunteerRepository.findById(volunteerJSON.getId())
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerJSON.getId()));
@@ -115,56 +99,58 @@ public class VolunteerController {
         return newVolunteer;
     }
 
-    /**
-     * @param volunteerId
-     * @param volunteerJSON
-     * @return
-     * @throws ResourceNotFoundHttpException {
-     *                                   "id": 2,
-     *                                   "firstName": "Tihomir",
-     *                                   "lastName": "Magdić",
-     *                                   "qualifications": [
-     *                                   {
-     *                                   "id": 1
-     *                                   },
-     *                                   {
-     *                                   "id": 2
-     *                                   }
-     *                                   ]
-     *                                   }
-     */
-
     @PutMapping("/volunteers/{id}")
     public ResponseEntity<Volunteer> updateVolunteer(@PathVariable(value = "id") Long volunteerId,
-                                                     @Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundHttpException {
-        //final Volunteer updatedVolunteer = volunteerRepository.save(volunteerJSON);
-        //return ResponseEntity.ok(updatedVolunteer);
+                                                     @Valid @RequestBody Volunteer volunteerJSON, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException {
+        WebUser webUser = (WebUser) session.getAttribute("webUser");
+        if(webUser == null) throw new ForbiddenHttpException("Unauthorized operation.");
 
         Volunteer volunteerDB = volunteerRepository.findById(volunteerId)
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerId));
 
-        log.info("volunteerJSON: " + volunteerJSON.getId() + ", Volunteer: " + volunteerJSON);
         log.info("Updating of volunteerDB by id: " + volunteerDB.getId() + ", Volunteer: " + volunteerDB);
 
-        // TODO: when proprerty is null it is overwriten to non-null property
+        // it is only allowed to change backgroundCheckNeeded and backgroundCheckPassed
+        // this is allowed if webUser has good rights
+        if(webUser.getChangeCheck() && volunteerJSON.getBackgroundCheckNeeded() != volunteerDB.getBackgroundCheckNeeded()){
+            volunteerDB.setBackgroundCheckNeeded(volunteerJSON.getBackgroundCheckNeeded());
+            log.info("Changed backgroundCheckNeeded to " + volunteerDB.getBackgroundCheckNeeded());
+            volunteerRepository.save(volunteerDB);
+            return ResponseEntity.ok(volunteerDB);
+        } else if(webUser.getChangeStatus() && volunteerJSON.getBackgroundCheckPassed() != volunteerDB.getBackgroundCheckPassed()){
+            volunteerDB.setBackgroundCheckPassed(volunteerJSON.getBackgroundCheckPassed());
+            log.info("Changed backgroundCheckPassed to " + volunteerDB.getBackgroundCheckPassed());
+            volunteerRepository.save(volunteerDB);
+            return ResponseEntity.ok(volunteerDB);
+        } else {
+            throw new ForbiddenHttpException("It is not allowed to change any other fields");
+        }
+
+        /*
+        // TODO: when property is null it is overwritten to non-null property
         BeanUtils.copyProperties(volunteerJSON, volunteerDB);
         //volunteerDB.setId(volunteerId);
-        log.info("Updated: " + volunteerDB.getId() + ", Voluneteer: " + volunteerDB);
+        log.info("Updated: " + volunteerDB.getId() + ", Volunteer: " + volunteerDB);
         log.info("volunteerJSON.getVolunteerQualifications().size(): " + volunteerJSON.getQualifications().size());
-		/*
+
 		volunteerJSON.getVolunteerQualifications().forEach((vq) -> {
 			log.info("vq:" + vq);
 			//volunteerDB.getVolunteerQualifications().add(vq);
 		});
 		//volunteerDB.getVolunteerQualifications().addAll(volunteerJSON.getVolunteerQualifications());
-		*/
+
         final Volunteer updatedVolunteer = volunteerRepository.save(volunteerDB);
         return ResponseEntity.ok(updatedVolunteer);
+
+         */
     }
 
     @DeleteMapping("/volunteers/{id}")
-    public Map<String, Boolean> deleteVolunteer(@PathVariable(value = "id") Long volunteerId)
-            throws ResourceNotFoundHttpException {
+    public Map<String, Boolean> deleteVolunteer(@PathVariable(value = "id") Long volunteerId, HttpSession session)
+            throws ResourceNotFoundHttpException, ForbiddenHttpException {
+        WebUser webUser = (WebUser) session.getAttribute("webUser");
+        if(webUser == null) throw new ForbiddenHttpException("Unauthorized operation.");
+
         Volunteer volunteer = volunteerRepository.findById(volunteerId)
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + volunteerId));
 
@@ -176,10 +162,12 @@ public class VolunteerController {
         return response;
     }
 
-
     @GetMapping("/volunteers/export-csv")
-    public void downloadUsersCSV(@Context HttpServletResponse response) {
-        log.info("Exporting volonteers ");
+    public void downloadUsersCSV(@Context HttpServletResponse response, HttpSession session) throws ForbiddenHttpException {
+        WebUser webUser = (WebUser) session.getAttribute("webUser");
+        if(webUser == null) throw new ForbiddenHttpException("Unauthorized operation.");
+
+        log.info("Exporting volunteers ");
 
         String filename = "HCK_volonteri_export.csv";
         List<Volunteer> volunteers = volunteerRepository.findAll();

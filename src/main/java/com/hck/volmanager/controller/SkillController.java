@@ -29,6 +29,7 @@ public class SkillController {
         return skillRepository.findAll();
     }
 
+    /*
     @PostMapping("/skills")
     public Skill createSkill(@Valid @RequestBody Skill skill) throws ResourceNotFoundHttpException {
         Skill newSkill = skillRepository.save(skill);
@@ -39,13 +40,6 @@ public class SkillController {
 
         return newSkill;
     }
-
-    /**
-     * @param skillId
-     * @param skillJSON
-     * @return
-     * @throws ResourceNotFoundHttpException
-     */
 
     @PutMapping("/skills/{id}")
     public ResponseEntity<Skill> updateSkill(@PathVariable(value = "id") Long skillId,
@@ -72,4 +66,5 @@ public class SkillController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+    */
 }

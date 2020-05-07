@@ -2,6 +2,7 @@ package com.hck.volmanager.model;
 
 import com.hck.volmanager.controller.VolunteerController;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table(name = "volunteers")
+@DynamicUpdate
 public class Volunteer {
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(VolunteerController.class);
@@ -165,7 +167,6 @@ public class Volunteer {
     }
 
     public void setCustomQualifications(Set<CustomQualification> customQualifications) {
-        log.info("***** setCustomQualifications: ");
         short i = 0;
         for (CustomQualification cq: customQualifications) {
             cq.setVolunteer(this);

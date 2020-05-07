@@ -28,7 +28,7 @@ Useability
     - map and display checkbox components for every field
 - add orderNum into hck.places table to define place item in select list on Registration form
 - add place status to differentiate places from the non-places (county, country) and filter only places in placeOfLiving select list
-- after submitting the Registraton form check response status code
++ after submitting the Registraton form check response status code
   - and display error message (if error exists) or
   - automatically go to confirmation page (if error does not exists)
 + after successfully login return json object with properties:
@@ -42,10 +42,20 @@ Useability
 - during login hash password from request with user's salt and then compare with hashed password in users table
 + display username in upper-right corner
 + implement logout
+  - on front side in drop down option
++ display username in upper-right corner
++ implement logout
   + on front side in drop down option
-  - on server side as DELETE /auth
-+ implement export all data
+  + on server side as DELETE /auth
+- implement export all data
 - optimize select for volunteers list
   - reduce additional selects for lookup tables
 + allow change status only for users with permission
 + allow change check only for user with permission
+
+Karlo:
++ comment REST for šifarnici
++ checkCheck/Status on backend
++ hash password
+   - with blowfish alg
+- excel export filtering ""
