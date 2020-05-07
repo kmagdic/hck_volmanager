@@ -31,18 +31,18 @@ Useability
 - after submitting the Registraton form check response status code
   - and display error message (if error exists) or
   - automatically go to confirmation page (if error does not exists)
-- after successfully login return json object with properties:
++ after successfully login return json object with properties:
   - username
   - admin
   - changeCheck
   - changeStatus
   - exportAll
   - exportForCheck
-- logged-in user object (json) store in app context for secured routes
++ logged-in user object (json) store in app context for secured routes
 - during login hash password from request with user's salt and then compare with hashed password in users table
-- display username in upper-right corner
++ display username in upper-right corner
 - implement logout
-  - on front side in drop down option
+  + on front side in drop down option
   - on server side as DELETE /auth
 - implement export all data
 - optimize select for volunteers list
