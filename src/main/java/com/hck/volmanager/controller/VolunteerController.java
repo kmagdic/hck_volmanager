@@ -51,8 +51,6 @@ public class VolunteerController {
         log.info("Current user is " + user);
         if(user == null) {
             throw new ForbiddenHttpException("Unauthorized operation.");
-            //return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
-            //return null; // TODO: return 403 Forbidden
         } else if (user.getAdmin()) {
             return volunteerRepository.findAll();
         } else if(user.getHckSociety().getName() == "nacionalno") {
