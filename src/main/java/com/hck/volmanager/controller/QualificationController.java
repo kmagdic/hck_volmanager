@@ -29,6 +29,7 @@ public class QualificationController {
         return qualificationRepository.findAll();
     }
 
+    /*
     @PostMapping("/qualifications")
     public Qualification createQualification(@Valid @RequestBody Qualification qualification) throws ResourceNotFoundHttpException {
         Qualification newQualification = qualificationRepository.save(qualification);
@@ -39,13 +40,6 @@ public class QualificationController {
 
         return newQualification;
     }
-
-    /**
-     * @param qualificationId
-     * @param qualificationJSON
-     * @return
-     * @throws ResourceNotFoundHttpException
-     */
 
     @PutMapping("/qualifications/{id}")
     public ResponseEntity<Qualification> updateQualification(@PathVariable(value = "id") Long qualificationId,
@@ -72,4 +66,5 @@ public class QualificationController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+    */
 }

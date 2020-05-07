@@ -29,6 +29,7 @@ public class WebUser {
     public WebUser(User user) {
         mapFromUser(user);
     }
+
     public void mapFromUser(User user) {
         this.id = user.getId();
         this.username = user.getUsername();

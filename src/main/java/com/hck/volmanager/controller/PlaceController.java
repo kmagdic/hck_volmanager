@@ -29,6 +29,7 @@ public class PlaceController {
         return placeRepository.findAll();
     }
 
+    /*
     @PostMapping("/places")
     public Place createPlace(@Valid @RequestBody Place place) throws ResourceNotFoundHttpException {
         Place newPlace = placeRepository.save(place);
@@ -39,13 +40,6 @@ public class PlaceController {
 
         return newPlace;
     }
-
-    /**
-     * @param placeId
-     * @param placeJSON
-     * @return
-     * @throws ResourceNotFoundHttpException
-     */
 
     @PutMapping("/places/{id}")
     public ResponseEntity<Place> updatePlace(@PathVariable(value = "id") Long placeId,
@@ -72,4 +66,6 @@ public class PlaceController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+    */
 }
+
