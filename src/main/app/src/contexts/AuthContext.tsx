@@ -7,6 +7,7 @@ export interface User {
   changeStatus?: boolean;
   exportAll?: boolean;
   exportForCheck?: boolean;
+  hckSocietyName?: string;
 }
 
 export interface UserAuth {

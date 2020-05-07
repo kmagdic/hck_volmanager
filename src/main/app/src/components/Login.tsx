@@ -86,6 +86,9 @@ function Login() {
         response
           .json()
           .then((user: any) => {
+            if(response.status != 200)
+              throw Error("Not authenticated user");
+
             console.log("User: ", user);
             login(user);
             //authUser.login(user);
@@ -94,7 +97,7 @@ function Login() {
           })
           .catch((error: any) => {
             console.log("login error:", error);
-            setShowMessage({ show: true, type: 'error', message: 'pogrešno korisničko ime ili lozinka' });
+            setShowMessage({ show: true, type: 'error', message: 'Pogrešno korisničko ime ili lozinka' });
           })
     }, "POST");
     /*

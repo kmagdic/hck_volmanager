@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import MaterialTable, { Column } from 'material-table';
 import Switch from '@material-ui/core/Switch';
 import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
 import MenuAppBar from './MenuAppBar';
+import { AuthContext, AuthConsumer, Auth } from "./../contexts/AuthContext";
 const _filefy = require("filefy");
 
 interface Row {
@@ -26,6 +27,7 @@ export default function VolunteersList() {
   const cellStyle = {
     padding: '0 14px',
   };
+  const { isAuth, user } = useContext(AuthContext);
   const getForRenderFullName = (rowData: any)  => rowData.firstName + ' ' + rowData.lastName;
   const getForRenderDob = (rowData: any) => format(new Date(rowData.dob), 'dd.MM.yyyy');
   const tableTitle = (count: number) => `Ukupno ${count} volonter` + (((count % 100 === 11) || (count % 10) !== 1) ? 'a' : '');
@@ -149,7 +151,7 @@ export default function VolunteersList() {
 
   return (
     <>
-      <MenuAppBar title="HCK - pregled volontera"></MenuAppBar>
+      <MenuAppBar title={"HCK - Pregled volontera za " + (user?.admin ? "Administratora" : ("HCK društvo '" + user?.hckSocietyName + "'")) }></MenuAppBar>
       <div style={{height: "4rem"}}></div>
       <MaterialTable
         title={title}

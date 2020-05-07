@@ -2,7 +2,7 @@ package com.hck.volmanager.controller;
 
 import com.hck.volmanager.exception.ForbiddenHttpException;
 import com.hck.volmanager.exception.ResourceNotFoundHttpException;
-import com.hck.volmanager.model.User;
+import com.hck.volmanager.model.WebUser;
 import com.hck.volmanager.model.Volunteer;
 import com.hck.volmanager.repository.VolunteerRepository;
 import org.mapstruct.Context;
@@ -12,7 +12,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,31 +44,42 @@ public class VolunteerController {
     }
 
     @GetMapping("/volunteers")
-    public List<Volunteer> getAllVolunteers(HttpSession session) throws ForbiddenHttpException {
-        log.info("Listing all volunteers ...");
-        User user = (User) session.getAttribute("webUser");
-        log.info("Current user is " + user);
-        if(user == null) {
+    public List<Volunteer> getAllVolunteers(HttpSession session) throws ForbiddenHttpException, ResourceNotFoundHttpException {
+        WebUser webUser = (WebUser) session.getAttribute("webUser");
+        log.info("Current user is " + webUser);
+        if(webUser == null) {
             throw new ForbiddenHttpException("Unauthorized operation.");
-        } else if (user.getAdmin()) {
+        } else if (webUser.getAdmin()) {
+            log.info("Listing all volunteers for admin user ...");
             return volunteerRepository.findAll();
-        } else if(user.getHckSociety().getName() == "nacionalno") {
-            return volunteerRepository.findAllByNational(user.getHckSociety().getId());
+        } else if(webUser.getHckSociety().getName().equals("nacionalno")) {
+            log.info("Listing volunteers for national society " + webUser.getHckSociety() + " ...");
+            return volunteerRepository.findAllByNational(webUser.getHckSociety().getId());
         } else {
-            return volunteerRepository.findAllByHcksocietyid(user.getHckSociety().getId());
+            if(webUser.getHckSociety() == null)
+                throw new ResourceNotFoundHttpException("No HCK society attached to logged user");
+
+            log.info("Listing volunteers for HCK society " + webUser.getHckSociety() + " ...");
+            return volunteerRepository.findAllByHcksocietyid(webUser.getHckSociety().getId());
         }
     }
 
 
-    @GetMapping("/volunteersInPages")
+    /*@GetMapping("/volunteersInPages")
     public List<Volunteer> getAllVolunteersPages(Pageable pageable) {
         log.info("Listing all volunteers ...");
         return (List<Volunteer>) volunteerRepository.findAll(pageable);
-    }
+    }*/
 
     @GetMapping("/volunteers/{id}")
-    public ResponseEntity<Volunteer> getVolunteerById(@PathVariable(value = "id") Long id)
-            throws ResourceNotFoundHttpException {
+    public ResponseEntity<Volunteer> getVolunteerById(@PathVariable(value = "id") Long id, HttpSession session)
+            throws ResourceNotFoundHttpException, ForbiddenHttpException {
+
+        WebUser webUser = (WebUser) session.getAttribute("webUser");
+        if(webUser == null) {
+            throw new ForbiddenHttpException("Unauthorized operation.");
+        }
+
         Volunteer volunteer = volunteerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + id));
 
@@ -78,7 +88,13 @@ public class VolunteerController {
     }
 
     @PostMapping("/volunteers")
-    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON) throws ResourceNotFoundHttpException {
+    public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException {
+        WebUser webUser = (WebUser) session.getAttribute("webUser");
+        if(webUser == null) {
+            throw new ForbiddenHttpException("Unauthorized operation.");
+        }
+
+
         Volunteer newVolunteer = volunteerRepository.save(volunteerJSON);
         log.info("Creating volunteer:  " + volunteerJSON.getId());
 

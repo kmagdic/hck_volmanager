@@ -112,6 +112,7 @@ export default function MenuAppBar(props: any) {
                               <ClickAwayListener onClickAway={handleClose}>
                                 <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                                   <MenuItem style={{display: "none" }} onClick={handleClose}>Profil</MenuItem>
+
                                   <MenuItem onClick={goToLogin}>Odjava</MenuItem>
                                 </MenuList>
                               </ClickAwayListener>
