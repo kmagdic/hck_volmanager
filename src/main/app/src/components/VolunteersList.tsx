@@ -6,6 +6,8 @@ import { request } from '../utils/requests';
 import { format } from 'date-fns';
 import MenuAppBar from './MenuAppBar';
 import { AuthContext, AuthConsumer, Auth } from "./../contexts/AuthContext";
+import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
 const _filefy = require("filefy");
 
 interface Row {
@@ -119,9 +121,23 @@ export default function VolunteersList() {
     })
   }, []);
   
-  const exportCsv = (allColumns: any, allData: any) => {
+  const dateTime = () => {
+    const now = new Date();
+    return '' + now.getFullYear() + '-' + 
+      (now.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+      now.getDate().toString().padStart(2, '0') + ' ' + 
+      now.getHours().toString().padStart(2, '0') + ':' + 
+      now.getMinutes().toString().padStart(2, '0') + ':' + 
+      now.getSeconds().toString().padStart(2, '0');
+  };
+  const allData = () => true;
+  const allForCheck = (rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null);
+
+  const exportCsv = (allColumns: any, allData: any, filter: any, fileName: string) => {
     console.log('columns:', allColumns);
     console.log('data:', allData);
+    console.log('filter:', filter);
+    //return;
     const additionalColumns = [
       { 
         field: 'years', title: 'Dob',
@@ -138,11 +154,11 @@ export default function VolunteersList() {
     const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false)
       .concat(additionalColumns);
     const exportedData = allData
-      .filter((rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null))
+      .filter(filter)
       .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
 
     console.log('exported data:', exportedData);
-    new _filefy.CsvBuilder("Volonteri.csv")
+    new _filefy.CsvBuilder(`${fileName}.csv`)
       .setDelimeter(';')
       .setColumns(columns.map((columnDef: any) => columnDef.title))
       .addRows(exportedData)
@@ -170,13 +186,7 @@ export default function VolunteersList() {
         options={
           {
             paging: false,
-            exportAllData: true,
-            exportButton: true,
-            exportDelimiter: ';',
-            exportFileName: 'Volonteri',
             tableLayout: 'fixed',
-
-            exportCsv,
             headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
             maxBodyHeight: 'calc(100vh - 128px)',
           }
@@ -195,16 +205,18 @@ export default function VolunteersList() {
         }}
         actions={[
           {
-            icon: 'add',
+            icon: () => <PlayForWorkIcon />,
             tooltip: 'Izvoz podataka za provjeru',
             isFreeAction: true,
-            onClick: (event) => alert("Izvoz podataka za provjeru")
+            hidden: !user?.exportForCheck,
+            onClick: () => exportCsv(tableRef.current.dataManager.columns, tableRef.current.dataManager.data, allForCheck, 'Volonteri za provjeru ' + dateTime())
           },
           {
-            icon: 'add',
+            icon: () => <SystemUpdateAltIcon />,
             tooltip: 'Izvoz svih podataka',
             isFreeAction: true,
-            onClick: (event) => alert("Izvoz svih podataka")
+            hidden: !user?.exportAll,
+            onClick: () => exportCsv(tableRef.current.dataManager.columns, tableRef.current.dataManager.data, allData, 'Svi volonteri ' + dateTime())
           }
         ]}
       />
