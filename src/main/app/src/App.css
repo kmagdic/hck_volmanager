@@ -210,6 +210,14 @@ label.MuiFormControlLabel-labelPlacementTop {
 }
 
 
+
+.MuiTypography-h6 {
+  clear: both;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .MuiTable-root th:nth-child(1) div {
   color: #CACACA;
 }

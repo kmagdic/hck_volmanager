@@ -29,6 +29,7 @@ public class ExperienceController {
         return experienceRepository.findAll();
     }
 
+    /*
     @PostMapping("/experiences")
     public Experience createExperience(@Valid @RequestBody Experience experience) throws ResourceNotFoundHttpException {
         Experience newExperience = experienceRepository.save(experience);
@@ -39,13 +40,6 @@ public class ExperienceController {
 
         return newExperience;
     }
-
-    /**
-     * @param experienceId
-     * @param experienceJSON
-     * @return
-     * @throws ResourceNotFoundHttpException
-     */
 
     @PutMapping("/experiences/{id}")
     public ResponseEntity<Experience> updateExperience(@PathVariable(value = "id") Long experienceId,
@@ -72,4 +66,5 @@ public class ExperienceController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+    */
 }

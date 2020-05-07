@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import MaterialTable, { Column } from 'material-table';
 import Switch from '@material-ui/core/Switch';
 import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
 import MenuAppBar from './MenuAppBar';
+import { AuthContext, AuthConsumer, Auth } from "./../contexts/AuthContext";
+import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
 const _filefy = require("filefy");
 
 interface Row {
@@ -26,6 +29,7 @@ export default function VolunteersList() {
   const cellStyle = {
     padding: '0 14px',
   };
+  const { isAuth, user } = useContext(AuthContext);
   const getForRenderFullName = (rowData: any)  => rowData.firstName + ' ' + rowData.lastName;
   const getForRenderDob = (rowData: any) => format(new Date(rowData.dob), 'dd.MM.yyyy');
   const tableTitle = (count: number) => `Ukupno ${count} volonter` + (((count % 100 === 11) || (count % 10) !== 1) ? 'a' : '');
@@ -54,6 +58,7 @@ export default function VolunteersList() {
       { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle, searchable: false,
         render: (rowData: any) =>
         <Switch
+          disabled={!user?.changeCheck}
           checked={rowData.backgroundCheckNeeded}
           onChange={e => {
             //console.log("rowData:", rowData);
@@ -76,6 +81,7 @@ export default function VolunteersList() {
         render: (rowData: any) => {
           return(
             <CustomSelect 
+              disabled={!user?.changeStatus}
               status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
               onChange={(status: any) => {
                 // console.log("onChange bgStatus rowData:", rowData);
@@ -115,9 +121,23 @@ export default function VolunteersList() {
     })
   }, []);
   
-  const exportCsv = (allColumns: any, allData: any) => {
+  const dateTime = () => {
+    const now = new Date();
+    return '' + now.getFullYear() + '-' + 
+      (now.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+      now.getDate().toString().padStart(2, '0') + ' ' + 
+      now.getHours().toString().padStart(2, '0') + ':' + 
+      now.getMinutes().toString().padStart(2, '0') + ':' + 
+      now.getSeconds().toString().padStart(2, '0');
+  };
+  const allData = () => true;
+  const allForCheck = (rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null);
+
+  const exportCsv = (allColumns: any, allData: any, filter: any, fileName: string) => {
     console.log('columns:', allColumns);
     console.log('data:', allData);
+    console.log('filter:', filter);
+    //return;
     const additionalColumns = [
       { 
         field: 'years', title: 'Dob',
@@ -134,11 +154,11 @@ export default function VolunteersList() {
     const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false)
       .concat(additionalColumns);
     const exportedData = allData
-      .filter((rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null))
+      .filter(filter)
       .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
 
     console.log('exported data:', exportedData);
-    new _filefy.CsvBuilder("Volonteri.csv")
+    new _filefy.CsvBuilder(`${fileName}.csv`)
       .setDelimeter(';')
       .setColumns(columns.map((columnDef: any) => columnDef.title))
       .addRows(exportedData)
@@ -149,7 +169,7 @@ export default function VolunteersList() {
 
   return (
     <>
-      <MenuAppBar title="HCK - pregled volontera"></MenuAppBar>
+      <MenuAppBar title={"HCK - Pregled volontera za " + (user?.admin ? "Administratora" : ("HCK društvo '" + user?.hckSocietyName + "'")) }></MenuAppBar>
       <div style={{height: "4rem"}}></div>
       <MaterialTable
         title={title}
@@ -166,13 +186,7 @@ export default function VolunteersList() {
         options={
           {
             paging: false,
-            exportAllData: true,
-            exportButton: true,
-            exportDelimiter: ';',
-            exportFileName: 'Volonteri',
             tableLayout: 'fixed',
-
-            exportCsv,
             headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
             maxBodyHeight: 'calc(100vh - 128px)',
           }
@@ -189,6 +203,22 @@ export default function VolunteersList() {
             emptyDataSourceMessage: '',
           },
         }}
+        actions={[
+          {
+            icon: () => <PlayForWorkIcon />,
+            tooltip: 'Izvoz podataka za provjeru',
+            isFreeAction: true,
+            hidden: !user?.exportForCheck,
+            onClick: () => exportCsv(tableRef.current.dataManager.columns, tableRef.current.dataManager.data, allForCheck, 'Volonteri za provjeru ' + dateTime())
+          },
+          {
+            icon: () => <SystemUpdateAltIcon />,
+            tooltip: 'Izvoz svih podataka',
+            isFreeAction: true,
+            hidden: !user?.exportAll,
+            onClick: () => exportCsv(tableRef.current.dataManager.columns, tableRef.current.dataManager.data, allData, 'Svi volonteri ' + dateTime())
+          }
+        ]}
       />
     </>
   );

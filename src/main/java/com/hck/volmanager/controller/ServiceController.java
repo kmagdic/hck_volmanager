@@ -29,6 +29,7 @@ public class ServiceController {
         return serviceRepository.findAll();
     }
 
+    /*
     @PostMapping("/services")
     public Service createService(@Valid @RequestBody Service service) throws ResourceNotFoundHttpException {
         Service newService = serviceRepository.save(service);
@@ -39,13 +40,6 @@ public class ServiceController {
 
         return newService;
     }
-
-    /**
-     * @param serviceId
-     * @param serviceJSON
-     * @return
-     * @throws ResourceNotFoundHttpException
-     */
 
     @PutMapping("/services/{id}")
     public ResponseEntity<Service> updateService(@PathVariable(value = "id") Long serviceId,
@@ -72,4 +66,6 @@ public class ServiceController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+
+    */
 }

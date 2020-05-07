@@ -3,12 +3,15 @@ import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import { AuthProvider } from "./contexts/AuthContext";
 import * as serviceWorker from './serviceWorker';
 
 render(
 
   <BrowserRouter>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </BrowserRouter>
   //<React.StrictMode>
     //<App />

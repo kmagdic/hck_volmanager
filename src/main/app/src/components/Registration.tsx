@@ -568,10 +568,8 @@ function Registration() {
 
       <fieldset className="fieldset">
         <legend>Važne informacije</legend>
-        <FormControl>
-          <FormControlLabel control={ <Checkbox name="householdElderly" color="primary" /> } label="Imate li u kućanstvu osobu stariju od 65 godina?"/>
-        <FormHelperText className="helper-text">Važne informacije tijekom voloniranja za vrijeme epidemije COVID-19</FormHelperText>
-        </FormControl>
+        <div className="fieldset-info">Važne informacije tijekom voloniranja za vrijeme epidemije COVID-19</div>
+        <FormControlLabel control={ <Checkbox name="householdElderly" color="primary" /> } label="Imate li u kućanstvu osobu stariju od 65 godina?"/>
         <FormControlLabel control={ <Checkbox name="householdPregnatWomen" color="primary" /> } label="Imate li u kućanstvu trudnicu?" />
         <FormControlLabel control={ <Checkbox name="pregnatWoman" color="primary" /> } label="Jeste li vi trudnica?" />
         <FormControlLabel control={ <Checkbox name="householdChild" color="primary" /> } label="Imate li u kućanstvu malo dijete?" />
@@ -583,29 +581,37 @@ function Registration() {
         <legend>Dodatne informacije</legend>
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
-        <FormControlLabel control={ 
-          <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationSelect} closeMenuOnSelect={false}
-            isValidNewOption={search => !includes(search, qualificationSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+        <FormControl>
+          <FormControlLabel control={ 
+            <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationSelect} closeMenuOnSelect={false}
+              isValidNewOption={search => !includes(search, qualificationSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+            />
+            }
+            label="Zanimanje/profesionalne kvalifikacije*:" className="textField" labelPlacement="top"
           />
-          }
-          label="Zanimanje/profesionalne kvalifikacije*:" className="textField" labelPlacement="top"
-        />
+        </FormControl>
 
-        <FormControlLabel control={ 
-          <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceSelect} closeMenuOnSelect={false}
-            isValidNewOption={search => !includes(search, experienceSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+        <FormControl>
+          <FormControlLabel control={ 
+            <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceSelect} closeMenuOnSelect={false}
+              isValidNewOption={search => !includes(search, experienceSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+            />
+            }
+            label="Iskustva*:" className="textField" labelPlacement="top"
           />
-          }
-          label="Iskustva*:" className="textField" labelPlacement="top"
-        />
+          <FormHelperText className="helper-text">Navedite postojeća iskustva u odgovoru na kriznu situaciju ili pripadnost nekoj drugoj organizaciji</FormHelperText>
+        </FormControl>
 
-        <FormControlLabel control={ 
-          <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceSelect} closeMenuOnSelect={false}
-            isValidNewOption={search => !includes(search, serviceSelect)} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+        <FormControl>
+          <FormControlLabel control={ 
+            <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceSelect} closeMenuOnSelect={false}
+              isValidNewOption={search => !includes(search, serviceSelect)} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+            />
+            }
+            label="Dodatne usluge*:" className="textField" labelPlacement="top"
           />
-          }
-          label="Dodatne usluge*:" className="textField" labelPlacement="top"
-        />
+          <FormHelperText className="helper-text">Navedite ukoliko želite ponuditi dodatne usluge koje smatrate da mogu doprinijeti radu Crvenog križa (npr. usluge prijevoza, ustupanja vozila i sl.)</FormHelperText>
+        </FormControl>
 
         <FormControlLabel control={
           <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillSelect} closeMenuOnSelect={false}
