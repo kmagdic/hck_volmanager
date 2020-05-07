@@ -47,3 +47,5 @@ Useability
 - implement export all data
 - optimize select for volunteers list
   - reduce additional selects for lookup tables
++ allow change status only for users with permission
++ allow change check only for user with permission

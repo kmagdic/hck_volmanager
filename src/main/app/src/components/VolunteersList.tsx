@@ -56,6 +56,7 @@ export default function VolunteersList() {
       { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle, searchable: false,
         render: (rowData: any) =>
         <Switch
+          disabled={!user?.changeCheck}
           checked={rowData.backgroundCheckNeeded}
           onChange={e => {
             //console.log("rowData:", rowData);
@@ -78,6 +79,7 @@ export default function VolunteersList() {
         render: (rowData: any) => {
           return(
             <CustomSelect 
+              disabled={!user?.changeStatus}
               status={rowData.backgroundCheckPassed == null ? "null" : rowData.backgroundCheckPassed.toString()}
               onChange={(status: any) => {
                 // console.log("onChange bgStatus rowData:", rowData);
@@ -191,6 +193,20 @@ export default function VolunteersList() {
             emptyDataSourceMessage: '',
           },
         }}
+        actions={[
+          {
+            icon: 'add',
+            tooltip: 'Izvoz podataka za provjeru',
+            isFreeAction: true,
+            onClick: (event) => alert("Izvoz podataka za provjeru")
+          },
+          {
+            icon: 'add',
+            tooltip: 'Izvoz svih podataka',
+            isFreeAction: true,
+            onClick: (event) => alert("Izvoz svih podataka")
+          }
+        ]}
       />
     </>
   );
