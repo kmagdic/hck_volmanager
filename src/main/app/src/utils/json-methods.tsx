@@ -12,7 +12,8 @@ export interface GroupedOption {
 
 export const emptyGroup: GroupedOption[] = [];
 
-export const deepField = (obj: any, field: string) => field.split('.').reduce((att: any, value: any) => att[value], obj);
+//export const deepField = (obj: any, field: string) => field.split('.').reduce((att: any, value: any) => att[value], obj);
+export const deepField = (obj: any, field: string) => field.split('.').reduce((att: any, value: any) => (att && att[value]) ? att[value] : null, obj);
 
 export interface CompareListItemsFunction {
   (a: ListItem, b: ListItem): number;
@@ -24,6 +25,15 @@ export interface CompareGroupedOptionsFunction {
 
 //export const CompareListItemsByLabel: CompareListItemsFunction = (a: ListItem, b: ListItem) => a.label.localeCompare(b.label);
 //export const CompareGroupedOptionsByLabel: CompareGroupedOptionsFunction = (a: GroupedOption, b: GroupedOption) => a.label.localeCompare(b.label);
+
+export const dateTime = (dt: any) => {
+  return '' + dt.getFullYear() + '-' + 
+    (dt.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+    dt.getDate().toString().padStart(2, '0') + ' ' + 
+    dt.getHours().toString().padStart(2, '0') + ':' + 
+    dt.getMinutes().toString().padStart(2, '0') + ':' + 
+    dt.getSeconds().toString().padStart(2, '0');
+};
 
 export const isEmpty = (value: any): boolean => (value === undefined) || (value === null) || isNaN(value);
 export const toSafeNumber = (value: any, nullsFirst: boolean = false): number => 

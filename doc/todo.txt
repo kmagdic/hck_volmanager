@@ -9,7 +9,7 @@ TODO HCK VOLMANAGER GENERAL
 - Srediti build
 
 Improve app stability
-- on registration submit catch and log api service's exception/error
++ on registration submit catch and log api service's exception/error
 - test performance with high volume volunteers in db
   - improve fetching volunteers data thru single select instead multi selects
 
@@ -41,10 +41,10 @@ Useability
 + logged-in user object (json) store in app context for secured routes
 - during login hash password from request with user's salt and then compare with hashed password in users table
 + display username in upper-right corner
-- implement logout
++ implement logout
   + on front side in drop down option
   - on server side as DELETE /auth
-- implement export all data
++ implement export all data
 - optimize select for volunteers list
   - reduce additional selects for lookup tables
 + allow change status only for users with permission
