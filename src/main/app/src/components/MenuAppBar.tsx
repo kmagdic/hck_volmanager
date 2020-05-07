@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,7 +12,8 @@ import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
+import { AuthContext, AuthConsumer, Auth } from "./../contexts/AuthContext";
 
 function ElevationScroll(props: any) {
   const { children } = props;
@@ -42,7 +43,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function MenuAppBar(props: any) {
   const classes = useStyles();
-  const [auth] = React.useState(true);
+  const { isAuth, user } = useContext(AuthContext);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
   const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -68,54 +70,64 @@ export default function MenuAppBar(props: any) {
     history.push("/login");
   }
 
+  if (!isAuth) {
+    return <Redirect to='/login' />
+  }
+
   return (
-    <div className={classes.root}>
-      <ElevationScroll {...props}>
-        <AppBar position="fixed">
-          <Toolbar>
-            {/* commenting hamburger menu
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-            */}
-            <Typography variant="h6" className={classes.title}>
-              {props.title}
-            </Typography>
-            {auth && (
-              <div>
-                <span>admin</span>
-                <IconButton
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  ref={anchorRef}
-                  color="inherit"
-                >
-                <AccountCircle />
-                </IconButton>
-                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-                  {({ TransitionProps, placement }) => (
-                    <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                    >
-                      <Paper>
-                        <ClickAwayListener onClickAway={handleClose}>
-                          <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                            <MenuItem onClick={handleClose}>Profil</MenuItem>
-                            <MenuItem onClick={goToLogin}>Odjava</MenuItem>
-                          </MenuList>
-                        </ClickAwayListener>
-                      </Paper>
-                    </Grow>
+/*    <AuthContext.Consumer>
+      {
+      (authUser: Auth) => {
+        return (*/
+          <div className={classes.root}>
+            <ElevationScroll {...props}>
+              <AppBar position="fixed">
+                <Toolbar>
+                  {/* commenting hamburger menu
+                  <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    <MenuIcon />
+                  </IconButton>
+                  */}
+                  <Typography variant="h6" className={classes.title}>{props.title}</Typography>
+                  {isAuth && (
+                    <div>
+                      <span>{user?.username}</span>
+                      <IconButton
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        ref={anchorRef}
+                        color="inherit"
+                      >
+                      <AccountCircle />
+                      </IconButton>
+                      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                        {({ TransitionProps, placement }) => (
+                          <Grow
+                            {...TransitionProps}
+                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                          >
+                            <Paper>
+                              <ClickAwayListener onClickAway={handleClose}>
+                                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                  <MenuItem style={{display: "none" }} onClick={handleClose}>Profil</MenuItem>
+                                  <MenuItem onClick={goToLogin}>Odjava</MenuItem>
+                                </MenuList>
+                              </ClickAwayListener>
+                            </Paper>
+                          </Grow>
+                        )}
+                      </Popper>
+                    </div>
                   )}
-                </Popper>
-              </div>
-            )}
-          </Toolbar>
-        </AppBar>
-      </ElevationScroll>
-    </div>
+                </Toolbar>
+              </AppBar>
+            </ElevationScroll>
+          </div>
+/*        )
+      }
+    }
+    </AuthContext.Consumer>*/
   );
 }

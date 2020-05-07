@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, Checkbox, InputAdornment, IconButton } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
-import { request } from "../utils/requests"
+import { request } from "../utils/requests";
+import { AuthContext, AuthProvider, AuthConsumer, Auth } from "./../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,6 +37,9 @@ interface LoginMessage {
 
 function Login() {
   const classes = useStyles();
+
+  const { isAuth, user, login } = useContext(AuthContext);
+  //const [user, setUser] = React.useState<Auth>(authUser);
 
   const adminEmail = "admin";
   const adminPassword = "admin-hck2020";
@@ -79,11 +83,21 @@ function Login() {
 
     request('auth?username=' + email + '&password=' + password, (response: any) => {
         console.log("Auth response:", response);
-        response.json().then((user: any) => {
-          console.log("User: ", user);
-        })
+        response
+          .json()
+          .then((user: any) => {
+            console.log("User: ", user);
+            login(user);
+            //authUser.login(user);
+            //setUser(authUser.login(user));
+            history.push("/list");
+          })
+          .catch((error: any) => {
+            console.log("login error:", error);
+            setShowMessage({ show: true, type: 'error', message: 'pogrešno korisničko ime ili lozinka' });
+          })
     }, "POST");
-
+    /*
     if((email === adminEmail) && (password === adminPassword)) {
       history.push("/list");
       return true;
@@ -92,55 +106,58 @@ function Login() {
       setShowMessage({ show: true, type: 'error', message: 'pogrešno korisničko ime ili lozinka' });
       return false;
     }
+    */
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
-        <form className={classes.form} noValidate onSubmit={validateForm}>
-          <Typography variant="h6" gutterBottom color="error">
-            <div className="login-message">
-              { showMessage.show ? (showMessage.type === 'warning' ? <WarningIcon /> : <ErrorIcon />) : null }
-              <div className="login-message-text">{showMessage.message}</div>
-            </div>
-          </Typography>
-          <FormControlLabel control={
-              <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus
-              />
-            }
-            label="Korisničko ime:" className="textField" labelPlacement="top"
-          />
-          <FormControlLabel control={
-              <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type={showPassword ? 'text' : 'password' }
-                InputProps={{
-                  endAdornment: 
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                }}
-              />
-            }
-            label="Lozinka:" className="textField" labelPlacement="top"
-          />
+    //<AuthProvider>
+          <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
+              <form className={classes.form} noValidate onSubmit={validateForm}>
+                <Typography variant="h6" gutterBottom color="error">
+                  <div className="login-message">
+                    { showMessage.show ? (showMessage.type === 'warning' ? <WarningIcon /> : <ErrorIcon />) : null }
+                    <div className="login-message-text">{showMessage.message}</div>
+                  </div>
+                </Typography>
+                <FormControlLabel control={
+                    <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus
+                    />
+                  }
+                  label="Korisničko ime:" className="textField" labelPlacement="top"
+                />
+                <FormControlLabel control={
+                    <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type={showPassword ? 'text' : 'password' }
+                      InputProps={{
+                        endAdornment: 
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                      }}
+                    />
+                  }
+                  label="Lozinka:" className="textField" labelPlacement="top"
+                />
 
-          <FormControlLabel
-            className="no-select"
-            control={<Checkbox value="remember" color="primary" />}
-            label="Zapamti prijavu"
-          />
-          <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
-        </form>
-      </div>
-    </Container>
+                <FormControlLabel
+                  className="no-select"
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Zapamti prijavu"
+                />
+                <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
+              </form>
+            </div>
+          </Container>
+    //</AuthProvider>
   );
 }
 

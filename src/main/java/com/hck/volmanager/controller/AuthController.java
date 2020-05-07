@@ -36,5 +36,6 @@ public class AuthController {
     @DeleteMapping("/auth")
     public User logout(HttpSession session) {
         session.setAttribute("webUser", null);
+        return null;
     }
 }
