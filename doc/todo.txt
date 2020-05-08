@@ -47,11 +47,17 @@ Useability
 + implement logout
   + on front side in drop down option
   + on server side as DELETE /auth
-- implement export all data
++ implement export all data
 - optimize select for volunteers list
   - reduce additional selects for lookup tables
 + allow change status only for users with permission
 + allow change check only for user with permission
+- enable secure hashing on database
+  - procceed with following:
+    - execute in postgres: create extension pgcrypto
+    - update every user in hck.users with: update hck.users set salt = gen_salt('bf', 8);
+    - update every password with update hck.users set pass = crypt(pass, salt);
+    - every new user should first be initialized with gen_salt('bf', 8) in salt column (e.g. trigger or during insert)
 
 Karlo:
 + comment REST for šifarnici
