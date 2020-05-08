@@ -254,23 +254,39 @@ create table hck.users(
 
 create unique index ui_users_user on hck.users(username);
 
+create unique index ui_users_salt on hck.users(salt);
 
-DROP TRIGGER IF EXISTS encrypt_userdata on users;
-DROP FUNCTION IF EXISTS encrypt_password();
+create extension pgcrypto;
 
+create or replace function hck.trgfn_prepare_pass()
+	returns trigger
+	language plpgsql
+as $function$
+begin
+	new.salt = gen_salt('bf', 8);
+	new.pass = crypt(new.pass, new.salt);
+	return new;
+end;
+$function$
+;
 
-CREATE OR REPLACE FUNCTION encrypt_password()
-  RETURNS TRIGGER AS
-$func$
-BEGIN
- IF LENGTH(NEW.pass)<32 THEN
- 	NEW.pass := md5(NEW.pass);
- END IF;
- RETURN NEW;
-END
-$func$ LANGUAGE plpgsql;  -- don't quote the language name
+create trigger trg_prepare_pass
+	before insert on hck.users
+	for each row
+	execute procedure hck.trgfn_prepare_pass();
 
+create or replace function hck.trgfn_update_pass()
+	returns trigger
+	language plpgsql
+as $function$
+begin
+	new.pass = crypt(new.pass, new.salt);
+	return new;
+end;
+$function$
+;
 
-CREATE TRIGGER encrypt_userdata
-BEFORE INSERT OR UPDATE ON users
-FOR EACH ROW EXECUTE PROCEDURE encrypt_password();
+create trigger trg_update_pass
+	before update of pass on hck.users
+	for each row
+	execute procedure hck.trgfn_update_pass();
