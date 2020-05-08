@@ -76,6 +76,7 @@ export default function CustomSelect(props: any) {
   //console.log("CustomSelect props:", props);
   const classes = useStyles();
   const [status, setStatus] = React.useState(props.status);
+  const [disabled] = React.useState(props.disabled); // Tihach: jel potrebn tu staviti setDisabled?
   const handleChange = (event: any) => {
     setStatus(event.target.value);
     props.onChange(event.target.value);
@@ -84,26 +85,27 @@ export default function CustomSelect(props: any) {
     <form className={classes.root} autoComplete="off">     
       <FormControl className={classes.margin}>
         <Select
+          disabled={disabled}
           value={status}
           onChange={handleChange}
           input={<BootstrapInput />}
         >
           <MenuItem value={"null"}>
-            <ListItemIcon>
-              <PanoramaWideAngleIcon className={classes["label-not-sent"]} />
-              <div className={'label'}>provjera nije poslana ili je u tijeku</div>
+            <ListItemIcon title="Provjera nije poslana ili je u tijeku">
+              <PanoramaWideAngleIcon className={classes["label-not-sent"]}/>
+              <div className={'label'}>Provjera nije poslana ili je u tijeku</div>
             </ListItemIcon>
           </MenuItem>
           <MenuItem value={"false"}>
-            <ListItemIcon>
+            <ListItemIcon title="Provjera nije prošla">
               <ThumbDownIcon className={classes["label-not-passed"]} />
-              <div className={'label'}>provjera nije prošla</div>
+              <div className={'label'}>Provjera nije prošla</div>
             </ListItemIcon>
           </MenuItem>
-          <MenuItem value={"true"}>
-            <ListItemIcon>
+          <MenuItem value={"true"} >
+            <ListItemIcon title="Provjera je prošla">
               <ThumbUpIcon className={classes["label-passed"]} />
-              <div className={"label"}>provjera je prošla</div>
+              <div className={"label"}>Provjera je prošla</div>
             </ListItemIcon>
           </MenuItem>
         </Select>

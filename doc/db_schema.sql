@@ -259,14 +259,17 @@ DROP TRIGGER IF EXISTS encrypt_userdata on users;
 DROP FUNCTION IF EXISTS encrypt_password();
 
 
-CREATE FUNCTION encrypt_password()
+CREATE OR REPLACE FUNCTION encrypt_password()
   RETURNS TRIGGER AS
 $func$
 BEGIN
- NEW.pass := md5(NEW.pass);
+ IF LENGTH(NEW.pass)<32 THEN
+ 	NEW.pass := md5(NEW.pass);
+ END IF;
  RETURN NEW;
 END
 $func$ LANGUAGE plpgsql;  -- don't quote the language name
+
 
 CREATE TRIGGER encrypt_userdata
 BEFORE INSERT OR UPDATE ON users
