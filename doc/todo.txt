@@ -47,7 +47,7 @@ Useability
 + implement logout
   + on front side in drop down option
   + on server side as DELETE /auth
-- implement export all data
++ implement export all data
 - optimize select for volunteers list
   - reduce additional selects for lookup tables
 + allow change status only for users with permission
