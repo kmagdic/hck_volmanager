@@ -25,9 +25,9 @@ public class AuthController {
     @PostMapping("/auth")
     public WebUser login(@RequestParam String username, @RequestParam String password, HttpSession session) throws ForbiddenHttpException {
         log.info("Login with username '" + username + "'");
-        User user = userRepository.findOneByUsername(username);
-        String hashedPassword = DigestUtils.md5Hex(password);
-        if(user != null && user.getEnabled() && user.getPassword().equals(hashedPassword)) {
+        //User user = userRepository.findOneByUsername(username);
+        User user = userRepository.findOneByUsernameAndHashedPass(username, password);
+        if(user != null) {
             WebUser webUser = new WebUser(user);
             log.info("Found user:  " + webUser.getId());
             session.setAttribute("webUser", webUser);

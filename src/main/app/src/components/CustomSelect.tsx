@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -73,10 +73,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CustomSelect(props: any) {
-  //console.log("CustomSelect props:", props);
   const classes = useStyles();
   const [status, setStatus] = React.useState(props.status);
-  const [disabled] = React.useState(props.disabled); // Tihach: jel potrebn tu staviti setDisabled?
+
   const handleChange = (event: any) => {
     setStatus(event.target.value);
     props.onChange(event.target.value);
@@ -85,7 +84,7 @@ export default function CustomSelect(props: any) {
     <form className={classes.root} autoComplete="off">     
       <FormControl className={classes.margin}>
         <Select
-          disabled={disabled}
+          disabled={props.disabled}
           value={status}
           onChange={handleChange}
           input={<BootstrapInput />}
