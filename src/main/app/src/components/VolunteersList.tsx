@@ -5,10 +5,11 @@ import CustomSelect from './CustomSelect';
 import { request } from '../utils/requests';
 import { format } from 'date-fns';
 import MenuAppBar from './MenuAppBar';
-import { AuthContext, AuthConsumer, Auth } from "./../contexts/AuthContext";
+import { AuthContext } from "./../contexts/AuthContext";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
-const _filefy = require("filefy");
+import { dateTime } from './../utils/json-methods';
+import { exportCsv, columnsForExportForCheck, columnsForExportAll } from './../utils/export-data';
 
 interface Row {
   id: number,
@@ -41,21 +42,21 @@ export default function VolunteersList() {
           cellStyle: { color: '#cacaca'},
           defaultSort: 'asc'
       },
-      { title: 'Ime i prezime', export: true, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
+      { title: 'Ime i prezime', cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
           const s = getForRenderFullName(rowData).toLocaleLowerCase();
           return s.indexOf(filter.toLocaleLowerCase()) >= 0;
         },
         render: getForRenderFullName
       },
-      { title: 'Datum rođenja', field: 'dob', type: 'date', export: false, cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
+      { title: 'Datum rođenja', field: 'dob', type: 'date', cellStyle, searchable: true, customFilterAndSearch: (filter: any, rowData: any, columnDef: any): boolean => {
           const s = getForRenderDob(rowData);
           return s.indexOf(filter.toLocaleLowerCase()) >= 0;
         },          
         render: getForRenderDob
       },
-      { title: 'OIB', field: 'oib', cellStyle, export: true, hidden: true, searchable: true },
-      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', export: false, cellStyle, searchable: false },
-      { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', export: false, cellStyle, searchable: false,
+      { title: 'OIB', field: 'oib', cellStyle, searchable: true },
+      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', hidden: !user?.admin, cellStyle, searchable: !user?.admin },
+      { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', cellStyle, searchable: false,
         render: (rowData: any) =>
         <Switch
           disabled={!user?.changeCheck}
@@ -77,7 +78,7 @@ export default function VolunteersList() {
           inputProps={{ 'aria-label': 'secondary checkbox' }}
         />
      },
-      { title: 'Background check status', field: 'backgroundCheckPassed', type: 'boolean', export: false, cellStyle, searchable: false,
+      { title: 'Status provjere', field: 'backgroundCheckPassed', type: 'boolean', cellStyle, searchable: false,
         render: (rowData: any) => {
           return(
             <CustomSelect 
@@ -121,55 +122,14 @@ export default function VolunteersList() {
     })
   }, []);
   
-  const dateTime = () => {
-    const now = new Date();
-    return '' + now.getFullYear() + '-' + 
-      (now.getMonth() + 1).toString().padStart(2, '0') + '-' + 
-      now.getDate().toString().padStart(2, '0') + ' ' + 
-      now.getHours().toString().padStart(2, '0') + ':' + 
-      now.getMinutes().toString().padStart(2, '0') + ':' + 
-      now.getSeconds().toString().padStart(2, '0');
-  };
-  const allData = () => true;
-  const allForCheck = (rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null);
-
-  const exportCsv = (allColumns: any, allData: any, filter: any, fileName: string) => {
-    console.log('columns:', allColumns);
-    console.log('data:', allData);
-    console.log('filter:', filter);
-    //return;
-    const additionalColumns = [
-      { 
-        field: 'years', title: 'Dob',
-        render: (rowData: any) => {
-          const now = new Date();
-          const dob = new Date(rowData.dob);
-          const diff = now.valueOf() - dob.valueOf();
-          //return new Date(diff).getFullYear() - 1970;
-          return Math.abs(new Date(new Date().valueOf() - new Date(rowData.dob).valueOf()).getUTCFullYear() - 1970);
-          //return Math.abs(diff.getUTCFullYear() - 1970);
-        }
-      }
-    ];
-    const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false)
-      .concat(additionalColumns);
-    const exportedData = allData
-      .filter(filter)
-      .map((rowData: any) => columns.map((columnDef: any) => columnDef.render ? columnDef.render(rowData) : columnDef.field === 'oib' ? `'${rowData[columnDef.field]}` : rowData[columnDef.field]));
-
-    console.log('exported data:', exportedData);
-    new _filefy.CsvBuilder(`${fileName}.csv`)
-      .setDelimeter(';')
-      .setColumns(columns.map((columnDef: any) => columnDef.title))
-      .addRows(exportedData)
-      .exportFile();
-  }
+  const dataAll = () => true;
+  const dataForCheck = (rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null);
 
   const tableRef: any = React.useRef();
 
   return (
     <>
-      <MenuAppBar title={"HCK - Pregled volontera za " + (user?.admin ? "Administratora" : ("HCK društvo '" + user?.hckSocietyName + "'")) }></MenuAppBar>
+      <MenuAppBar title={"HCK - Pregled volontera za " + (user?.admin ? "administratora" : ("HCK društvo '" + user?.hckSocietyName + "'")) }></MenuAppBar>
       <div style={{height: "4rem"}}></div>
       <MaterialTable
         title={title}
@@ -209,14 +169,14 @@ export default function VolunteersList() {
             tooltip: 'Izvoz podataka za provjeru',
             isFreeAction: true,
             hidden: !user?.exportForCheck,
-            onClick: () => exportCsv(tableRef.current.dataManager.columns, tableRef.current.dataManager.data, allForCheck, 'Volonteri za provjeru ' + dateTime())
+            onClick: () => exportCsv(columnsForExportForCheck, tableRef.current.dataManager.sortedData, dataForCheck, 'Volonteri za provjeru ' + dateTime(new Date()))
           },
           {
             icon: () => <SystemUpdateAltIcon />,
             tooltip: 'Izvoz svih podataka',
             isFreeAction: true,
             hidden: !user?.exportAll,
-            onClick: () => exportCsv(tableRef.current.dataManager.columns, tableRef.current.dataManager.data, allData, 'Svi volonteri ' + dateTime())
+            onClick: () => exportCsv(columnsForExportAll, tableRef.current.dataManager.sortedData, dataAll, 'Svi volonteri ' + dateTime(new Date()))
           }
         ]}
       />
