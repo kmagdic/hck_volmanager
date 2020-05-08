@@ -12,7 +12,7 @@ public class Application {
 
 
 	public static void main(String[] args) {
-		log.info("Starting HCK Volunteer Manager V0.1");
+		log.info("Starting HCK Volunteer Manager V0.2");
 
 		SpringApplication.run(Application.class, args);
 	}
