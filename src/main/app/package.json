@@ -20,6 +20,7 @@
     "material-table": "^1.57.2",
     "moment": "^2.24.0",
     "react": "^16.13.1",
+    "react-app-polyfill": "^1.0.6",
     "react-datetime": "^2.16.3",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
@@ -45,7 +46,9 @@
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "ie 11",
+      "last 1 ie version"
     ]
   },
   "proxy": "http://localhost:8080"
