@@ -18,6 +18,12 @@ function Approval() {
     <div className="approval">
 
       <div className="header">
+        <div className="btnContainer ctnLogin">
+          <div className="loginLabel">Prijava samo za djelatnike Hrvatskog Crvenog križa</div>
+          <Link to="/login">
+            <Button className="btn" variant="contained" color="primary">Prijava</Button>
+          </Link>
+        </div>
         <img src={logo} className="App-logo" alt="logo" />
 
         <h1>Obrazac za prijavu volontera</h1>
@@ -66,11 +72,6 @@ Voditelj obrade Vaših osobnih podataka je društvo Crvenog križa koje će Vas 
         <div className="btnContainer">
           <Link to={approved === "true" ? "/registration" : "/confirmation" }>
             <Button disabled={approved === "null"} className="btn" variant="contained" color="primary">Dalje</Button>
-          </Link>
-        </div>
-        <div className="btnContainer">
-          <Link to="/login">
-            <Button className="btn" variant="contained" color="primary">Login</Button>
           </Link>
         </div>
       </div>

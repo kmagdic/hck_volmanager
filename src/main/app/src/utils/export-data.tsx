@@ -116,8 +116,8 @@ export const columnsForExportAll = [
 ];
 
 export const exportCsv = (allColumns: any, allData: any, filter: any, fileName: string) => {
-  console.log('columns:', allColumns);
-  console.log('data:', allData);
+  //console.log('columns:', allColumns);
+  //console.log('data:', allData);
   const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false);
 
   const exportedData = allData
@@ -126,7 +126,7 @@ export const exportCsv = (allColumns: any, allData: any, filter: any, fileName: 
       columnDef.render ? columnDef.render(rowData) : 
         columnDef.field === 'oib' ? `'${deepField(rowData, columnDef.field)}` : deepField(rowData, columnDef.field)));
     
-  console.log('exported data:', exportedData);
+  //console.log('exported data:', exportedData);
   new _filefy.CsvBuilder(`${fileName}.csv`)
     .setDelimeter(';')
     .setColumns(columns.map((columnDef: any) => columnDef.title))

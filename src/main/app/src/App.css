@@ -30,10 +30,6 @@ label.MuiFormControlLabel-labelPlacementTop {
   margin-bottom: 0.8rem !important;
 }
 
-.MuiFormControl-root, .MuiFormControlLabel-root {
-  awidth: 100% !important;
-}
-
 .rdt .MuiFormControl-root.MuiTextField-root.form-control, .fullWidth {
   width: 100%;
   amargin-bottom: 1rem;
@@ -129,6 +125,18 @@ label.MuiFormControlLabel-labelPlacementTop {
   padding: 0.5em;
 }
 
+.approval .btnContainer.ctnLogin {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+
+.loginLabel {
+  margin-right: 1rem;
+}
+
 .approval .btnContainer a {
   text-decoration: none;
 }
@@ -214,8 +222,6 @@ label.MuiFormControlLabel-labelPlacementTop {
     transform: rotate(360deg);
   }
 }
-
-
 
 .MuiTypography-h6 {
   clear: both;

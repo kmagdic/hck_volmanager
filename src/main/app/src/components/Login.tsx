@@ -71,14 +71,14 @@ function Login() {
     event.preventDefault();
 
     request('auth?username=' + email + '&password=' + password, (response: any) => {
-        console.log("Auth response:", response);
+        // console.log("Auth response:", response);
         response
           .json()
           .then((user: any) => {
             if(response.status !== 200)
               throw Error("Not authenticated user");
 
-            console.log("User: ", user);
+            // console.log("User: ", user);
             login(user);
             //authUser.login(user);
             //setUser(authUser.login(user));

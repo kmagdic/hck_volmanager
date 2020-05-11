@@ -99,16 +99,9 @@ function Registration() {
 
   const inputRef: any = React.useRef();
 
-  //setGroupedPlaces(newGroupedPlaces);
-
-  //const newPlaces = join(places, counties, (p: any, c: any) => (p.county === c.id) ? { ...p, countyName: c.name } : null );
-  //console.log("newPlaces:", newPlaces);
-  
   const setFocus = () => { inputRef.current.focus(); };
 
   useEffect(() => {
-    console.log("before fetching...");
-
     // fetching places
     request('places', (placesResponse: any) => {
       console.log("placesResponse:", placesResponse);
@@ -222,9 +215,6 @@ function Registration() {
         setSkillSelect(newGroupedSkills);
       });
     });
-
-    console.log("after fetching...");
-    console.log("inputRef:", inputRef);
 
     setTimeout(setFocus, 200);
   }, []);

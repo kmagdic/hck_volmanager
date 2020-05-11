@@ -75,60 +75,52 @@ export default function MenuAppBar(props: any) {
   }
 
   return (
-/*    <AuthContext.Consumer>
-      {
-      (authUser: Auth) => {
-        return (*/
-          <div className={classes.root}>
-            <ElevationScroll {...props}>
-              <AppBar position="fixed">
-                <Toolbar>
-                  {/* commenting hamburger menu
-                  <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon />
-                  </IconButton>
-                  */}
-                  <Typography variant="subtitle1" className={classes.title}>{props.title}</Typography>
-                  {isAuth && (
-                    <div>
-                      <span>{user?.username}</span>
-                      <IconButton
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={handleMenu}
-                        ref={anchorRef}
-                        color="inherit"
-                      >
-                      <AccountCircle />
-                      </IconButton>
-                      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-                        {({ TransitionProps, placement }) => (
-                          <Grow
-                            {...TransitionProps}
-                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                          >
-                            <Paper>
-                              <ClickAwayListener onClickAway={handleClose}>
-                                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                  <MenuItem style={{display: "none" }} onClick={handleClose}>Profil</MenuItem>
+    <div className={classes.root}>
+      <ElevationScroll {...props}>
+        <AppBar position="fixed">
+          <Toolbar>
+            {/* commenting hamburger menu
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            */}
+            <Typography variant="subtitle1" className={classes.title}>{props.title}</Typography>
+            {isAuth && (
+              <div>
+                <span>{user?.username}</span>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  ref={anchorRef}
+                  color="inherit"
+                >
+                <AccountCircle />
+                </IconButton>
+                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                            <MenuItem style={{display: "none" }} onClick={handleClose}>Profil</MenuItem>
 
-                                  <MenuItem onClick={goToLogin}>Odjava</MenuItem>
-                                </MenuList>
-                              </ClickAwayListener>
-                            </Paper>
-                          </Grow>
-                        )}
-                      </Popper>
-                    </div>
+                            <MenuItem onClick={goToLogin}>Odjava</MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
                   )}
-                </Toolbar>
-              </AppBar>
-            </ElevationScroll>
-          </div>
-/*        )
-      }
-    }
-    </AuthContext.Consumer>*/
+                </Popper>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
+      </ElevationScroll>
+    </div>
   );
 }

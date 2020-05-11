@@ -96,7 +96,7 @@ export default function VolunteersList() {
                   data[data.indexOf(rowData)] = rowData;
                   return { ...prevState, data };
                 });
-                console.log("state:", state);
+                // console.log("state:", state);
               }}
               >
             </CustomSelect>
