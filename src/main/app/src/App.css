@@ -30,6 +30,10 @@ label.MuiFormControlLabel-labelPlacementTop {
   margin-bottom: 0.8rem !important;
 }
 
+.MuiFormControl-root, .MuiFormControlLabel-root {
+  awidth: 100%;
+}
+
 .rdt .MuiFormControl-root.MuiTextField-root.form-control, .fullWidth {
   width: 100%;
   amargin-bottom: 1rem;
