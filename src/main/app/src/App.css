@@ -129,8 +129,6 @@ label.MuiFormControlLabel-labelPlacementTop {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 1rem;
-  padding: 0;
 }
 
 .loginLabel {
@@ -143,6 +141,10 @@ label.MuiFormControlLabel-labelPlacementTop {
 
 .approval .btn {
   width: 300px;
+}
+
+.approval .ctnLogin .btn {
+  width: 100px;
 }
 
 .approval-radiobuttons {

@@ -16,25 +16,23 @@ function Approval() {
 
     <div className="ctnApproval">
     <div className="approval">
-
-      <div className="header">
-        <div className="btnContainer ctnLogin">
+      <div className="btnContainer ctnLogin">
           <div className="loginLabel">Prijava samo za djelatnike Hrvatskog Crvenog križa</div>
           <Link to="/login">
             <Button className="btn" variant="contained" color="primary">Prijava</Button>
           </Link>
         </div>
+
+      <div className="header">
         <img src={logo} className="App-logo" alt="logo" />
 
         <h1>Obrazac za prijavu volontera</h1>
         <p>Poštovani,</p>
         <p>
         hvala Vam što ste iskazali želju i volju za volontiranjem u Hrvatskom Crvenom križu i društvima Crvenog križa diljem Hrvatske. 
-        Ukoliko ste u mogućnosti, molimo Vas da se za volontiranje prijavite direktno društvima Crvenog križa na čijem području se nalazite i želite volontirati. Kontakt podaci svih društava Crvenog križa u Hrvatskoj nalaze se na poveznici 
+        Ukoliko ste u mogućnosti, molimo Vas da se za volontiranje prijavite direktno društvima Crvenog križa na čijem području se nalazite i želite volontirati. Kontakt podaci svih društava Crvenog križa u Hrvatskoj nalaze se na&nbsp;
+        <a href="https://www.hck.hr/novosti/ovo-su-kontakti-drustava-crvenoga-kriza-za-ljude-u-potrebi/10282">poveznici</a>
         </p>
-        <a href="https://www.hck.hr/novosti/ovo-su-kontakti-drustava-crvenoga-kriza-za-ljude-u-potrebi/10282">
-          https://www.hck.hr/novosti/ovo-su-kontakti-drustava-crvenoga-kriza-za-ljude-u-potrebi/10282
-        </a>
 
         <p>
         Ovo je centralna evidencija spontanih volontera Hrvatskog Crvenog križa, iz koje ćemo podatke o potencijalnim volonterima prosljeđivati društvima Crvenog križa koji organiziraju aktivnosti sukladno potrebama lokalnog stanovništva na čijem području djeluju. 
