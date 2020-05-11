@@ -97,10 +97,14 @@ function Registration() {
 
   const history = useHistory();
 
+  const inputRef: any = React.useRef();
+
   //setGroupedPlaces(newGroupedPlaces);
 
   //const newPlaces = join(places, counties, (p: any, c: any) => (p.county === c.id) ? { ...p, countyName: c.name } : null );
   //console.log("newPlaces:", newPlaces);
+  
+  const setFocus = () => { inputRef.current.focus(); };
 
   useEffect(() => {
     console.log("before fetching...");
@@ -220,6 +224,9 @@ function Registration() {
     });
 
     console.log("after fetching...");
+    console.log("inputRef:", inputRef);
+
+    setTimeout(setFocus, 200);
   }, []);
 
   const renderInput = (props: any) => <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />;
@@ -486,7 +493,7 @@ function Registration() {
       <fieldset className="fieldset">
         <legend>Osobni podaci volontera</legend>
         <FormControlLabel control={
-          <TextField id="firstName" required={true} className="textField" variant="outlined" />
+          <TextField id="firstName" required={true} className="textField" variant="outlined" inputRef={inputRef} />
           } label="Ime*:" className="textField" labelPlacement="top"
         />
 

@@ -6,7 +6,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import { request } from "../utils/requests";
-import { AuthContext, AuthProvider, AuthConsumer, Auth } from "./../contexts/AuthContext";
+import { AuthContext } from "./../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,11 +38,11 @@ interface LoginMessage {
 function Login() {
   const classes = useStyles();
 
-  const { isAuth, user, login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   //const [user, setUser] = React.useState<Auth>(authUser);
 
-  const adminEmail = "admin";
-  const adminPassword = "admin-hck2020";
+  const adminEmail = ""; // "admin";
+  const adminPassword = ""; // "admin-hck2020";
 
   const [email, setEmail] = useState(adminEmail);
   const [password, setPassword] = useState(adminPassword);
@@ -70,17 +70,6 @@ function Login() {
   const validateForm = (event: any) => {
     event.preventDefault();
 
-    /*const data = {
-      username: event.target.username.value,
-      password: event.target.lastName.value,
-      admin: event.target.dob.value,
-      enabled: event.target.oib.value,
-      gender,
-      address: event.target.address.value,
-      placeOfLiving,
-      placeOfVolunteering,
-    }*/
-
     request('auth?username=' + email + '&password=' + password, (response: any) => {
         console.log("Auth response:", response);
         response
@@ -100,16 +89,6 @@ function Login() {
             setShowMessage({ show: true, type: 'error', message: 'Pogrešno korisničko ime ili lozinka' });
           })
     }, "POST");
-    /*
-    if((email === adminEmail) && (password === adminPassword)) {
-      history.push("/list");
-      return true;
-    }
-    else {
-      setShowMessage({ show: true, type: 'error', message: 'pogrešno korisničko ime ili lozinka' });
-      return false;
-    }
-    */
   };
 
   return (
