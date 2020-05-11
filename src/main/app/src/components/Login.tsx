@@ -129,12 +129,6 @@ function Login() {
                   }
                   label="Lozinka:" className="textField" labelPlacement="top"
                 />
-
-                <FormControlLabel
-                  className="no-select"
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Zapamti prijavu"
-                />
                 <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
               </form>
             </div>
