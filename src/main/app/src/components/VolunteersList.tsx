@@ -8,7 +8,7 @@ import MenuAppBar from './MenuAppBar';
 import { AuthContext } from "./../contexts/AuthContext";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import PlayForWorkIcon from '@material-ui/icons/PlayForWork';
-import { dateTime } from './../utils/json-methods';
+import { asDateTime } from './../utils/json-methods';
 import { exportCsv, columnsForExportForCheck, columnsForExportAll } from './../utils/export-data';
 
 interface Row {
@@ -30,7 +30,7 @@ export default function VolunteersList() {
   const cellStyle = {
     padding: '0 14px',
   };
-  const { isAuth, user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const getForRenderFullName = (rowData: any)  => rowData.firstName + ' ' + rowData.lastName;
   const getForRenderDob = (rowData: any) => format(new Date(rowData.dob), 'dd.MM.yyyy');
   const tableTitle = (count: number) => `Ukupno ${count} volonter` + (((count % 100 === 11) || (count % 10) !== 1) ? 'a' : '');
@@ -169,14 +169,14 @@ export default function VolunteersList() {
             tooltip: 'Izvoz podataka za provjeru',
             isFreeAction: true,
             hidden: !user?.exportForCheck,
-            onClick: () => exportCsv(columnsForExportForCheck, tableRef.current.dataManager.sortedData, dataForCheck, 'Volonteri za provjeru ' + dateTime(new Date()))
+            onClick: () => exportCsv(columnsForExportForCheck, tableRef.current.dataManager.sortedData, dataForCheck, 'Volonteri za provjeru ' + asDateTime(new Date()))
           },
           {
             icon: () => <SystemUpdateAltIcon />,
             tooltip: 'Izvoz svih podataka',
             isFreeAction: true,
             hidden: !user?.exportAll,
-            onClick: () => exportCsv(columnsForExportAll, tableRef.current.dataManager.sortedData, dataAll, 'Svi volonteri ' + dateTime(new Date()))
+            onClick: () => exportCsv(columnsForExportAll, tableRef.current.dataManager.sortedData, dataAll, 'Svi volonteri ' + asDateTime(new Date()))
           }
         ]}
       />

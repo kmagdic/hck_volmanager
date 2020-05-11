@@ -31,7 +31,7 @@ label.MuiFormControlLabel-labelPlacementTop {
 }
 
 .MuiFormControl-root, .MuiFormControlLabel-root {
-  width: 100% !important;
+  awidth: 100% !important;
 }
 
 .rdt .MuiFormControl-root.MuiTextField-root.form-control, .fullWidth {
@@ -46,7 +46,9 @@ label.MuiFormControlLabel-labelPlacementTop {
 
 .criminalRecord {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  ajustify-content: space-evenly;
+  margin: 0 5rem;
 }
 
 .fieldset {

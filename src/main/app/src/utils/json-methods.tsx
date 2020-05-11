@@ -26,13 +26,19 @@ export interface CompareGroupedOptionsFunction {
 //export const CompareListItemsByLabel: CompareListItemsFunction = (a: ListItem, b: ListItem) => a.label.localeCompare(b.label);
 //export const CompareGroupedOptionsByLabel: CompareGroupedOptionsFunction = (a: GroupedOption, b: GroupedOption) => a.label.localeCompare(b.label);
 
-export const dateTime = (dt: any) => {
+export const asDateTime = (dt: any) => {
   return '' + dt.getFullYear() + '-' + 
     (dt.getMonth() + 1).toString().padStart(2, '0') + '-' + 
     dt.getDate().toString().padStart(2, '0') + ' ' + 
     dt.getHours().toString().padStart(2, '0') + ':' + 
     dt.getMinutes().toString().padStart(2, '0') + ':' + 
     dt.getSeconds().toString().padStart(2, '0');
+};
+
+export const asDate = (dt: any) => {
+  return '' + dt.getFullYear() + '-' + 
+    (dt.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+    dt.getDate().toString().padStart(2, '0');
 };
 
 export const isEmpty = (value: any): boolean => (value === undefined) || (value === null) || isNaN(value);
@@ -63,7 +69,6 @@ export const defaultDataGroupSort: any[] = [
       return cmp;
       }
   ];
-
 
 export const sortData = (values: any[], compare: any[]): any[] => {
   return values.sort((a: any, b: any): number => {

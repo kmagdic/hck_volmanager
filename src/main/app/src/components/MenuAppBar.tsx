@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { useHistory, Redirect } from "react-router-dom";
-import { AuthContext, AuthConsumer, Auth } from "./../contexts/AuthContext";
+import { AuthContext } from "./../contexts/AuthContext";
 
 function ElevationScroll(props: any) {
   const { children } = props;

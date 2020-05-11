@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, Checkbox, InputAdornment, IconButton } from "@material-ui/core";
+import { Container, CssBaseline, Typography, TextField, FormControlLabel, Button, makeStyles, InputAdornment, IconButton } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -75,7 +75,7 @@ function Login() {
         response
           .json()
           .then((user: any) => {
-            if(response.status != 200)
+            if(response.status !== 200)
               throw Error("Not authenticated user");
 
             console.log("User: ", user);
@@ -92,48 +92,46 @@ function Login() {
   };
 
   return (
-    //<AuthProvider>
-          <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-              <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
-              <form className={classes.form} noValidate onSubmit={validateForm}>
-                <Typography variant="h6" gutterBottom color="error">
-                  <div className="login-message">
-                    { showMessage.show ? (showMessage.type === 'warning' ? <WarningIcon /> : <ErrorIcon />) : null }
-                    <div className="login-message-text">{showMessage.message}</div>
-                  </div>
-                </Typography>
-                <FormControlLabel control={
-                    <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus
-                    />
-                  }
-                  label="Korisničko ime:" className="textField" labelPlacement="top"
-                />
-                <FormControlLabel control={
-                    <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type={showPassword ? 'text' : 'password' }
-                      InputProps={{
-                        endAdornment: 
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                      }}
-                    />
-                  }
-                  label="Lozinka:" className="textField" labelPlacement="top"
-                />
-                <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
-              </form>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">Prijava djelatnika HCK društava</Typography>
+        <form className={classes.form} noValidate onSubmit={validateForm}>
+          <Typography variant="h6" gutterBottom color="error">
+            <div className="login-message">
+              { showMessage.show ? (showMessage.type === 'warning' ? <WarningIcon /> : <ErrorIcon />) : null }
+              <div className="login-message-text">{showMessage.message}</div>
             </div>
-          </Container>
-    //</AuthProvider>
+          </Typography>
+          <FormControlLabel control={
+              <TextField id="email" required value={email} onChange={changeEmail} fullWidth margin="normal" className="textField" variant="outlined" autoFocus
+              />
+            }
+            label="Korisničko ime:" className="textField" labelPlacement="top"
+          />
+          <FormControlLabel control={
+              <TextField id="password" required value={password} onChange={changePassword} fullWidth className="textField" variant="outlined" type={showPassword ? 'text' : 'password' }
+                InputProps={{
+                  endAdornment: 
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                }}
+              />
+            }
+            label="Lozinka:" className="textField" labelPlacement="top"
+          />
+          <Button type="submit" className={classes.submit} fullWidth variant="contained" color="primary">Prijava</Button>
+        </form>
+      </div>
+    </Container>
   );
 }
 
