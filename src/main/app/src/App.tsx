@@ -6,7 +6,6 @@ import Confirmation from "./components/Confirmation";
 import Login from "./components/Login";
 import "./App.css";
 import VolunteersList from "./components/VolunteersList";
-import { AuthProvider } from "./contexts/AuthContext";
 
 class App extends React.Component {
   render() {

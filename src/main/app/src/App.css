@@ -42,7 +42,9 @@ label.MuiFormControlLabel-labelPlacementTop {
 
 .criminalRecord {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  ajustify-content: space-evenly;
+  margin: 0 5rem;
 }
 
 .fieldset {
@@ -123,12 +125,26 @@ label.MuiFormControlLabel-labelPlacementTop {
   padding: 0.5em;
 }
 
+.approval .btnContainer.ctnLogin {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.loginLabel {
+  margin-right: 1rem;
+}
+
 .approval .btnContainer a {
   text-decoration: none;
 }
 
 .approval .btn {
   width: 300px;
+}
+
+.approval .ctnLogin .btn {
+  width: 100px;
 }
 
 .approval-radiobuttons {
@@ -208,8 +224,6 @@ label.MuiFormControlLabel-labelPlacementTop {
     transform: rotate(360deg);
   }
 }
-
-
 
 .MuiTypography-h6 {
   clear: both;

@@ -97,14 +97,11 @@ function Registration() {
 
   const history = useHistory();
 
-  //setGroupedPlaces(newGroupedPlaces);
+  const inputRef: any = React.useRef();
 
-  //const newPlaces = join(places, counties, (p: any, c: any) => (p.county === c.id) ? { ...p, countyName: c.name } : null );
-  //console.log("newPlaces:", newPlaces);
+  const setFocus = () => { inputRef.current.focus(); };
 
   useEffect(() => {
-    console.log("before fetching...");
-
     // fetching places
     request('places', (placesResponse: any) => {
       console.log("placesResponse:", placesResponse);
@@ -219,7 +216,7 @@ function Registration() {
       });
     });
 
-    console.log("after fetching...");
+    setTimeout(setFocus, 200);
   }, []);
 
   const renderInput = (props: any) => <TextField id="dob" className="textField fullWidth" variant="outlined" {...props} />;
@@ -486,7 +483,7 @@ function Registration() {
       <fieldset className="fieldset">
         <legend>Osobni podaci volontera</legend>
         <FormControlLabel control={
-          <TextField id="firstName" required={true} className="textField" variant="outlined" />
+          <TextField id="firstName" required={true} className="textField" variant="outlined" inputRef={inputRef} />
           } label="Ime*:" className="textField" labelPlacement="top"
         />
 
@@ -508,7 +505,7 @@ function Registration() {
           } label="OIB*:" className="textField" labelPlacement="top"
         />
 
-        <FormControl error={errorGender}>
+        <FormControl error={errorGender} className="fullWidth">
           <FormControlLabel control={
             <Select inputId="gender00" className="fullWidth" required={true} placeholder="Odaberi..." onChange={genderOnChange} options={genders} noOptionsMessage={noOptionsMessage}
             />
@@ -522,7 +519,7 @@ function Registration() {
           } label="Adresa*:" className="textField" labelPlacement="top"
         />
         
-        <FormControl error={errorPlaceOfLiving}>
+        <FormControl error={errorPlaceOfLiving} className="fullWidth">
           <FormControlLabel control={ 
             <Select inputId="placeOfLiving" className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfLivingOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
             />
@@ -532,7 +529,7 @@ function Registration() {
           <FormHelperText className="helper-text">{helperTextPlaceOfLiving}</FormHelperText>
         </FormControl>
 
-        <FormControl error={errorPlaceOfVolunteering}>
+        <FormControl error={errorPlaceOfVolunteering} className="fullWidth">
           <FormControlLabel control={ 
             <Select inputId="placeOfVolunteering" className="fullWidth" required={true} placeholder="Odaberi..." onChange={placeOfVolunteeringOnChange} options={groupedPlaces} noOptionsMessage={noOptionsMessage}
             />
@@ -569,19 +566,19 @@ function Registration() {
       <fieldset className="fieldset">
         <legend>Važne informacije</legend>
         <div className="fieldset-info">Važne informacije tijekom voloniranja za vrijeme epidemije COVID-19</div>
-        <FormControlLabel control={ <Checkbox name="householdElderly" color="primary" /> } label="Imate li u kućanstvu osobu stariju od 65 godina?"/>
-        <FormControlLabel control={ <Checkbox name="householdPregnatWomen" color="primary" /> } label="Imate li u kućanstvu trudnicu?" />
-        <FormControlLabel control={ <Checkbox name="pregnatWoman" color="primary" /> } label="Jeste li vi trudnica?" />
-        <FormControlLabel control={ <Checkbox name="householdChild" color="primary" /> } label="Imate li u kućanstvu malo dijete?" />
-        <FormControlLabel control={ <Checkbox name="householdChronicPatient" color="primary" /> } label="Imate li u kućanstvu kroničnog bolesnika?" />
-        <FormControlLabel control={ <Checkbox name="healthfine" color="primary" /> } label="Imate li sami zdravstvenih poteškoća?" />
+        <FormControlLabel className="fullWidth" control={ <Checkbox name="householdElderly" color="primary" /> } label="Imate li u kućanstvu osobu stariju od 65 godina?"/>
+        <FormControlLabel className="fullWidth" control={ <Checkbox name="householdPregnatWomen" color="primary" /> } label="Imate li u kućanstvu trudnicu?" />
+        <FormControlLabel className="fullWidth" control={ <Checkbox name="pregnatWoman" color="primary" /> } label="Jeste li vi trudnica?" />
+        <FormControlLabel className="fullWidth" control={ <Checkbox name="householdChild" color="primary" /> } label="Imate li u kućanstvu malo dijete?" />
+        <FormControlLabel className="fullWidth" control={ <Checkbox name="householdChronicPatient" color="primary" /> } label="Imate li u kućanstvu kroničnog bolesnika?" />
+        <FormControlLabel className="fullWidth" control={ <Checkbox name="healthfine" color="primary" /> } label="Imate li sami zdravstvenih poteškoća?" />
       </fieldset>
 
       <fieldset className="fieldset">
         <legend>Dodatne informacije</legend>
         <div className="fieldset-info">Kako bi brže i učinkovitije rasporedili volontere na odgovarajuće volonterske pozicije i najbolje iskoristili resurse kojima raspolažemo, molimo da odgovorite na dodatnih nekoliko pitanja.</div>
 
-        <FormControl>
+        <FormControl className="fullWidth">
           <FormControlLabel control={ 
             <CreatableSelect inputId="qualifications" className="fullWidth" placeholder="Odaberi..." onChange={qualificationsOnChange} options={qualificationSelect} closeMenuOnSelect={false}
               isValidNewOption={search => !includes(search, qualificationSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
@@ -591,7 +588,7 @@ function Registration() {
           />
         </FormControl>
 
-        <FormControl>
+        <FormControl className="fullWidth">
           <FormControlLabel control={ 
             <CreatableSelect inputId="experiences" className="fullWidth" placeholder="Odaberi..." onChange={experiencesOnChange} options={experienceSelect} closeMenuOnSelect={false}
               isValidNewOption={search => !includes(search, experienceSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
@@ -602,7 +599,7 @@ function Registration() {
           <FormHelperText className="helper-text">Navedite postojeća iskustva u odgovoru na kriznu situaciju ili pripadnost nekoj drugoj organizaciji</FormHelperText>
         </FormControl>
 
-        <FormControl>
+        <FormControl className="fullWidth">
           <FormControlLabel control={ 
             <CreatableSelect inputId="services" className="fullWidth" placeholder="Odaberi..." onChange={servicesOnChange} options={serviceSelect} closeMenuOnSelect={false}
               isValidNewOption={search => !includes(search, serviceSelect)} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
@@ -613,13 +610,15 @@ function Registration() {
           <FormHelperText className="helper-text">Navedite ukoliko želite ponuditi dodatne usluge koje smatrate da mogu doprinijeti radu Crvenog križa (npr. usluge prijevoza, ustupanja vozila i sl.)</FormHelperText>
         </FormControl>
 
-        <FormControlLabel control={
-          <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillSelect} closeMenuOnSelect={false}
-            isValidNewOption={search => !includes(search, skillSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+        <FormControl className="fullWidth">
+          <FormControlLabel control={
+            <CreatableSelect inputId="skills" className="fullWidth" placeholder="Odaberi..." onChange={skillsOnChange} options={skillSelect} closeMenuOnSelect={false}
+              isValidNewOption={search => !includes(search, skillSelect)} formatGroupLabel={formatGroupLabel} formatCreateLabel={option => `Dodaj: "${option}"`} noOptionsMessage={noOptionsMessage} isMulti
+            />
+            }
+            label="Dodatne vještine*:" className="textField" labelPlacement="top"
           />
-          }
-          label="Dodatne vještine*:" className="textField" labelPlacement="top"
-        />
+        </FormControl>
 
         <FormControlLabel control={ 
           <TextField id="healthDetails" required={true} className="textField" variant="outlined" multiline

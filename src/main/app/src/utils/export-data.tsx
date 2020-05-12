@@ -1,5 +1,5 @@
 import { genders } from "../utils/data"
-import { deepField, dateTime } from "../utils/json-methods"
+import { deepField, asDateTime, asDate } from "../utils/json-methods"
 const _filefy = require("filefy");
 
 const boolToString = (value: boolean, sTrue: string = 'da', sFalse: string = 'ne') => value ? sTrue : sFalse;
@@ -7,20 +7,37 @@ const boolToString = (value: boolean, sTrue: string = 'da', sFalse: string = 'ne
 export const columnsForExportForCheck = [
   { title: 'Ime', field: 'firstName' },
   { title: 'Prezime', field: 'lastName' },
+/*
   { 
     field: 'years', title: 'Dob',
     render: (rowData: any) => Math.abs(new Date(new Date().valueOf() - new Date(rowData.dob).valueOf()).getUTCFullYear() - 1970)
   },
+*/
   { title: 'OIB', field: 'oib' },
+  { title: 'Adresa', field: 'addressOfLiving' },
+  { title: 'Mjesto prebivališta', field: 'placeOfLiving.name' },
+  { 
+    title: 'Spol', field: 'gender',
+    render: (rowData: any) => {
+      const found = genders.find((gender: any) => gender.value === rowData.gender);
+      return found ? found.label : '';
+    }
+  },
+  {
+    title: 'Datum rođenja', field: 'dob',
+    render: (rowData: any) => asDate(new Date(rowData.dob))
+  },
+  { title: 'Email adresa', field: 'email' },
+  { title: 'Broj telefona/mobitela', field: 'phone' },
 ];
 
 export const columnsForExportAll = [
   { title: 'id', field: 'id' },
   { title: 'Ime', field: 'firstName' },
   { title: 'Prezime', field: 'lastName' },
-  { 
-    field: 'years', title: 'Dob',
-    render: (rowData: any) => Math.abs(new Date(new Date().valueOf() - new Date(rowData.dob).valueOf()).getUTCFullYear() - 1970)
+  {
+    title: 'Datum rođenja', field: 'dob',
+    render: (rowData: any) => asDate(new Date(rowData.dob))
   },
   { title: 'OIB', field: 'oib' },
   { 
@@ -88,7 +105,7 @@ export const columnsForExportAll = [
   { title: 'Posebna skupina', field: 'criminalRecord', render: (rowData: any) => boolToString(rowData.criminalRecord) },
   { 
     title: 'Datum unosa', field: 'dateTimeEntry',
-    render: (rowData: any) => dateTime(new Date(rowData.dateTimeEntry))
+    render: (rowData: any) => asDateTime(new Date(rowData.dateTimeEntry))
   },
   { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', render: (rowData: any) => boolToString(rowData.backgroundCheckNeeded) },
   { 
@@ -99,8 +116,8 @@ export const columnsForExportAll = [
 ];
 
 export const exportCsv = (allColumns: any, allData: any, filter: any, fileName: string) => {
-  console.log('columns:', allColumns);
-  console.log('data:', allData);
+  //console.log('columns:', allColumns);
+  //console.log('data:', allData);
   const columns = allColumns.filter((columnDef: any) => columnDef["export"] !== false);
 
   const exportedData = allData
@@ -109,7 +126,7 @@ export const exportCsv = (allColumns: any, allData: any, filter: any, fileName: 
       columnDef.render ? columnDef.render(rowData) : 
         columnDef.field === 'oib' ? `'${deepField(rowData, columnDef.field)}` : deepField(rowData, columnDef.field)));
     
-  console.log('exported data:', exportedData);
+  //console.log('exported data:', exportedData);
   new _filefy.CsvBuilder(`${fileName}.csv`)
     .setDelimeter(';')
     .setColumns(columns.map((columnDef: any) => columnDef.title))
