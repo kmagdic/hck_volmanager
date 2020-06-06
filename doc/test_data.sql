@@ -7,7 +7,7 @@ insert into hck.test_firstnames
 values
 ('Andrea', 'F'),
 ('Anica', 'F'),
-('Miroslav', 'M')
+('Miroslav', 'M'),
 ('Lidija', 'F'),
 ('Lucija', 'F'),
 ('Ana', 'F'),

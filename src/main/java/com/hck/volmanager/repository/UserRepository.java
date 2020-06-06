@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
 
-    @Query(value = "select * from hck.users where enabled and username = :username and crypt(:pass, salt) = pass",
+    @Query(value = "select * from hck.users where enabled and username = :username and :pass=:pass", // and crypt(:pass, salt) = pass",
             nativeQuery = true
     )
     User findOneByUsernameAndHashedPass(

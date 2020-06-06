@@ -3,6 +3,8 @@ package com.hck.volmanager.model;
 import com.hck.volmanager.controller.VolunteerController;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,10 +82,12 @@ public class Volunteer {
 
     @ManyToOne
     @JoinColumn(name="placeoflivingid")
+    @Fetch(FetchMode.JOIN)
     private Place placeOfLiving;
 
     @ManyToOne
     @JoinColumn(name="placeofvolunteeringid")
+    @Fetch(FetchMode.JOIN)
     private Place placeOfVolunteering;
 
     @Column(name = "phone", length = 15)
@@ -145,10 +149,11 @@ public class Volunteer {
     @Column(name = "datetimelastupdate", columnDefinition="TIMESTAMP", insertable = false)
     private Instant datetimeLastUpdate = null;
 
-    @ManyToMany(fetch = FetchType.LAZY/*, cascade = CascadeType.ALL*/)
+    @ManyToMany() //(fetch = FetchType.LAZY/*, cascade = CascadeType.ALL*/)
     @JoinTable(name = "vqualifications", joinColumns = {
             @JoinColumn(name = "volunteerid", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "qualificationid", nullable = false, updatable = false) })
+    @Fetch(FetchMode.JOIN)
     private Set<Qualification> qualifications = new HashSet<Qualification>(0);
 
     public Set<Qualification> getQualifications() {
@@ -160,6 +165,7 @@ public class Volunteer {
     }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Set<CustomQualification> customQualifications;
 
     public Set<CustomQualification> getCustomQualifications() {
@@ -175,7 +181,7 @@ public class Volunteer {
         this.customQualifications = customQualifications;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER) //(fetch = FetchType.LAZY)
     @JoinTable(
             name = "vskills",
             joinColumns = { @JoinColumn(name = "volunteerid") },
@@ -192,6 +198,7 @@ public class Volunteer {
     }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Set<CustomSkill> customSkills;
 
     public Set<CustomSkill> getCustomSkills() {
@@ -207,7 +214,7 @@ public class Volunteer {
         this.customSkills = customSkills;
     }
     
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "vexperiences",
             joinColumns = { @JoinColumn(name = "volunteerid") },
@@ -224,6 +231,7 @@ public class Volunteer {
     }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Set<CustomExperience> customExperiences;
 
     public Set<CustomExperience> getCustomExperiences() {
@@ -239,12 +247,13 @@ public class Volunteer {
         this.customExperiences = customExperiences;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany()
     @JoinTable(
             name = "vservices",
             joinColumns = { @JoinColumn(name = "volunteerid") },
             inverseJoinColumns = { @JoinColumn(name = "serviceid") }
     )
+    @Fetch(FetchMode.JOIN)
     Set<Service> services = new HashSet<>();
 
     public Set<Service> getServices() {
@@ -256,6 +265,7 @@ public class Volunteer {
     }
 
     @OneToMany(mappedBy="volunteer", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Set<CustomService> customServices;
 
     public Set<CustomService> getCustomServices() {

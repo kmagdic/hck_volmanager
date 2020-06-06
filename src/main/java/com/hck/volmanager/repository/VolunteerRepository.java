@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+
 public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
 
     @Query(value = "select v.* from " +
@@ -35,4 +36,19 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
     List<Volunteer> findAllByNational(
         @Param("hcksocietyid") Long hcksocietyid
     );
+
+    @Query(value = "FROM Volunteer v " +
+            "LEFT JOIN FETCH v.placeOfLiving " +
+            "LEFT JOIN FETCH v.placeOfVolunteering " +
+            "LEFT JOIN FETCH v.qualifications " +
+            "LEFT JOIN FETCH v.customQualifications " +
+            "LEFT JOIN FETCH v.skills " +
+            "LEFT JOIN FETCH v.customSkills " +
+            "LEFT JOIN FETCH v.experiences " +
+            "LEFT JOIN FETCH v.customExperiences " +
+            "LEFT JOIN FETCH v.services " +
+            "LEFT JOIN FETCH v.customServices "
+
+    )
+    List<Volunteer> findAllJoined();
 }
