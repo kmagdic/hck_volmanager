@@ -786,8 +786,7 @@ function Registration() {
             <fieldset className="fieldset">
               <legend>Važne informacije</legend>
               <div className="fieldset-info">
-                Važne informacije tijekom voloniranja za vrijeme epidemije
-                COVID-19
+                Označite izjavu koja se odnosi na vas.
               </div>
               <FormControlLabel
                 className="fullWidth"
