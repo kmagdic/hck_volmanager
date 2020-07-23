@@ -25,7 +25,7 @@ import {
   defaultDataGroupSort,
   emptyGroup,
 } from "../utils/json-methods";
-import { genders } from "../utils/data";
+import { genders, programList } from "../utils/data";
 import { useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
@@ -82,6 +82,11 @@ function Registration() {
   const [gender, setGender] = React.useState("");
   const [errorGender, setErrorGender] = React.useState(false);
   const [helperTextGender, setHelperTextGender] = React.useState("");
+
+  // Programs
+  const [programs, setPrograms] = React.useState("");
+  const [errorPrograms, setErrorPrograms] = React.useState(false);
+  const [helperTextPrograms, setHelperTextPrograms] = React.useState("");
 
   // placeOfResidence
   const [placeOfResidence, setPlaceOfResidence] = React.useState({
@@ -525,6 +530,13 @@ function Registration() {
     setGender(newGender ? newGender.value : null);
     setHelperTextGender("");
     setErrorGender(false);
+  };
+
+  const programsOnChange = (newProgram: any, action: any) => {
+    console.log("on change:", newProgram, action);
+    setPrograms(newProgram ? newProgram.value : null);
+    setHelperTextPrograms("");
+    setErrorPrograms(false);
   };
 
   const qualificationsOnChange = (values: any, action: any) => {
@@ -1281,6 +1293,28 @@ function Registration() {
                 className="textField"
                 labelPlacement="top"
               />
+
+              <FormControl className="fullWidth">
+                <FormControlLabel
+                  control={
+                    <Select
+                      inputId="programs"
+                      className="fullWidth"
+                      placeholder="Odaberite..."
+                      onChange={programsOnChange}
+                      options={programList}
+                      noOptionsMessage={noOptionsMessage}
+                      isMulti
+                    />
+                  }
+                  label="Programi/projekti u kojima želite volontirati:"
+                  className="textField"
+                  labelPlacement="top"
+                />
+                <FormHelperText className="helper-text">
+                  {helperTextPrograms}
+                </FormHelperText>
+              </FormControl>
             </fieldset>
 
             <Law></Law>
