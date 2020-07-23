@@ -25,7 +25,7 @@ import {
   defaultDataGroupSort,
   emptyGroup,
 } from "../utils/json-methods";
-import { genders, programList } from "../utils/data";
+import { genders, programSet } from "../utils/data";
 import { useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
@@ -84,7 +84,8 @@ function Registration() {
   const [helperTextGender, setHelperTextGender] = React.useState("");
 
   // Programs
-  const [programs, setPrograms] = React.useState("");
+  const [programSelect, setProgramSelect] = React.useState(emptyGroup);
+  const [programList, setProgramList] = React.useState(emptyGroup);
   const [errorPrograms, setErrorPrograms] = React.useState(false);
   const [helperTextPrograms, setHelperTextPrograms] = React.useState("");
 
@@ -278,6 +279,34 @@ function Registration() {
         const sortedSkills = sortData(skills, defaultDataGroupSort);
         const newGroupedSkills = groupingOptions(sortedSkills);
         setSkillSelect(newGroupedSkills);
+      });
+    });
+
+    // fatching programs
+    request("programs", (programsResponse: any) => {
+      console.log("programsResponse:", programsResponse);
+      programsResponse.json().then((programsData: any) => {
+        if (!Array.isArray(programsData)) {
+          programsData = programSet;
+        }
+        let hasGroups = false;
+        const programs = programsData.map((program: any) => {
+          hasGroups = hasGroups || !!program.programGroup;
+          return {
+            value: program.id,
+            label: program.name,
+            group: program.programGroup ? program.programGroup.name : "",
+            orderNum: program.orderNum,
+            groupOrderNum: program.programGroup
+              ? program.programGroup.orderNum
+              : undefined,
+          };
+        });
+        const sortedPrograms = sortData(programs, defaultDataGroupSort);
+        const newGroupedPrograms = hasGroups
+          ? groupingOptions(sortedPrograms, "ostalo")
+          : sortedPrograms;
+        setProgramSelect(newGroupedPrograms);
       });
     });
 
@@ -482,6 +511,7 @@ function Registration() {
         sundayTo: event.target.sundayTo.value,
       },
       availabilityDetails: event.target.availabilityDetails.value,
+      programs: programList,
       criminalRecord: event.target.criminalRecord.value,
     };
     console.log("form data:", data);
@@ -532,9 +562,12 @@ function Registration() {
     setErrorGender(false);
   };
 
-  const programsOnChange = (newProgram: any, action: any) => {
-    console.log("on change:", newProgram, action);
-    setPrograms(newProgram ? newProgram.value : null);
+  const programsOnChange = (values: any, action: any) => {
+    console.log("programs/projects on change:", values);
+    const lProgramList: any = [];
+    const _: any = [];
+    getValues(values, lProgramList, _);
+    setProgramList(lProgramList);
     setHelperTextPrograms("");
     setErrorPrograms(false);
   };
@@ -1294,7 +1327,7 @@ function Registration() {
                 labelPlacement="top"
               />
 
-              <FormControl className="fullWidth">
+              <FormControl error={errorPrograms} className="fullWidth">
                 <FormControlLabel
                   control={
                     <Select
@@ -1302,7 +1335,8 @@ function Registration() {
                       className="fullWidth"
                       placeholder="Odaberite..."
                       onChange={programsOnChange}
-                      options={programList}
+                      options={programSelect}
+                      formatGroupLabel={formatGroupLabel}
                       noOptionsMessage={noOptionsMessage}
                       isMulti
                     />

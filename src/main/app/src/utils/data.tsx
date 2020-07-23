@@ -29,8 +29,13 @@ export const genders = [
   { value: "A", label: "ne želim se izjasniti" },
 ];
 
-export const programList = [
-  { value: "1", label: "project 1" },
-  { value: "2", label: "project 2" },
-  { value: "3", label: "project 3" },
+export const programSet = [
+  { id: "1", name: "project 1", orderNum: 1 },
+  {
+    id: "2",
+    name: "project 2",
+    programGroup: { id: 1, name: "Da", orderNum: 2 },
+    orderNum: 2,
+  },
+  { id: "3", name: "project 3", orderNum: 3 },
 ];
