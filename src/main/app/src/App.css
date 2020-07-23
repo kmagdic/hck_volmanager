@@ -17,7 +17,8 @@
   aalign-items: flex-start;
 }
 
-.MuiOutlinedInput-input, .MuiOutlinedInput-multilinea {
+.MuiOutlinedInput-input,
+.MuiOutlinedInput-multilinea {
   padding: 0.6rem !important;
 }
 
@@ -30,9 +31,35 @@ label.MuiFormControlLabel-labelPlacementTop {
   margin-bottom: 0.8rem !important;
 }
 
-.rdt .MuiFormControl-root.MuiTextField-root.form-control, .fullWidth {
+.rdt .MuiFormControl-root.MuiTextField-root.form-control,
+.fullWidth {
   width: 100%;
   amargin-bottom: 1rem;
+}
+
+.dayControl {
+  display: flex;
+  justify-content: space-between;
+  width: 20rem;
+  amargin-bottom: 1em !important;
+}
+
+.fromToControls {
+  display: inline-flex;
+  width: 8rem;
+  justify-content: space-between;
+}
+
+.textCenterAligned {
+  text-align: center;
+}
+
+.fromControl {
+  width: 3rem;
+}
+
+.toControl {
+  width: 3rem;
 }
 
 .rdt-datepicker {
@@ -95,15 +122,15 @@ label.MuiFormControlLabel-labelPlacementTop {
 
 .approval {
   apadding: 1em;
-  -webkit-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.75);
 }
 
 .approval .header {
   padding: 1em;
   color: white;
-  background-color: #0E8906;
+  background-color: #0e8906;
 }
 
 .approval .header a {
@@ -162,7 +189,9 @@ label.MuiFormControlLabel-labelPlacementTop {
 }
 
 @media (max-width: 576px) {
-  .ctnRegister, ctnApproval, ctnConfirmation {
+  .ctnRegister,
+  ctnApproval,
+  ctnConfirmation {
     width: 100%;
     max-width: 100%;
   }
@@ -233,6 +262,5 @@ label.MuiFormControlLabel-labelPlacementTop {
 }
 
 .MuiTable-root th:nth-child(1) div {
-  color: #CACACA;
+  color: #cacaca;
 }
-

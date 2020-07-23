@@ -10,6 +10,7 @@ import {
   Radio,
   FormHelperText,
 } from "@material-ui/core";
+import Input from "@material-ui/core/Input";
 import Law from "./Law";
 import CreatableSelect from "react-select/creatable";
 import Datetime from "react-datetime";
@@ -81,6 +82,18 @@ function Registration() {
   const [gender, setGender] = React.useState("");
   const [errorGender, setErrorGender] = React.useState(false);
   const [helperTextGender, setHelperTextGender] = React.useState("");
+
+  // placeOfResidence
+  const [placeOfResidence, setPlaceOfResidence] = React.useState({
+    id: undefined,
+  });
+  const [errorPlaceOfResidence, setErrorPlaceOfResidence] = React.useState(
+    false
+  );
+  const [
+    helperTextPlaceOfResidence,
+    setHelperTextPlaceOfResidence,
+  ] = React.useState("");
 
   // placeOfLiving
   const [placeOfLiving, setPlaceOfLiving] = React.useState({ id: undefined });
@@ -363,6 +376,19 @@ function Registration() {
       setErrorDOB(false);
     }
 
+    // placeOfResidence
+    if (!placeOfResidence.id) {
+      console.error("placeOfResidence is null");
+      setHelperTextPlaceOfLiving("nije odabrano mjesto boravišta");
+      setErrorPlaceOfResidence(true);
+      form.placeOfResidence.focus();
+      return false;
+    }
+    if (errorPlaceOfResidence) {
+      setHelperTextPlaceOfResidence("");
+      setErrorPlaceOfResidence(false);
+    }
+
     // placeOfLiving
     if (!placeOfLiving.id) {
       console.error("placeOfLiving is null");
@@ -404,6 +430,7 @@ function Registration() {
       oib: event.target.oib.value,
       gender,
       address: event.target.address.value,
+      placeOfResidence,
       placeOfLiving,
       placeOfVolunteering,
       phone: event.target.phone.value,
@@ -426,6 +453,29 @@ function Registration() {
       customSkills: customSkillList,
       healthDetails: event.target.healthDetails.value,
       availabilityHoursWeekly: event.target.availabilityHoursWeekly.value,
+      availabilityDays: {
+        monday: event.target.monday.value,
+        mondayFrom: event.target.mondayFrom.value,
+        mondayTo: event.target.mondayTo.value,
+        tuesday: event.target.tuesday.value,
+        tuesdayFrom: event.target.tuesdayFrom.value,
+        tuesdayTo: event.target.tuesdayTo.value,
+        wednesday: event.target.wednesday.value,
+        wednesdayFrom: event.target.wednesdayFrom.value,
+        wednesdayTo: event.target.wednesdayTo.value,
+        thursday: event.target.thursday.value,
+        thursdayFrom: event.target.thursdayFrom.value,
+        thursdayTo: event.target.thursdayTo.value,
+        friday: event.target.friday.value,
+        fridayFrom: event.target.fridayFrom.value,
+        fridayTo: event.target.fridayTo.value,
+        saturday: event.target.saturday.value,
+        saturdayFrom: event.target.saturdayFrom.value,
+        saturdayTo: event.target.saturdayTo.value,
+        sunday: event.target.sunday.value,
+        sundayFrom: event.target.sundayFrom.value,
+        sundayTo: event.target.sundayTo.value,
+      },
       availabilityDetails: event.target.availabilityDetails.value,
       criminalRecord: event.target.criminalRecord.value,
     };
@@ -512,6 +562,13 @@ function Registration() {
     getValues(values, lSkillList, lCustomSkillList);
     setSkillList(lSkillList);
     setCustomSkillList(lCustomSkillList);
+  };
+
+  const placeOfResidenceOnChange = (place: any, action: any) => {
+    console.log("on change:", place, action);
+    setPlaceOfResidence({ id: place ? place.value : null });
+    setErrorPlaceOfResidence(false);
+    setHelperTextPlaceOfResidence("");
   };
 
   const placeOfLivingOnChange = (place: any, action: any) => {
@@ -648,7 +705,7 @@ function Registration() {
                       inputId="gender00"
                       className="fullWidth"
                       required={true}
-                      placeholder="Odaberi..."
+                      placeholder="Odaberite..."
                       onChange={genderOnChange}
                       options={genders}
                       noOptionsMessage={noOptionsMessage}
@@ -660,6 +717,50 @@ function Registration() {
                 />
                 <FormHelperText className="helper-text">
                   {helperTextGender}
+                </FormHelperText>
+              </FormControl>
+
+              <FormControl error={errorPlaceOfLiving} className="fullWidth">
+                <FormControlLabel
+                  control={
+                    <Select
+                      inputId="placeOfLiving"
+                      className="fullWidth"
+                      required={true}
+                      placeholder="Odaberite..."
+                      onChange={placeOfLivingOnChange}
+                      options={groupedPlaces}
+                      noOptionsMessage={noOptionsMessage}
+                    />
+                  }
+                  label="Mjesto prebivališta*:"
+                  className="textField"
+                  labelPlacement="top"
+                />
+                <FormHelperText className="helper-text">
+                  {helperTextPlaceOfLiving}
+                </FormHelperText>
+              </FormControl>
+
+              <FormControl error={errorPlaceOfResidence} className="fullWidth">
+                <FormControlLabel
+                  control={
+                    <Select
+                      inputId="placeOfResidence"
+                      className="fullWidth"
+                      required={true}
+                      placeholder="Odaberite..."
+                      onChange={placeOfResidenceOnChange}
+                      options={groupedPlaces}
+                      noOptionsMessage={noOptionsMessage}
+                    />
+                  }
+                  label="Mjesto boravišta*:"
+                  className="textField"
+                  labelPlacement="top"
+                />
+                <FormHelperText className="helper-text">
+                  {helperTextPlaceOfResidence}
                 </FormHelperText>
               </FormControl>
 
@@ -677,28 +778,6 @@ function Registration() {
                 labelPlacement="top"
               />
 
-              <FormControl error={errorPlaceOfLiving} className="fullWidth">
-                <FormControlLabel
-                  control={
-                    <Select
-                      inputId="placeOfLiving"
-                      className="fullWidth"
-                      required={true}
-                      placeholder="Odaberi..."
-                      onChange={placeOfLivingOnChange}
-                      options={groupedPlaces}
-                      noOptionsMessage={noOptionsMessage}
-                    />
-                  }
-                  label="Mjesto prebivališta*:"
-                  className="textField"
-                  labelPlacement="top"
-                />
-                <FormHelperText className="helper-text">
-                  {helperTextPlaceOfLiving}
-                </FormHelperText>
-              </FormControl>
-
               <FormControl
                 error={errorPlaceOfVolunteering}
                 className="fullWidth"
@@ -709,7 +788,7 @@ function Registration() {
                       inputId="placeOfVolunteering"
                       className="fullWidth"
                       required={true}
-                      placeholder="Odaberi..."
+                      placeholder="Odaberite..."
                       onChange={placeOfVolunteeringOnChange}
                       options={groupedPlaces}
                       noOptionsMessage={noOptionsMessage}
@@ -757,13 +836,12 @@ function Registration() {
                 control={
                   <TextField
                     id="iceName"
-                    required={true}
                     className="textField"
                     variant="outlined"
                     helperText="Molimo unesite ime i prezime osobe koje možemo kontaktirati u slučaju nužde, kao i broj telefona te osobe."
                   />
                 }
-                label="Kontakt u slučaju nužde (član obitelji, prijatelj, sl.)*:"
+                label="Kontakt u slučaju nužde (član obitelji, prijatelj, sl.):"
                 className="textField"
                 labelPlacement="top"
               />
@@ -772,13 +850,12 @@ function Registration() {
                 control={
                   <TextField
                     id="icePhone"
-                    required={true}
                     className="textField"
                     variant="outlined"
                   />
                 }
                 className="textField"
-                label="Broj telefona kontakta u nuždi*:"
+                label="Broj telefona kontakta u nuždi:"
                 labelPlacement="top"
               />
             </fieldset>
@@ -790,36 +867,64 @@ function Registration() {
               </div>
               <FormControlLabel
                 className="fullWidth"
-                control={<Checkbox name="householdElderly" color="primary" />}
+                control={
+                  <Checkbox
+                    id="householdElderly"
+                    name="householdElderly"
+                    color="primary"
+                  />
+                }
                 label="Živim u kućanstvu s osobom starijom od 65 godine"
               />
               <FormControlLabel
                 className="fullWidth"
                 control={
-                  <Checkbox name="householdPregnatWomen" color="primary" />
+                  <Checkbox
+                    id="householdPregnatWomen"
+                    name="householdPregnatWomen"
+                    color="primary"
+                  />
                 }
                 label="Živim u kućanstvu s trudnicom"
               />
               <FormControlLabel
                 className="fullWidth"
-                control={<Checkbox name="pregnatWoman" color="primary" />}
+                control={
+                  <Checkbox
+                    id="pregnatWoman"
+                    name="pregnatWoman"
+                    color="primary"
+                  />
+                }
                 label="Ja sam trudnica"
               />
               <FormControlLabel
                 className="fullWidth"
-                control={<Checkbox name="householdChild" color="primary" />}
+                control={
+                  <Checkbox
+                    id="householdChild"
+                    name="householdChild"
+                    color="primary"
+                  />
+                }
                 label="Živim u kućanstvu s malim djetetom"
               />
               <FormControlLabel
                 className="fullWidth"
                 control={
-                  <Checkbox name="householdChronicPatient" color="primary" />
+                  <Checkbox
+                    id="householdChronicPatient"
+                    name="householdChronicPatient"
+                    color="primary"
+                  />
                 }
                 label="Živim u kućanstvu s kroničnim bolesnikom"
               />
               <FormControlLabel
                 className="fullWidth"
-                control={<Checkbox name="healthfine" color="primary" />}
+                control={
+                  <Checkbox id="healthfine" name="healthfine" color="primary" />
+                }
                 label="Imam zdravstvenih poteškoće"
               />
             </fieldset>
@@ -833,13 +938,17 @@ function Registration() {
                 pitanja.
               </div>
 
+              <div className="fieldset-info" style={{ fontWeight: 700 }}>
+                Molimo odaberite ili upišite jedan ili više odgovora.
+              </div>
+
               <FormControl className="fullWidth">
                 <FormControlLabel
                   control={
                     <CreatableSelect
                       inputId="qualifications"
                       className="fullWidth"
-                      placeholder="Odaberi..."
+                      placeholder="Odaberite..."
                       onChange={qualificationsOnChange}
                       options={qualificationSelect}
                       closeMenuOnSelect={false}
@@ -864,7 +973,7 @@ function Registration() {
                     <CreatableSelect
                       inputId="experiences"
                       className="fullWidth"
-                      placeholder="Odaberi..."
+                      placeholder="Odaberite..."
                       onChange={experiencesOnChange}
                       options={experienceSelect}
                       closeMenuOnSelect={false}
@@ -893,7 +1002,7 @@ function Registration() {
                     <CreatableSelect
                       inputId="services"
                       className="fullWidth"
-                      placeholder="Odaberi..."
+                      placeholder="Odaberite..."
                       onChange={servicesOnChange}
                       options={serviceSelect}
                       closeMenuOnSelect={false}
@@ -905,7 +1014,7 @@ function Registration() {
                       isMulti
                     />
                   }
-                  label="Dodatne usluge*:"
+                  label="Dodatne usluge:"
                   className="textField"
                   labelPlacement="top"
                 />
@@ -922,7 +1031,7 @@ function Registration() {
                     <CreatableSelect
                       inputId="skills"
                       className="fullWidth"
-                      placeholder="Odaberi..."
+                      placeholder="Odaberite..."
                       onChange={skillsOnChange}
                       options={skillSelect}
                       closeMenuOnSelect={false}
@@ -935,7 +1044,7 @@ function Registration() {
                       isMulti
                     />
                   }
-                  label="Dodatne vještine*:"
+                  label="Dodatne vještine:"
                   className="textField"
                   labelPlacement="top"
                 />
@@ -945,17 +1054,21 @@ function Registration() {
                 control={
                   <TextField
                     id="healthDetails"
-                    required={true}
                     className="textField"
                     variant="outlined"
                     multiline
+                    rows="2"
                     helperText="U svrhu zaštite vašeg zdravlja molimo da navedete zdravstvene detalje (npr. alergije, kronične bolesti i sl.)"
                   />
                 }
-                label="Zdravstveni detalji*:"
+                label="Zdravstveni detalji:"
                 className="textField"
                 labelPlacement="top"
               />
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend>Spremnost na volontiranje</legend>
 
               <FormControlLabel
                 control={
@@ -973,17 +1086,198 @@ function Registration() {
               />
 
               <FormControlLabel
+                control={<div></div>}
+                label="Navedite kada ste dostupni za volontiranje (što preciznije - koji dani u tjednu i u kojem vremenskom razdoblju):"
+                className="textField"
+                labelPlacement="top"
+              />
+
+              <div className="dayControl">
+                <FormControlLabel
+                  control={
+                    <Checkbox id="monday" name="monday" color="primary" />
+                  }
+                  label="ponedjeljak"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="monday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="monday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="dayControl">
+                <FormControlLabel
+                  control={
+                    <Checkbox id="tuesday" name="tuesday" color="primary" />
+                  }
+                  label="utorak"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="tuesday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="tuesday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="dayControl">
+                <FormControlLabel
+                  control={
+                    <Checkbox id="wednesday" name="wednesday" color="primary" />
+                  }
+                  label="srijeda"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="wednesday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="wednesday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="dayControl">
+                <FormControlLabel
+                  control={
+                    <Checkbox id="thursday" name="thursday" color="primary" />
+                  }
+                  label="četvrtak"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="thursday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="thursday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="dayControl">
+                <FormControlLabel
+                  control={
+                    <Checkbox id="friday" name="friday" color="primary" />
+                  }
+                  label="petak"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="friday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="friday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="dayControl">
+                <FormControlLabel
+                  control={
+                    <Checkbox id="saturday" name="saturday" color="primary" />
+                  }
+                  label="subota"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="saturday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="saturday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <div className="dayControl" style={{ marginBottom: "1em" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox id="sunday" name="sunday" color="primary" />
+                  }
+                  label="nedjelja"
+                />
+                <div className="fromToControls">
+                  <FormControl className="fromControl">
+                    <Input
+                      id="sunday-from"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                  <FormControl className="toControl">
+                    <Input
+                      id="sunday-to"
+                      type="number"
+                      inputProps={{ min: 0, className: "textCenterAligned" }}
+                    />
+                  </FormControl>
+                </div>
+              </div>
+
+              <FormControlLabel
                 control={
                   <TextField
                     id="availabilityDetails"
-                    required={true}
                     className="textField"
                     variant="outlined"
                     multiline
-                    helperText="Što preciznije navedite kada ste dostupni za volontiranje,  koje dane u tjednu i u kojem vremenskom razdoblju (npr. pon od 18-20h, uto od 11-14h)"
+                    rows="2"
                   />
                 }
-                label="Ostali detalji o vašoj raspoloživosti za volontiranje*:"
+                label="Ostali detalji o vašoj raspoloživosti za volontiranje:"
                 className="textField"
                 labelPlacement="top"
               />
