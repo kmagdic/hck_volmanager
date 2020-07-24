@@ -24,8 +24,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * 	dob date,
  * 	oib char(11),
  * 	gender char(1),
- * 	addressOfLiving text,
+ * 	placeOfResidenceId int8,
  * 	placeOfLivingId int8,
+ * 	addressOfLiving text,
  * 	placeOfVolunteeringId int8,
  * 	phone text,
  * 	email text,
@@ -77,13 +78,18 @@ public class Volunteer {
     @Column(name = "gender", columnDefinition="bpchar", length = 1)
     private String gender;
 
-    @Column(name = "addressofliving")
-    private String addressOfLiving;
+    @ManyToOne
+    @JoinColumn(name="placeofresidenceid")
+    @Fetch(FetchMode.JOIN)
+    private Place placeOfResidence;
 
     @ManyToOne
     @JoinColumn(name="placeoflivingid")
     @Fetch(FetchMode.JOIN)
     private Place placeOfLiving;
+
+    @Column(name = "addressofliving")
+    private String addressOfLiving;
 
     @ManyToOne
     @JoinColumn(name="placeofvolunteeringid")
@@ -340,12 +346,12 @@ public class Volunteer {
         this.gender = gender;
     }
 
-    public String getAddressOfLiving() {
-        return addressOfLiving;
+    public Place getPlaceOfResidence() {
+        return placeOfResidence;
     }
 
-    public void setAddressOfLiving(String addressOfLiving) {
-        this.addressOfLiving = addressOfLiving;
+    public void setPlaceOfResidence(Place placeOfResidence) {
+        this.placeOfResidence = placeOfResidence;
     }
 
     public Place getPlaceOfLiving() {
@@ -354,6 +360,14 @@ public class Volunteer {
 
     public void setPlaceOfLiving(Place placeOfLiving) {
         this.placeOfLiving = placeOfLiving;
+    }
+
+    public String getAddressOfLiving() {
+        return addressOfLiving;
+    }
+
+    public void setAddressOfLiving(String addressOfLiving) {
+        this.addressOfLiving = addressOfLiving;
     }
 
     public Place getPlaceOfVolunteering() {

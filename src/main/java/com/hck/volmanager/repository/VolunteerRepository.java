@@ -38,6 +38,7 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
     );
 
     @Query(value = "FROM Volunteer v " +
+            "LEFT JOIN FETCH v.placeOfResidence " +
             "LEFT JOIN FETCH v.placeOfLiving " +
             "LEFT JOIN FETCH v.placeOfVolunteering " +
             "LEFT JOIN FETCH v.qualifications " +

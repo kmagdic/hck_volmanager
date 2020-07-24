@@ -456,7 +456,8 @@ function Registration() {
 
   const onSubmit = (event: any) => {
     event.preventDefault();
-    console.log("fields:", event.target.elements);
+    console.log("event.target.elements:", event.target.elements);
+    console.log("event.target:", event.target);
     const data = {
       firstName: event.target.firstName.value,
       lastName: event.target.lastName.value,
@@ -488,25 +489,25 @@ function Registration() {
       healthDetails: event.target.healthDetails.value,
       availabilityHoursWeekly: event.target.availabilityHoursWeekly.value,
       availabilityDays: {
-        monday: event.target.monday.value,
+        monday: event.target.monday.checked,
         mondayFrom: event.target.mondayFrom.value,
         mondayTo: event.target.mondayTo.value,
-        tuesday: event.target.tuesday.value,
+        tuesday: event.target.tuesday.checked,
         tuesdayFrom: event.target.tuesdayFrom.value,
         tuesdayTo: event.target.tuesdayTo.value,
-        wednesday: event.target.wednesday.value,
+        wednesday: event.target.wednesday.checked,
         wednesdayFrom: event.target.wednesdayFrom.value,
         wednesdayTo: event.target.wednesdayTo.value,
-        thursday: event.target.thursday.value,
+        thursday: event.target.thursday.checked,
         thursdayFrom: event.target.thursdayFrom.value,
         thursdayTo: event.target.thursdayTo.value,
-        friday: event.target.friday.value,
+        friday: event.target.friday.checked,
         fridayFrom: event.target.fridayFrom.value,
         fridayTo: event.target.fridayTo.value,
-        saturday: event.target.saturday.value,
+        saturday: event.target.saturday.checked,
         saturdayFrom: event.target.saturdayFrom.value,
         saturdayTo: event.target.saturdayTo.value,
-        sunday: event.target.sunday.value,
+        sunday: event.target.sunday.checked,
         sundayFrom: event.target.sundayFrom.value,
         sundayTo: event.target.sundayTo.value,
       },
@@ -1147,14 +1148,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="monday-from"
+                      id="mondayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="monday-to"
+                      id="mondayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
@@ -1172,14 +1173,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="tuesday-from"
+                      id="tuesdayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="tuesday-to"
+                      id="tuesdayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
@@ -1197,14 +1198,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="wednesday-from"
+                      id="wednesdayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="wednesday-to"
+                      id="wednesdayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
@@ -1222,14 +1223,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="thursday-from"
+                      id="thursdayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="thursday-to"
+                      id="thursdayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
@@ -1247,14 +1248,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="friday-from"
+                      id="fridayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="friday-to"
+                      id="fridayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
@@ -1272,14 +1273,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="saturday-from"
+                      id="saturdayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="saturday-to"
+                      id="saturdayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
@@ -1297,14 +1298,14 @@ function Registration() {
                 <div className="fromToControls">
                   <FormControl className="fromControl">
                     <Input
-                      id="sunday-from"
+                      id="sundayFrom"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />
                   </FormControl>
                   <FormControl className="toControl">
                     <Input
-                      id="sunday-to"
+                      id="sundayTo"
                       type="number"
                       inputProps={{ min: 0, className: "textCenterAligned" }}
                     />

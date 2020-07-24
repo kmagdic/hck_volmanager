@@ -27,8 +27,9 @@ create table hck.volunteers(
 	dob date,
 	oib char(11),
 	gender char(1),
-	addressOfLiving text,
+	placeOfResidenceId int8,
 	placeOfLivingId int8,
+	addressOfLiving text,
 	placeOfVolunteeringId int8,
 	phone text,
 	email text,
@@ -50,6 +51,7 @@ create table hck.volunteers(
 	datetimeEntry timestamptz not null default current_timestamp,
 	datetimeLastUpdate timestamptz,
 	constraint pk_volunteers primary key(id),
+	constraint fk_volunteers_placeOfResidenceId foreign key(placeOfResidenceId) references hck.places(id),
 	constraint fk_volunteers_placeOfLivingId foreign key(placeOfLivingId) references hck.places(id),
 	constraint fk_volunteers_placeOfVolunteeringId foreign key(placeOfVolunteeringId) references hck.places(id)
 );
