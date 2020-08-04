@@ -31,3 +31,8 @@ alter table if exists hck.qualifications add column groupid int8
 alter table if exists hck.experiences add constraint fk_experiences_groups foreign key (groupid) references hck.experiencegroups
 alter table if exists hck.qualifications add constraint fk_qualifications_groups foreign key (groupid) references hck.qualificationgroups
 
+
+-- 04.08.2020 - Adding placeOfResidence to Volunteers
+
+alter table if exists hck.volunteers add column placeOfResidenceId int8;
+alter table if exists hck.volunteers add constraint fk_volunteers_placeOfResidenceId foreign key(placeOfResidenceId) references hck.places(id);
