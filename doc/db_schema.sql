@@ -238,6 +238,39 @@ create table hck.vcustomservices(
 	constraint fk_cservices_volunteerId foreign key(volunteerId) references hck.volunteers(id)
 );
 
+create table hck.projects(
+  id text not null,
+  name text not null,
+  constraint pk_projects primary key(id)
+);
+
+create table hck.vprojects(
+	volunteerId int8,
+	projectId text,
+	constraint pk_vprojects primary key(volunteerId, projectId),
+	constraint fk_vprojects_volunteerId foreign key(volunteerId) references hck.volunteers(id),
+	constraint fk_vprojects_projectId foreign key(projectId) references hck.projects(id)
+);
+
+create table hck.availabilities(
+	volunteerId int8,
+	mondayFrom int2,
+	mondayTo int2,
+	tuesdayFrom int2,
+	tuesdayTo int2,
+	wednesdayFrom int2,
+	wednesdayTo int2,
+	thursdayFrom int2,
+	thursdayTo int2,
+	fridayFrom int2,
+	fridayTo int2,
+	saturdayFrom int2,
+	saturdayTo int2,
+	sundayFrom int2,
+	sundayTo int2,
+	constraint pk_availabilities primary key(volunteerId)
+);
+
 create table hck.users(
 	id bigserial,
 	username text not null,
