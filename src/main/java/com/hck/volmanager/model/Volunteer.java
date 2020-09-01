@@ -136,6 +136,10 @@ public class Volunteer {
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
 
+    @OneToOne(mappedBy = "volunteer")
+    @Fetch(FetchMode.JOIN)
+ 	private Availability availability;
+
     @Column(name="criminalrecord")
  	private Boolean criminalRecord;
 

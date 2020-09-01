@@ -1,30 +1,60 @@
 package com.hck.volmanager.model;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 
-public class Availability {
+@Entity
+@Table(name = "availabilities")
+public class Availability implements Serializable {
     @Id
-    @OneToOne
-    @JoinColumn(name = "volunteerid", referencedColumnName = "id")
+    @OneToOne()
+    @JoinColumn(name = "volunteerid")
     private Volunteer volunteer;
 
+    @Column(name = "mondayfrom")
     Short mondayFrom;
+
+    @Column(name = "mondayto")
     Short mondayTo;
+
+    @Column(name = "tuesdayfrom")
     Short tuesdayFrom;
+
+    @Column(name = "tuesdayto")
     Short tuesdayTo;
+
+    @Column(name = "wednesdayfrom")
     Short wednesdayFrom;
+
+    @Column(name = "wednesdayto")
     Short wednesdayTo;
+
+    @Column(name = "thursdayfrom")
     Short thursdayFrom;
+
+    @Column(name = "thursdayto")
     Short thursdayTo;
+
+    @Column(name = "fridayfrom")
     Short fridayFrom;
+
+    @Column(name = "fridayto")
     Short fridayTo;
+
+    @Column(name = "saturdayfrom")
     Short saturdayFrom;
+
+    @Column(name = "saturdayto")
     Short saturdayTo;
+
+    @Column(name = "sundayfrom")
     Short sundayFrom;
+
+    @Column(name = "sundayto")
     Short sundayTo;
+
+    public Availability() {
+    }
 
     public Volunteer getVolunteer() {
         return volunteer;
