@@ -238,6 +238,13 @@ create table hck.vcustomservices(
 	constraint fk_cservices_volunteerId foreign key(volunteerId) references hck.volunteers(id)
 );
 
+create table hck.projectgroups(
+	id bigserial,
+	name text not null,
+	ordernum int2,
+	constraint pk_projectgroups primary key (id)
+);
+
 create table hck.projects(
   id text not null,
   name text not null,
