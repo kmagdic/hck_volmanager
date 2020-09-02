@@ -241,6 +241,8 @@ create table hck.vcustomservices(
 create table hck.projects(
   id text not null,
   name text not null,
+	ordernum int2,
+	enabled boolean not null default true,
   constraint pk_projects primary key(id)
 );
 

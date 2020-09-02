@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-
 public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
 
     @Query(value = "select v.* from " +

@@ -2,14 +2,24 @@ package com.hck.volmanager.model;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "projects")
 public class Project {
     private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
 
-    @Column(name = "name")
+    @Column
     private String name;
+
+    @Column(name = "ordernum")
+    private Short orderNum;
+
+    private boolean enabled;
+
+    public Project() {
+    }
 
     @Override
     public String toString() {
@@ -33,5 +43,21 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Short getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Short orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
