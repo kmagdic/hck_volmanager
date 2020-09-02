@@ -136,8 +136,8 @@ public class Volunteer {
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
 
-    @OneToOne(mappedBy = "volunteer")
-    @Fetch(FetchMode.JOIN)
+    @OneToOne(mappedBy = "volunteer", fetch = FetchType.EAGER)
+    //@Fetch(FetchMode.JOIN)
  	private Availability availability;
 
     @Column(name="criminalrecord")
@@ -484,6 +484,14 @@ public class Volunteer {
 
     public void setAvailabilityDetails(String availabilityDetails) {
         this.availabilityDetails = availabilityDetails;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
     }
 
     public Boolean getCriminalRecord() {

@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Table(name = "availabilities")
 public class Availability implements Serializable {
     @Id
-    @OneToOne()
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "volunteerid")
     private Volunteer volunteer;
 
@@ -54,14 +54,6 @@ public class Availability implements Serializable {
     Short sundayTo;
 
     public Availability() {
-    }
-
-    public Volunteer getVolunteer() {
-        return volunteer;
-    }
-
-    public void setVolunteer(Volunteer volunteer) {
-        this.volunteer = volunteer;
     }
 
     public Short getMondayFrom() {

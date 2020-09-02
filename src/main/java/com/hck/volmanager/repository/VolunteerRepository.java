@@ -48,7 +48,8 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
             "LEFT JOIN FETCH v.experiences " +
             "LEFT JOIN FETCH v.customExperiences " +
             "LEFT JOIN FETCH v.services " +
-            "LEFT JOIN FETCH v.customServices "
+            "LEFT JOIN FETCH v.customServices " +
+            "LEFT JOIN FETCH v.availability "
 
     )
     List<Volunteer> findAllJoined();
