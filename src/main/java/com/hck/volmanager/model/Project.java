@@ -18,8 +18,11 @@ public class Project {
 
     private boolean enabled;
 
-    public Project() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "groupid")
+    private ProjectGroup projectGroup;
+
+    public Project() { }
 
     @Override
     public String toString() {
@@ -59,5 +62,13 @@ public class Project {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public ProjectGroup getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(ProjectGroup projectGroup) {
+        this.projectGroup = projectGroup;
     }
 }

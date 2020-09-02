@@ -250,7 +250,9 @@ create table hck.projects(
   name text not null,
 	ordernum int2,
 	enabled boolean not null default true,
-  constraint pk_projects primary key(id)
+  groupid int8,
+  constraint pk_projects primary key(id),
+	add constraint fk_projects_groupid foreign key(groupid) references hck.projectgroups(id)
 );
 
 create table hck.vprojects(

@@ -25,7 +25,7 @@ import {
   defaultDataGroupSort,
   emptyGroup,
 } from "../utils/json-methods";
-import { genders, programSet } from "../utils/data";
+import { genders } from "../utils/data";
 import { useHistory } from "react-router-dom";
 import { checkOIB } from "../utils/oib";
 import { parse } from "date-fns";
@@ -83,11 +83,11 @@ function Registration() {
   const [errorGender, setErrorGender] = React.useState(false);
   const [helperTextGender, setHelperTextGender] = React.useState("");
 
-  // Programs
-  const [programSelect, setProgramSelect] = React.useState(emptyGroup);
-  const [programList, setProgramList] = React.useState(emptyGroup);
-  const [errorPrograms, setErrorPrograms] = React.useState(false);
-  const [helperTextPrograms, setHelperTextPrograms] = React.useState("");
+  // Projects
+  const [projectSelect, setProjectSelect] = React.useState(emptyGroup);
+  const [projectList, setProjectList] = React.useState(emptyGroup);
+  const [errorProjects, setErrorProjects] = React.useState(false);
+  const [helperTextProjects, setHelperTextProjects] = React.useState("");
 
   // placeOfResidence
   const [placeOfResidence, setPlaceOfResidence] = React.useState({
@@ -156,7 +156,7 @@ function Registration() {
   useEffect(() => {
     // fetching places
     request("places", (placesResponse: any) => {
-      console.log("placesResponse:", placesResponse);
+      //console.log("placesResponse:", placesResponse);
       placesResponse.json().then((placesData: any) => {
         const places = placesData.map((place: any) => ({
           value: place.id,
@@ -206,7 +206,7 @@ function Registration() {
 
     // fetching qualifications
     request("qualifications", (qualificationsResponse: any) => {
-      console.log("qualificationsResponse:", qualificationsResponse);
+      //console.log("qualificationsResponse:", qualificationsResponse);
       qualificationsResponse.json().then((qualificationsData: any) => {
         const qualifications = qualificationsData.map((qualification: any) => ({
           value: qualification.id,
@@ -230,7 +230,7 @@ function Registration() {
 
     // fetching experiences
     request("experiences", (experiencesResponse: any) => {
-      console.log("experiencesResponse:", experiencesResponse);
+      //console.log("experiencesResponse:", experiencesResponse);
       experiencesResponse.json().then((experiencesData: any) => {
         const experiences = experiencesData.map((experience: any) => ({
           value: experience.id,
@@ -251,7 +251,7 @@ function Registration() {
 
     // fetching services
     request("services", (servicesResponse: any) => {
-      console.log("servicesResponse:", servicesResponse);
+      //console.log("servicesResponse:", servicesResponse);
       servicesResponse.json().then((servicesData: any) => {
         const services = servicesData.map((service: any) => ({
           value: service.id,
@@ -265,7 +265,7 @@ function Registration() {
 
     // fatching skills
     request("skills", (skillsResponse: any) => {
-      console.log("skillsResponse:", skillsResponse);
+      //console.log("skillsResponse:", skillsResponse);
       skillsResponse.json().then((skillsData: any) => {
         const skills = skillsData.map((skill: any) => ({
           value: skill.id,
@@ -282,31 +282,35 @@ function Registration() {
       });
     });
 
-    // fatching programs
-    request("programs", (programsResponse: any) => {
-      console.log("programsResponse:", programsResponse);
-      programsResponse.json().then((programsData: any) => {
-        if (!Array.isArray(programsData)) {
-          programsData = programSet;
+    // fatching projectss
+    request("projects/enabled", (projectsResponse: any) => {
+      //console.log("projectsResponse:", projectsResponse);
+      projectsResponse.json().then((projectsData: any) => {
+        console.log("projectsData:", projectsData);
+        /*
+        if (!Array.isArray(projectsData)) {
+          projectsData = projectSet;
         }
+        */
         let hasGroups = false;
-        const programs = programsData.map((program: any) => {
-          hasGroups = hasGroups || !!program.programGroup;
+        const projects = projectsData.map((project: any) => {
+          hasGroups = hasGroups || !!project.projectGroup;
           return {
-            value: program.id,
-            label: program.name,
-            group: program.programGroup ? program.programGroup.name : "",
-            orderNum: program.orderNum,
-            groupOrderNum: program.programGroup
-              ? program.programGroup.orderNum
+            value: project.id,
+            label: project.name,
+            group: project.projectGroup ? project.projectGroup.name : "",
+            orderNum: project.orderNum,
+            groupOrderNum: project.projectGroup
+              ? project.projectGroup.orderNum
               : undefined,
           };
         });
-        const sortedPrograms = sortData(programs, defaultDataGroupSort);
-        const newGroupedPrograms = hasGroups
-          ? groupingOptions(sortedPrograms, "ostalo")
-          : sortedPrograms;
-        setProgramSelect(newGroupedPrograms);
+        const sortedProjects = sortData(projects, defaultDataGroupSort);
+        const newGroupedProjects = hasGroups
+          ? groupingOptions(sortedProjects, "ostalo")
+          : sortedProjects;
+        setProjectSelect(newGroupedProjects);
+        console.log("newGroupedProjects:", newGroupedProjects);
       });
     });
 
@@ -512,7 +516,7 @@ function Registration() {
         sundayTo: event.target.sundayTo.value,
       },
       availabilityDetails: event.target.availabilityDetails.value,
-      programs: programList,
+      projects: projectList,
       criminalRecord: event.target.criminalRecord.value,
     };
     console.log("form data:", data);
@@ -563,14 +567,14 @@ function Registration() {
     setErrorGender(false);
   };
 
-  const programsOnChange = (values: any, action: any) => {
+  const projectsOnChange = (values: any, action: any) => {
     console.log("programs/projects on change:", values);
-    const lProgramList: any = [];
+    const lProjectList: any = [];
     const _: any = [];
-    getValues(values, lProgramList, _);
-    setProgramList(lProgramList);
-    setHelperTextPrograms("");
-    setErrorPrograms(false);
+    getValues(values, lProjectList, _);
+    setProjectList(lProjectList);
+    setHelperTextProjects("");
+    setErrorProjects(false);
   };
 
   const qualificationsOnChange = (values: any, action: any) => {
@@ -1328,15 +1332,15 @@ function Registration() {
                 labelPlacement="top"
               />
 
-              <FormControl error={errorPrograms} className="fullWidth">
+              <FormControl error={errorProjects} className="fullWidth">
                 <FormControlLabel
                   control={
                     <Select
-                      inputId="programs"
+                      inputId="projects"
                       className="fullWidth"
                       placeholder="Odaberite..."
-                      onChange={programsOnChange}
-                      options={programSelect}
+                      onChange={projectsOnChange}
+                      options={projectSelect}
                       formatGroupLabel={formatGroupLabel}
                       noOptionsMessage={noOptionsMessage}
                       isMulti
@@ -1347,7 +1351,7 @@ function Registration() {
                   labelPlacement="top"
                 />
                 <FormHelperText className="helper-text">
-                  {helperTextPrograms}
+                  {helperTextProjects}
                 </FormHelperText>
               </FormControl>
             </fieldset>

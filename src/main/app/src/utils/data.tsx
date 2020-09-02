@@ -29,12 +29,12 @@ export const genders = [
   { value: "A", label: "ne želim se izjasniti" },
 ];
 
-export const programSet = [
+export const projectSet = [
   { id: "1", name: "project 1", orderNum: 1 },
   {
     id: "2",
     name: "project 2",
-    programGroup: { id: 1, name: "Da", orderNum: 2 },
+    projectGroup: { id: 1, name: "Da", orderNum: 2 },
     orderNum: 2,
   },
   { id: "3", name: "project 3", orderNum: 3 },
