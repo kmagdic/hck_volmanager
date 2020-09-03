@@ -139,7 +139,7 @@ public class Volunteer {
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
 
-    @OneToOne(mappedBy = "volunteer", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL)
     //@Fetch(FetchMode.JOIN)
  	private Availability availability;
 
@@ -293,7 +293,26 @@ public class Volunteer {
         }
         this.customServices = customServices;
     }
-    
+
+
+    @ManyToMany()
+    @JoinTable(
+            name = "vprojects",
+            joinColumns = { @JoinColumn(name = "volunteerid") },
+            inverseJoinColumns = { @JoinColumn(name = "projectid") }
+    )
+    @Fetch(FetchMode.JOIN)
+    Set<Project> projects = new HashSet<>();
+
+    public Set<Project> getProjects() {
+        return this.projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
+    }
+
+
     @Override
     public String toString() {
         return "Volunteer{" +
@@ -503,6 +522,8 @@ public class Volunteer {
 
     public void setAvailability(Availability availability) {
         this.availability = availability;
+        if (availability != null)
+           availability.setVolunteer(this);
     }
 
     public Boolean getCriminalRecord() {

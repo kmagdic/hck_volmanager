@@ -36,3 +36,53 @@ alter table if exists hck.qualifications add constraint fk_qualifications_groups
 
 alter table if exists hck.volunteers add column placeOfResidenceId int8;
 alter table if exists hck.volunteers add constraint fk_volunteers_placeOfResidenceId foreign key(placeOfResidenceId) references hck.places(id);
+
+
+-- 03.09.2020 -- Adding projects, vprojects, availities
+
+create table hck.projects (
+  id text not null,
+  name text not null,
+  ordernum int2,
+	enabled boolean not null default true,
+	groupid int8,
+  constraint pk_projects primary key(id),
+  constraint fk_projects_groupid foreign key(groupid) references hck.projectgroups(id)
+);
+
+create table hck.vprojects (
+	volunteerId int8,
+	projectId text,
+	constraint pk_vprojects primary key(volunteerId, projectId),
+	constraint fk_vprojects_volunteerId foreign key(volunteerId) references hck.volunteers(id),
+	constraint fk_vprojects_projectId foreign key(projectId) references hck.projects(id)
+);
+
+
+create table hck.projectgroups (
+	id bigserial,
+	name text not null,
+	ordernum int2,
+	constraint pk_projectgroups primary key (id)
+);
+
+
+create table hck.availabilities (
+	volunteerId int8,
+	mondayFrom int2,
+	mondayTo int2,
+	tuesdayFrom int2,
+	tuesdayTo int2,
+	wednesdayFrom int2,
+	wednesdayTo int2,
+	thursdayFrom int2,
+	thursdayTo int2,
+	fridayFrom int2,
+	fridayTo int2,
+	saturdayFrom int2,
+	saturdayTo int2,
+	sundayFrom int2,
+	sundayTo int2,
+	constraint pk_availabilities primary key(volunteerId),
+	constraint fk_volunteers foreign key (volunteerid) references hck.volunteers
+);

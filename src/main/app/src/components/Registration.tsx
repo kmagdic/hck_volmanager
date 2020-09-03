@@ -492,7 +492,7 @@ function Registration() {
       customSkills: customSkillList,
       healthDetails: event.target.healthDetails.value,
       availabilityHoursWeekly: event.target.availabilityHoursWeekly.value,
-      availabilityDays: {
+      availability: {
         monday: event.target.monday.checked,
         mondayFrom: event.target.mondayFrom.value,
         mondayTo: event.target.mondayTo.value,

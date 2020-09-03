@@ -1,14 +1,16 @@
 package com.hck.volmanager.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "availabilities")
 public class Availability implements Serializable {
+
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "volunteerid")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="volunteerid")
     private Volunteer volunteer;
 
     @Column(name = "mondayfrom")
@@ -166,5 +168,14 @@ public class Availability implements Serializable {
 
     public void setSundayTo(Short sundayTo) {
         this.sundayTo = sundayTo;
+    }
+
+
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+    }
+
+    public Volunteer getVolunteer() {
+        return volunteer;
     }
 }
