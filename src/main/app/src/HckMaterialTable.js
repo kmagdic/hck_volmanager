@@ -52,6 +52,19 @@ class HckMaterialTable extends React.Component {
 
           }
 
+          detailPanel={rowData => {
+                  return (
+                    <iframe
+                      width="100%"
+                      height="315"
+                      src="https://www.youtube.com/embed/C0DPdy98e4c"
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    />
+                  )
+                }}
+          //onRowClick={(event, rowData, togglePanel) => togglePanel()}
+
 
 
       />

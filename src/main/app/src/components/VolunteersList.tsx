@@ -13,11 +13,15 @@ import { exportCsv, columnsForExportForCheck, columnsForExportAll } from './../u
 
 interface Row {
   id: number,
-  firstName: string;
-  lastName: string;
-  dob: string;
-  backgroundCheckNeeded: boolean;
-  backgroundCheckPassed: any;
+  firstName: string,
+  lastName: string,
+  dob: string,
+  backgroundCheckNeeded: boolean,
+  backgroundCheckPassed: any,
+}
+
+interface Place {
+  [key: number]: string;
 }
 
 interface TableState {
@@ -25,7 +29,7 @@ interface TableState {
   data: Row[],
   isLoading: boolean
 }
-
+//const ColumnDefs =
 export default function VolunteersList() {
   const cellStyle = {
     padding: '0 14px',
@@ -34,7 +38,11 @@ export default function VolunteersList() {
   const getForRenderFullName = (rowData: any)  => rowData.firstName + ' ' + rowData.lastName;
   const getForRenderDob = (rowData: any) => format(new Date(rowData.dob), 'dd.MM.yyyy');
   const tableTitle = (count: number) => `Ukupno ${count} volonter` + (((count % 100 === 11) || (count % 10) !== 1) ? 'a' : '');
+  const [dataLoaded, setDataLoaded] = React.useState(0);
   const [title, setTitle] = React.useState(tableTitle(0));
+  const [places, setPlaces] = React.useState<Place>({});
+  const [placesOfLiving, setPlacesOfLiving] = React.useState<Place>({});
+
   const [state, setState] = React.useState<TableState>({
     columns: [
       { title: 'ID', field: 'id', searchable: true,
@@ -55,7 +63,11 @@ export default function VolunteersList() {
         render: getForRenderDob
       },
       { title: 'OIB', field: 'oib', cellStyle, searchable: true },
-      { title: 'HCK Društvo', field: 'placeOfVolunteering.name', hidden: !user?.admin, cellStyle, searchable: !user?.admin },
+      { title: 'HCK Društvo',
+        field: 'placeOfVolunteering.id', hidden: !user?.admin, cellStyle,
+        searchable: !user?.admin,
+        lookup: placesOfLiving,
+      },
       { title: 'Potrebna provjera', field: 'backgroundCheckNeeded', type: 'boolean', cellStyle, searchable: false,
         render: (rowData: any) =>
         <Switch
@@ -108,24 +120,73 @@ export default function VolunteersList() {
     isLoading: true
   });
 
+  const refreshFilters = () => {
+    console.log(1);
+    console.log(state.data);
+    if (!state.data.length)
+      return;
+    console.log(2);
+    if (!Object.keys(places).length)
+      return;
+    console.log(3);
+    console.log("places:", places);
+    const placesOfLiving: any = {};
+    state.data.filter((v: any) => v.placeOfLiving && v.placeOfLiving.id).forEach( (v: any) => placesOfLiving[v.placeOfLiving.id] = places[v.placeOfLiving.id] );
+
+    console.log("New placesOfLiving: ", placesOfLiving);
+    setPlacesOfLiving(placesOfLiving);
+    setState(prevState => {
+      const oldState = { ...prevState };
+      oldState.columns[4].lookup = placesOfLiving;
+      return { ...prevState, oldState};
+    });
+  };
+
+  useEffect(refreshFilters, [dataLoaded]);
+
   useEffect(() => {
     request('volunteers', (response: any) => {
-      //console.log("volunteers:", data);
       response.json().then((data: any) => {
+        console.log("volunteers:", data);
         setState((prevState) => ({ ...prevState, data, isLoading: false }));
-        const count= tableRef.current.dataManager.searchedData.length;
-        setTitle(tableTitle(count));
+        //setTitleWithCount();
+        setDataLoaded(1);
+      })
+      .catch((error: any) => {
+        console.log("error:", error);
+      });
+    });
+
+    request('places', (response: any) => {
+      console.log("places:", response);
+      response.json().then((data: any) => {
+        //places = [{id:"name"}]
+        console.log("Places JSON: ", data);
+        const newPlaces: any = {};
+          data.forEach((city: any) => {
+            newPlaces[city.id] = city.name;
+          });
+        console.log("New places: ", newPlaces);
+        setPlaces(newPlaces);
+        setDataLoaded(2);
       })
       .catch((error: any) => {
         console.log("error:", error);
       });
     })
   }, []);
-  
+
   const dataAll = () => true;
   const dataForCheck = (rowData: any) => rowData.backgroundCheckNeeded && (rowData.backgroundCheckPassed === null);
 
   const tableRef: any = React.useRef();
+
+  const setTitleWithCount = () => {
+    if (tableRef && tableRef.current) {
+      const count= tableRef.current.dataManager.searchedData.length;
+      setTitle(tableTitle(count));
+    }
+  }
 
   return (
     <>
@@ -137,18 +198,15 @@ export default function VolunteersList() {
         data={state.data}
         isLoading={state.isLoading}
         tableRef={tableRef}
-        onSearchChange={() => {
-          if (tableRef && tableRef.current) {
-            const count= tableRef.current.dataManager.searchedData.length;
-            setTitle(tableTitle(count));
-          }
-        }}
+        onSearchChange={setTitleWithCount}
+        onFilterChange={setTitleWithCount}
         options={
           {
             paging: false,
             tableLayout: 'fixed',
             headerStyle: { position: 'sticky', top: 0, backgroundColor: '#ECECEC', fontWeight: 'bold' },
             maxBodyHeight: 'calc(100vh - 128px)',
+            filtering: true,
           }
         }
         localization={{
@@ -179,6 +237,29 @@ export default function VolunteersList() {
             onClick: () => exportCsv(columnsForExportAll, tableRef.current.dataManager.sortedData, dataAll, 'Svi volonteri ' + asDateTime(new Date()))
           }
         ]}
+
+        detailPanel={[
+          {
+              tooltip: 'Show Name',
+              render: rowData => {
+                 console.log(rowData);
+                 return (
+                     <div
+                       style={{
+                         fontSize: 100,
+                         textAlign: 'center',
+                         color: 'white',
+                         backgroundColor: '#43A047',
+                       }}
+                     >
+                       {rowData.id}
+                     </div>
+                   )
+               }
+          }
+          ]}
+        //onRowClick={(event, rowData, togglePanel) => togglePanel()}
+
       />
     </>
   );

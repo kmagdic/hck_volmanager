@@ -61,6 +61,9 @@ public class Volunteer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
     @Column(name = "firstname", length = 50)
     private String firstName;
 
@@ -308,6 +311,14 @@ public class Volunteer {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getFirstName() {

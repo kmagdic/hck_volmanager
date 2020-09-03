@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
+
+public interface VolunteerRepository extends JpaRepository<Volunteer, Long>, CustomEntityGraphRepository{
 
     @Query(value = "select v.* from " +
             "hck.volunteers v left join hck.places p on (p.id = v.placeofvolunteeringid) " +
@@ -47,9 +48,18 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long>{
             "LEFT JOIN FETCH v.experiences " +
             "LEFT JOIN FETCH v.customExperiences " +
             "LEFT JOIN FETCH v.services " +
-            "LEFT JOIN FETCH v.customServices " +
-            "LEFT JOIN FETCH v.availability "
+            "LEFT JOIN FETCH v.customServices "
 
     )
     List<Volunteer> findAllJoined();
+
+    @Query(value = "select v.* from " +
+            "hck.volunteers v left join hck.places p on (p.id = v.placeofvolunteeringid) " +
+            "where " +
+            "p.hcksocietyid = :hcksocietyid " +
+            "order by " +
+            "v.id",
+            nativeQuery = true
+    )
+    List<Volunteer> findAllEnabled();
 }
