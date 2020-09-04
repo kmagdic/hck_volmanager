@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 
-public interface VolunteerRepository extends JpaRepository<Volunteer, Long>, CustomEntityGraphRepository{
+public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
 
     @Query(value = "select v.* from " +
             "hck.volunteers v left join hck.places p on (p.id = v.placeofvolunteeringid) " +
@@ -52,14 +52,4 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long>, Cus
 
     )
     List<Volunteer> findAllJoined();
-
-    @Query(value = "select v.* from " +
-            "hck.volunteers v left join hck.places p on (p.id = v.placeofvolunteeringid) " +
-            "where " +
-            "p.hcksocietyid = :hcksocietyid " +
-            "order by " +
-            "v.id",
-            nativeQuery = true
-    )
-    List<Volunteer> findAllEnabled();
 }

@@ -57,14 +57,11 @@ public class VolunteerController {
 
         }
 
-
         if(webUser == null) {
             throw new ForbiddenHttpException("Unauthorized operation.");
         } else if (webUser.getAdmin()) {
             log.info("Listing all volunteers for admin user ...");
-            Volunteer enabledVolonteer = new Volunteer();
-            enabledVolonteer.setEnabled(true);
-            return volunteerRepository.findAll(Example.of(enabledVolonteer));
+            return volunteerRepository.findAll();
         } else if(webUser.getHckSociety().getName().equals("nacionalno")) {
             log.info("Listing volunteers for national society " + webUser.getHckSociety() + " ...");
             return volunteerRepository.findAllByNational(webUser.getHckSociety().getId());
