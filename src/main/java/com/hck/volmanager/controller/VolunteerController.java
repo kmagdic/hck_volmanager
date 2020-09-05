@@ -57,7 +57,6 @@ public class VolunteerController {
 
         }
 
-
         if(webUser == null) {
             throw new ForbiddenHttpException("Unauthorized operation.");
         } else if (webUser.getAdmin()) {
