@@ -61,7 +61,7 @@ public class VolunteerController {
         if(webUser == null) {
             throw new ForbiddenHttpException("Unauthorized operation.");
         } else if (webUser.getAdmin()) {
-            log.info("Listing all volunteers for admin user ...");
+            log.info("Listing all enabled volunteers for admin user ...");
             Volunteer enabledVolonteer = new Volunteer();
             enabledVolonteer.setEnabled(true);
             return volunteerRepository.findAll(Example.of(enabledVolonteer));
@@ -100,17 +100,7 @@ public class VolunteerController {
     public Volunteer createVolunteer(@Valid @RequestBody Volunteer volunteerJSON, HttpSession session) throws ResourceNotFoundHttpException, ForbiddenHttpException, IllegalAccessException {
         Volunteer newVolunteer;
         try {
-            // save without availabilability
-            Availability a = volunteerJSON.getAvailability();
-            volunteerJSON.setAvailability(null);
             newVolunteer = volunteerRepository.save(volunteerJSON);
-
-            // save with availability - throws not-null constraint exception on availability.volounteerId
-            //a.setVolunteer(newVolunteer);
-            //newVolunteer.setAvailability(a);
-            //volunteerRepository.save(newVolunteer);
-
-
         } catch(Exception e) {
             log.warn("Error in creating volunteer: " + e.getMessage());
             log.warn("Volunteer: " + volunteerJSON);

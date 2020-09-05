@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class Availability implements Serializable {
 
     @Id
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="volunteerid")
+    @OneToOne
+    @JoinColumn(name="volunteerid", referencedColumnName = "id")
     private Volunteer volunteer;
 
     @Column(name = "mondayfrom")
@@ -175,7 +175,7 @@ public class Availability implements Serializable {
         this.volunteer = volunteer;
     }
 
-    public Volunteer getVolunteer() {
+    /*public Volunteer getVolunteer() {
         return volunteer;
-    }
+    }*/
 }

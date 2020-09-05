@@ -140,7 +140,7 @@ public class Volunteer {
  	private String availabilityDetails;
 
     @OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL)
-    //@Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.JOIN)
  	private Availability availability;
 
     @Column(name="criminalrecord")
