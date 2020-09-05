@@ -309,6 +309,16 @@ public class Volunteer {
         this.projects = projects;
     }
 
+    @Column(name="enabled")
+    private Boolean enabled;
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
     @Override
     public String toString() {
