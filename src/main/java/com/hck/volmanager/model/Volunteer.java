@@ -136,7 +136,7 @@ public class Volunteer {
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
 
-    @OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL, optional = true)
     //@OneToMany()
     @Fetch(FetchMode.JOIN)
  	private Availability availability;
@@ -148,12 +148,11 @@ public class Volunteer {
 
     public void setAvailability(Availability availability) {
         this.availability = availability;
-        /*
-        if (availability != null)
-           availability.setVolunteer(this);
-        */
+        if (availability != null) {
+            availability.setVolunteer(this);
+        }
     }
-    /*
+/*
     public Set<Availability> getAvailability() {
         return availability;
     }

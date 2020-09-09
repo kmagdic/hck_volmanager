@@ -9,9 +9,12 @@ import java.io.Serializable;
 public class Availability implements Serializable {
 
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name="volunteerid", referencedColumnName = "id", unique = true)
-    @JoinColumn(name="volunteerid")
+    @Column(name = "volunteerid")
+    private Long vid;
+
+    @OneToOne
+    @JoinColumn(name="volunteerid", unique = true)
+    @MapsId
     private Volunteer volunteer;
 
     @Column(name = "mondayfrom")
@@ -58,11 +61,11 @@ public class Availability implements Serializable {
 
     public Availability() {
     }
-
+/*
     public Availability(Volunteer volunteer) {
         this.volunteer = volunteer;
     }
-
+*/
     public Short getMondayFrom() {
         return mondayFrom;
     }
@@ -174,12 +177,13 @@ public class Availability implements Serializable {
     public void setSundayTo(Short sundayTo) {
         this.sundayTo = sundayTo;
     }
-/*
+
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
     }
-*/
-    /*public Volunteer getVolunteer() {
+
+    /*
+    public Volunteer getVolunteer() {
         return volunteer;
     }*/
 }
