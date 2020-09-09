@@ -9,7 +9,9 @@ import java.io.Serializable;
 public class Availability implements Serializable {
 
     @Id
-    @OneToOne
+    //@OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
+    //@JoinColumn(name="volunteerid", referencedColumnName = "id", unique = true)
     @JoinColumn(name="volunteerid", referencedColumnName = "id")
     private Volunteer volunteer;
 
@@ -56,6 +58,10 @@ public class Availability implements Serializable {
     Short sundayTo;
 
     public Availability() {
+    }
+
+    public Availability(Volunteer volunteer) {
+        this.volunteer = volunteer;
     }
 
     public Short getMondayFrom() {
@@ -169,12 +175,11 @@ public class Availability implements Serializable {
     public void setSundayTo(Short sundayTo) {
         this.sundayTo = sundayTo;
     }
-
-
+/*
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
     }
-
+*/
     /*public Volunteer getVolunteer() {
         return volunteer;
     }*/

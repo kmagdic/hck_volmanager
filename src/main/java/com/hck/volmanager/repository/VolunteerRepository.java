@@ -48,12 +48,28 @@ public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
             "LEFT JOIN FETCH v.experiences " +
             "LEFT JOIN FETCH v.customExperiences " +
             "LEFT JOIN FETCH v.services " +
-            "LEFT JOIN FETCH v.customServices "
+            "LEFT JOIN FETCH v.customServices " +
+            "LEFT JOIN FETCH v.projects " +
+            "LEFT JOIN FETCH v.availability "
 
     )
     List<Volunteer> findAllJoined();
 
-
-
-
+    @Query(value = "FROM Volunteer v " +
+            "LEFT JOIN FETCH v.placeOfResidence " +
+            "LEFT JOIN FETCH v.placeOfLiving " +
+            "LEFT JOIN FETCH v.placeOfVolunteering " +
+            "LEFT JOIN FETCH v.qualifications " +
+            "LEFT JOIN FETCH v.customQualifications " +
+            "LEFT JOIN FETCH v.skills " +
+            "LEFT JOIN FETCH v.customSkills " +
+            "LEFT JOIN FETCH v.experiences " +
+            "LEFT JOIN FETCH v.customExperiences " +
+            "LEFT JOIN FETCH v.services " +
+            "LEFT JOIN FETCH v.customServices " +
+            "LEFT JOIN FETCH v.projects " +
+            "LEFT JOIN FETCH v.availability " +
+            "WHERE v.id = :id"
+    )
+    Volunteer findAllJoinedById(@Param("id") Long id);
 }

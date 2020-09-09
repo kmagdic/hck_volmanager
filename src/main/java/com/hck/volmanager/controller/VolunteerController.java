@@ -61,9 +61,9 @@ public class VolunteerController {
             throw new ForbiddenHttpException("Unauthorized operation.");
         } else if (webUser.getAdmin()) {
             log.info("Listing all enabled volunteers for admin user ...");
-            Volunteer enabledVolonteer = new Volunteer();
-            enabledVolonteer.setEnabled(true);
-            return volunteerRepository.findAll(Example.of(enabledVolonteer));
+            //V olunteer enabledVolonteer = new Volunteer();
+            // enabledVolonteer.setEnabled(true);
+            return volunteerRepository.findAll();
         } else if(webUser.getHckSociety().getName().equals("nacionalno")) {
             log.info("Listing volunteers for national society " + webUser.getHckSociety() + " ...");
             return volunteerRepository.findAllByNational(webUser.getHckSociety().getId());
@@ -90,7 +90,10 @@ public class VolunteerController {
 
         Volunteer volunteer = volunteerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + id));
-
+/*
+        Volunteer volunteer = volunteerRepository.findAllJoinedById(id);
+                //.orElseThrow(() -> new ResourceNotFoundHttpException("Volunteer not found for this id :: " + id));
+*/
         log.info("Get volunteer by id " + volunteer.getId() + ": " + volunteer);
         return ResponseEntity.ok().body(volunteer);
     }

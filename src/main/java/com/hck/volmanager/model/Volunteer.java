@@ -136,9 +136,11 @@ public class Volunteer {
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
 
-    @OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL)
+    //@OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "volunteer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
- 	private Availability availability;
+ 	//private Availability availability;
+ 	private Set<Availability> availability = new HashSet<>();
 
     @Column(name="criminalrecord")
  	private Boolean criminalRecord;
@@ -308,7 +310,7 @@ public class Volunteer {
     public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
-
+/*
     @Column(name="enabled")
     private Boolean enabled;
 
@@ -319,7 +321,7 @@ public class Volunteer {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-
+*/
     @Override
     public String toString() {
         return "Volunteer{" +
@@ -514,7 +516,7 @@ public class Volunteer {
     public void setAvailabilityDetails(String availabilityDetails) {
         this.availabilityDetails = availabilityDetails;
     }
-
+/*
     public Availability getAvailability() {
         return availability;
     }
@@ -523,6 +525,18 @@ public class Volunteer {
         this.availability = availability;
         if (availability != null)
            availability.setVolunteer(this);
+    }
+*/
+    public Set<Availability> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Set<Availability> availability) {
+        this.availability = availability;
+        /*
+        if (availability != null)
+           availability.setVolunteer(this);
+        */
     }
 
     public Boolean getCriminalRecord() {
