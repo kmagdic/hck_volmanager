@@ -136,11 +136,34 @@ public class Volunteer {
     @Column(name="availabilitydetails")
  	private String availabilityDetails;
 
-    //@OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "volunteer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "volunteer", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    //@OneToMany()
     @Fetch(FetchMode.JOIN)
- 	//private Availability availability;
- 	private Set<Availability> availability = new HashSet<>();
+ 	private Availability availability;
+ 	//private Set<Availability> availability = new HashSet<>();
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
+        /*
+        if (availability != null)
+           availability.setVolunteer(this);
+        */
+    }
+    /*
+    public Set<Availability> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Set<Availability> availability) {
+        this.availability = availability;
+        if (availability != null)
+           availability.setVolunteer(this);
+    }
+    */
 
     @Column(name="criminalrecord")
  	private Boolean criminalRecord;
@@ -515,28 +538,6 @@ public class Volunteer {
 
     public void setAvailabilityDetails(String availabilityDetails) {
         this.availabilityDetails = availabilityDetails;
-    }
-/*
-    public Availability getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Availability availability) {
-        this.availability = availability;
-        if (availability != null)
-           availability.setVolunteer(this);
-    }
-*/
-    public Set<Availability> getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Set<Availability> availability) {
-        this.availability = availability;
-        /*
-        if (availability != null)
-           availability.setVolunteer(this);
-        */
     }
 
     public Boolean getCriminalRecord() {

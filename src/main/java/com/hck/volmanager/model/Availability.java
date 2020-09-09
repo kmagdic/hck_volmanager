@@ -9,10 +9,9 @@ import java.io.Serializable;
 public class Availability implements Serializable {
 
     @Id
-    //@OneToOne(fetch = FetchType.LAZY)
-    @ManyToOne()
+    @OneToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name="volunteerid", referencedColumnName = "id", unique = true)
-    @JoinColumn(name="volunteerid", referencedColumnName = "id")
+    @JoinColumn(name="volunteerid")
     private Volunteer volunteer;
 
     @Column(name = "mondayfrom")
