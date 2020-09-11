@@ -12,7 +12,7 @@ public class Availability implements Serializable {
     @Column(name = "volunteerid")
     private Long vid;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="volunteerid", unique = true)
     @MapsId
     private Volunteer volunteer;
