@@ -1,3 +1,3 @@
 # HCK Volunteers Manager
 
-The initial HCK application which allows basic volunteers operations.
+The HCK application which allows managament (registering, approving, editing) of volunteers owned by multiple centers.
